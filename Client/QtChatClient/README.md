@@ -50,3 +50,61 @@
 | m_content       | QByteArray  | 消息内容：文本为 UTF-8；图片/文件/语音为二进制数据 |
 | m_attachmentId  | QString     | 附件ID，仅文件/图片/语音消息使用，文本消息为空     |
 | m_documentName  | QString     | 文件名，仅文件消息使用，图片和语音消息为空         |
+
+补充说明：
+
+1. 上述数据类型位于 Model 命名空间中。
+2. Message 对象通过静态工厂方法 CreateMessage 创建，不直接对外开放默认构造。
+
+## 二. 工具模块
+
+当前公共工具主要位于以下两个头文件中：
+
+1. include/utils/utils.h
+2. include/utils/log.h
+
+### 1) Utils
+
+Utils 命名空间提供了一组轻量级通用工具函数，当前包括：
+
+| 函数名               | 返回类型   | 作用                           |
+| -------------------- | ---------- | ------------------------------ |
+| GetFormattedTime     | QString    | 将时间戳格式化为指定时间字符串 |
+| GetCurrentTimestamp  | int64_t    | 获取当前 Unix 秒级时间戳       |
+| QByteArrayToQIcon    | QIcon      | 将二进制数据转换为 QIcon       |
+| ReadFileToByteArray  | QByteArray | 读取文件内容为二进制数据       |
+| WriteByteArrayToFile | bool       | 将二进制数据写入文件           |
+| GetFileNameFromPath  | QString    | 从完整路径中提取文件名         |
+
+### 2) Log
+
+Log 命名空间提供了客户端当前使用的日志能力，核心内容如下：
+
+| 项               | 说明                                        |
+| ---------------- | ------------------------------------------- |
+| LogLevel         | 日志级别枚举，当前支持 INFO、WARNING、ERROR |
+| GLOBAL_LOG_LEVEL | 全局日志级别，低于该级别的日志不会输出      |
+| SetLogLevel      | 设置当前日志过滤级别                        |
+| LogInfo          | 日志宏，在调用点自动捕获文件名与行号        |
+
+日志模块设计要点：
+
+1. LogInfo 通过宏展开在调用处传入 **LINE**，因此输出的是日志调用位置，而不是日志实现内部行号。
+2. 输出时使用文件名而不是完整路径，便于终端阅读。
+3. 当前输出格式为：[ERROR main.cpp:16]:这是一个错误日志。
+
+示例：
+
+```cpp
+SetLogLevel(Log::LogLevel::WARNING);
+LogInfo(Log::LogLevel::INFO, "应用程序启动");
+LogInfo(Log::LogLevel::WARNING, "这是一个警告日志");
+LogInfo(Log::LogLevel::ERROR, "这是一个错误日志");
+```
+
+当日志级别设置为 WARNING 时，实际终端输出示例为：
+
+```text
+[WARNING main.cpp:15]:这是一个警告日志
+[ERROR main.cpp:16]:这是一个错误日志
+```
