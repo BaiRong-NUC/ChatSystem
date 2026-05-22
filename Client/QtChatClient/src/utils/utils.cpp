@@ -2,13 +2,6 @@
 
 namespace Utils
 {
-    QString GetFormattedTime(int64_t dateTime, const QString &format)
-    {
-        return QDateTime::fromSecsSinceEpoch(dateTime).toString(format);
-    }
-
-    int64_t GetCurrentTimestamp() { return QDateTime::currentSecsSinceEpoch(); }
-
     QIcon QByteArrayToQIcon(const QByteArray &data)
     {
         QPixmap pixmap;
