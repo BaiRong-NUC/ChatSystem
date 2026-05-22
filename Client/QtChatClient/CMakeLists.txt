@@ -1,15 +1,28 @@
 cmake_minimum_required(VERSION 3.19)
 project(QtChatClient LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+file(GLOB_RECURSE QTCHATCLIENT_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+)
+file(GLOB_RECURSE QTCHATCLIENT_HEADERS CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+)
+
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
 
 qt_standard_project_setup()
 
 qt_add_executable(QtChatClient
     WIN32 MACOSX_BUNDLE
-    main.cpp
-    mainwidget.cpp
-    mainwidget.h
+    ${QTCHATCLIENT_SOURCES}
+    ${QTCHATCLIENT_HEADERS}
+)
+
+target_include_directories(QtChatClient
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(QtChatClient
