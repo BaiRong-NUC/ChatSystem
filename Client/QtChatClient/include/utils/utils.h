@@ -10,4 +10,11 @@ namespace Utils
 
     // 获取当前时间戳,单位秒
     int64_t GetCurrentTimestamp();
+
+    // QByteArray转QIcon
+    QIcon QByteArrayToQIcon(const QByteArray &data);
+
+    // 二进制文件的读写
+    QByteArray ReadFileToByteArray(const QString &filePath);
+    bool WriteByteArrayToFile(const QString &filePath, const QByteArray &data);
 }  // namespace Utils
