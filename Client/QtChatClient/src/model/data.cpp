@@ -1,7 +1,5 @@
 #include <model/data.h>
 
-#include <QDateTime>
-
 namespace Model
 {
     // 生成唯一m_messageId,取QUuid的字符串形式的最后12位作为消息ID,保证唯一性
@@ -12,78 +10,37 @@ namespace Model
         return "M" + uuid.right(12);
     }
 
-    QString Message::_GetCurrentTimestamp() { return QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"); }
-
     Message Message::CreateMessage(MessageType type, const QString &chatSessionId, const UserInfo &sender,
                                    const QByteArray &content, const QString &extraInfo)
     {
-        if (type == MessageType::Text) { return _CreateTextMessage(chatSessionId, sender, content); }
-        else if (type == MessageType::Image) { return _CreateImageMessage(chatSessionId, sender, content); }
-        else if (type == MessageType::File) { return _CreateFileMessage(chatSessionId, sender, content, extraInfo); }
-        else if (type == MessageType::SPEECH) { return _CreateSpeechMessage(chatSessionId, sender, content); }
-        else
+        Message msg;
+        msg.m_messageId = Message::_GenerateUniqueMessageId();
+        msg.m_chatSessionId = chatSessionId;
+        msg.m_sender = sender;
+        msg.m_content = content;
+        msg.m_timestamp = Utils::GetFormattedTime(Utils::GetCurrentTimestamp());
+        msg.m_messageType = type;
+        // 根据消息类型设置m_attachmentId;m_documentName等字段
+        if (type == MessageType::Text)
         {
-            // 未知消息类型默认创建空消息对象
-            return Message();
+            msg.m_attachmentId = "";  // 文本消息没有附件ID
+            msg.m_documentName = "";  // 文本消息没有文件名
         }
-    }
-
-    Message Message::_CreateTextMessage(const QString &chatSessionId, const UserInfo &sender, const QByteArray &text)
-    {
-        Message msg;
-        msg.m_messageType = MessageType::Text;
-        msg.m_chatSessionId = chatSessionId;
-        msg.m_sender = sender;
-        msg.m_content = text;
-        msg.m_attachmentId = "";                                // 文本消息没有附件ID
-        msg.m_documentName = "";                                // 文本消息没有文件名
-        msg.m_messageId = Message::_GenerateUniqueMessageId();  // 生成唯一消息ID
-        msg.m_timestamp = Message::_GetCurrentTimestamp();      // 设置当前时间戳
-        return msg;
-    }
-
-    Message Message::_CreateImageMessage(const QString &chatSessionId, const UserInfo &sender,
-                                         const QByteArray &imageData)
-    {
-        Message msg;
-        msg.m_messageType = MessageType::Image;
-        msg.m_chatSessionId = chatSessionId;
-        msg.m_sender = sender;
-        msg.m_content = imageData;
-        msg.m_attachmentId = Message::_GenerateUniqueMessageId();
-        msg.m_documentName = "";
-        msg.m_messageId = Message::_GenerateUniqueMessageId();
-        msg.m_timestamp = Message::_GetCurrentTimestamp();
-        return msg;
-    }
-
-    Message Message::_CreateFileMessage(const QString &chatSessionId, const UserInfo &sender,
-                                        const QByteArray &fileData, const QString &extraInfo)
-    {
-        Message msg;
-        msg.m_messageType = MessageType::File;
-        msg.m_chatSessionId = chatSessionId;
-        msg.m_sender = sender;
-        msg.m_content = fileData;
-        msg.m_attachmentId = Message::_GenerateUniqueMessageId();
-        msg.m_documentName = extraInfo;
-        msg.m_messageId = Message::_GenerateUniqueMessageId();
-        msg.m_timestamp = Message::_GetCurrentTimestamp();
-        return msg;
-    }
-
-    Message Message::_CreateSpeechMessage(const QString &chatSessionId, const UserInfo &sender,
-                                          const QByteArray &speechData)
-    {
-        Message msg;
-        msg.m_messageType = MessageType::SPEECH;
-        msg.m_chatSessionId = chatSessionId;
-        msg.m_sender = sender;
-        msg.m_content = speechData;
-        msg.m_attachmentId = Message::_GenerateUniqueMessageId();
-        msg.m_documentName = "";
-        msg.m_messageId = Message::_GenerateUniqueMessageId();
-        msg.m_timestamp = Message::_GetCurrentTimestamp();
+        else if (type == MessageType::Image)
+        {
+            msg.m_documentName = "";      // 图片消息没有文件名
+            msg.m_attachmentId = "TODO";  // TODO:生成图片附件ID
+        }
+        else if (type == MessageType::File)
+        {
+            msg.m_documentName = extraInfo;  // 文件消息使用extraInfo作为文件名
+            msg.m_attachmentId = "TODO";     // TODO:生成文件附件ID
+        }
+        else if (type == MessageType::SPEECH)
+        {
+            msg.m_documentName = "";      // 语音消息没有文件名
+            msg.m_attachmentId = "TODO";  // TODO:生成语音附件ID
+        }
         return msg;
     }
 }  // namespace Model
