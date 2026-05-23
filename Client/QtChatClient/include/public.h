@@ -14,7 +14,7 @@
 // utils/log.h
 #include <QDebug>  // 输出日志到控制台
 
-// mainwidget.h
+// widget/*
 #include <QWidget>      // 窗口基类
 #include <QPushButton>  // 按钮
 #include <QHBoxLayout>  // 水平布局

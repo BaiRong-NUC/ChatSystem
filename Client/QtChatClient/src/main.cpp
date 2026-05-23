@@ -1,4 +1,4 @@
-#include <mainwidget.h>
+#include <widget/mainwidget.h>
 #include <QApplication>
 #include <model/data.h>
 #include <utils/log.h>
