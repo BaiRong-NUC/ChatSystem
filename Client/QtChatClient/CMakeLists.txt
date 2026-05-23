@@ -34,6 +34,7 @@ qt_add_executable(QtChatClient
     WIN32 MACOSX_BUNDLE
     ${QTCHATCLIENT_SOURCES}
     ${QTCHATCLIENT_HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/resource.qrc
 )
 
 target_include_directories(QtChatClient

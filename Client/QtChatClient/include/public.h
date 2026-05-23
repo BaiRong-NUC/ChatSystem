@@ -17,3 +17,4 @@
 // mainwidget.h
 #include <QWidget>
 #include <QPushButton>
+#include <QHBoxLayout>  // 水平布局
