@@ -13,3 +13,6 @@
 
 // utils/log.h
 #include <QDebug>
+
+// mainwidget.h
+#include <QWidget>
