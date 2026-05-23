@@ -15,24 +15,28 @@
 
 结合当前代码结构，客户端可先按如下模块理解：
 
-| 模块         | 位置                                        | 当前职责                           |
-| ------------ | ------------------------------------------- | ---------------------------------- |
-| 入口模块     | src/main.cpp                                | 创建 QApplication，启动主窗口      |
-| 主窗口模块   | include/mainwidget.h / src/mainwidget.cpp   | 管理主界面骨架、三栏布局、标签切换 |
-| 数据模型模块 | include/model/data.h / src/model/data.cpp   | 定义用户、会话、消息等核心数据     |
-| 工具模块     | include/utils/utils.h / src/utils/utils.cpp | 提供时间、文件、图标转换等通用能力 |
-| 日志模块     | include/utils/log.h / src/utils/log.cpp     | 提供统一日志等级控制和格式化输出   |
-| 资源模块     | resources/resource.qrc                      | 管理图标等 Qt 资源文件             |
+| 模块         | 位置                                                                              | 当前职责                           |
+| ------------ | --------------------------------------------------------------------------------- | ---------------------------------- |
+| 入口模块     | src/main.cpp                                                                      | 创建 QApplication，启动主窗口      |
+| 主窗口模块   | include/widget/mainwidget.h / src/widget/mainwidget.cpp                           | 装配三栏布局并持有三个子窗口       |
+| 左侧导航模块 | include/widget/leftwidget/leftwidget.h / src/widget/leftwidget/leftwidget.cpp     | 管理头像、导航按钮和标签切换       |
+| 中间列表模块 | include/widget/midwidget/midwidget.h / src/widget/midwidget/midwidget.cpp         | 承载会话、好友、申请列表区占位     |
+| 右侧内容模块 | include/widget/rightwidget/rightwidget.h / src/widget/rightwidget/rightwidget.cpp | 承载聊天详情或信息面板占位         |
+| 数据模型模块 | include/model/data.h / src/model/data.cpp                                         | 定义用户、会话、消息等核心数据     |
+| 工具模块     | include/utils/utils.h / src/utils/utils.cpp                                       | 提供时间、文件、图标转换等通用能力 |
+| 日志模块     | include/utils/log.h / src/utils/log.cpp                                           | 提供统一日志等级控制和格式化输出   |
+| 资源模块     | resources/resource.qrc                                                            | 管理图标等 Qt 资源文件             |
 
 ## 3. 当前依赖关系
 
 当前依赖关系可以概括为：
 
 1. 程序入口依赖主窗口模块。
-2. 主窗口模块依赖日志模块和 Qt Widgets。
-3. 数据模型模块依赖工具模块提供时间格式化等能力。
-4. 日志模块依赖工具模块提取文件名。
-5. 各界面模块通过 Qt 资源系统加载图标资源。
+2. 主窗口模块依赖左侧、中间、右侧三个子窗口模块完成界面装配。
+3. 左侧导航模块依赖 Qt Widgets 和 Qt 资源系统完成按钮与图标切换。
+4. 数据模型模块依赖工具模块提供时间格式化等能力。
+5. 日志模块依赖工具模块提取文件名。
+6. 各界面模块通过 Qt 资源系统加载图标资源。
 
 当前项目还未引入独立的网络层、控制器层、持久化层或状态管理层。
 
@@ -41,9 +45,11 @@
 当前架构处于“界面骨架搭建阶段”，具有以下特点：
 
 1. 主窗口职责较集中，既负责布局，也负责部分交互状态切换。
-2. 数据模型层已经独立出来，便于后续与界面或网络模块解耦。
-3. 工具与日志能力已经抽出，避免基础逻辑散落在业务代码中。
-4. 中间列表区与右侧内容区仍是占位实现，后续扩展空间明确。
+2. 经过本轮重构后，MainWidget 职责已收敛到布局装配和子窗口持有，避免主窗口代码继续膨胀。
+3. 左侧导航交互已沉到 LeftWidget，自身负责按钮创建、默认状态和信号槽绑定。
+4. 数据模型层已经独立出来，便于后续与界面或网络模块解耦。
+5. 工具与日志能力已经抽出，避免基础逻辑散落在业务代码中。
+6. 中间列表区与右侧内容区仍是占位实现，后续扩展空间明确。
 
 ## 5. 建议的后续分层方向
 

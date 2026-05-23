@@ -7,10 +7,11 @@
 当前项目已完成的能力主要集中在基础界面骨架和导航状态管理：
 
 1. 主窗口单例创建与展示。
-2. 左中右三栏窗口骨架搭建。
-3. 左侧导航栏按钮初始化。
-4. 会话、好友、好友申请三个标签的图标切换逻辑。
-5. 基础日志输出与公共工具支持。
+2. 主窗口拆分为 MainWidget、LeftWidget、MidWidget、RightWidget 四个窗口类。
+3. 左中右三栏窗口骨架搭建。
+4. 左侧导航栏按钮初始化。
+5. 会话、好友、好友申请三个标签的图标切换逻辑。
+6. 基础日志输出与公共工具支持。
 
 当前尚未完成的内容包括：
 
@@ -21,18 +22,20 @@
 
 ## 2. 主窗口模块
 
-当前客户端主窗口由 MainWidget 管理，声明位于 include/mainwidget.h，实现位于 src/mainwidget.cpp。
+当前客户端主窗口由 MainWidget 负责装配，声明位于 include/widget/mainwidget.h，实现位于 src/widget/mainwidget.cpp。
 
 ### 2.1 设计概览
 
-MainWidget 继承 QWidget，当前采用单例模式对外提供唯一窗口实例：
+MainWidget 继承 QWidget，当前采用单例模式对外提供唯一窗口实例，同时只负责三栏子窗口的创建、持有和布局装配：
 
-| 成员/方法         | 类型                | 作用                     |
-| ----------------- | ------------------- | ------------------------ |
-| s_instance        | MainWidget\*        | 保存单例实例             |
-| GetInstance       | static MainWidget\* | 获取主窗口唯一实例       |
-| \_InitUI          | void                | 统一调度主窗口 UI 初始化 |
-| \_InitSignalSlots | void                | 绑定按钮点击信号与槽函数 |
+| 成员/方法        | 类型                | 作用                         |
+| ---------------- | ------------------- | ---------------------------- |
+| s_instance       | MainWidget\*        | 保存单例实例                 |
+| GetInstance      | static MainWidget\* | 获取主窗口唯一实例           |
+| \_InitMainWidget | void                | 初始化主布局并装配三个子窗口 |
+| m_leftWidget     | LeftWidget\*        | 持有左侧导航栏窗口           |
+| m_midWidget      | MidWidget\*         | 持有中间列表区窗口           |
+| m_rightWidget    | RightWidget\*       | 持有右侧内容区窗口           |
 
 当前程序入口 main.cpp 中会创建 QApplication，并通过 MainWidget::GetInstance 获取主窗口后调用 show 展示界面。
 
@@ -40,20 +43,18 @@ MainWidget 继承 QWidget，当前采用单例模式对外提供唯一窗口实�
 
 主窗口当前使用三栏布局：
 
-| 区域成员      | 类型      | 当前职责                                 |
-| ------------- | --------- | ---------------------------------------- |
-| m_leftWidget  | QWidget\* | 左侧导航栏，承载头像与标签按钮           |
-| m_midWidget   | QWidget\* | 中间列表区，后续用于会话、好友、申请列表 |
-| m_rightWidget | QWidget\* | 右侧主内容区，后续用于聊天详情或信息面板 |
+| 区域成员      | 类型          | 当前职责                                 |
+| ------------- | ------------- | ---------------------------------------- |
+| m_leftWidget  | LeftWidget\*  | 左侧导航栏，承载头像与标签按钮           |
+| m_midWidget   | MidWidget\*   | 中间列表区，后续用于会话、好友、申请列表 |
+| m_rightWidget | RightWidget\* | 右侧主内容区，后续用于聊天详情或信息面板 |
 
 布局初始化由 \_InitMainWidget 完成，当前行为如下：
 
-1. 使用 QHBoxLayout 将三栏横向排列。
-2. 左侧导航栏固定宽度为 50。
-3. 中间区域固定宽度为 200。
-4. 右侧区域最小宽高为 350，并占据剩余空间。
-5. 主布局边距与间距均为 0。
-6. 三栏通过 objectName 设置独立背景色，避免样式级联影响按钮图标。
+1. 使用 QHBoxLayout 将 LeftWidget、MidWidget、RightWidget 横向排列。
+2. MainWidget 只负责创建并加入三个子窗口，不再承载各区域具体 UI 细节。
+3. 主布局边距与间距均为 0。
+4. 左侧、中间、右侧窗口各自维护自己的尺寸约束和内部界面。
 
 当前主窗口默认尺寸为 800 x 700，窗口标题为 Qt Chat Client，窗口图标来自资源文件 :/images/logo.png。
 
@@ -80,7 +81,7 @@ MainWidget 继承 QWidget，当前采用单例模式对外提供唯一窗口实�
 
 ## 4. 标签状态切换逻辑
 
-MainWidget 内部定义了 ActiveTab 枚举：
+LeftWidget 内部定义了 ActiveTab 枚举：
 
 | 枚举值           | 含义         |
 | ---------------- | ------------ |
@@ -99,23 +100,16 @@ MainWidget 内部定义了 ActiveTab 枚举：
 
 ## 5. 初始化顺序
 
-MainWidget 构造函数中的当前初始化顺序如下：
+当前窗口初始化顺序如下：
 
 1. 设置窗口标题与窗口图标。
-2. 创建左、中、右三个子区域并设置 objectName。
-3. 创建头像按钮与三个标签按钮。
-4. 初始化按钮与图标资源映射表。
-5. 调用 \_InitUI 完成主窗口布局和各区域初始化。
-6. 调用 \_InitSignalSlots 绑定信号槽。
+2. MainWidget 调用 \_InitMainWidget 创建主布局。
+3. MainWidget 获取 LeftWidget、MidWidget、RightWidget 三个子窗口实例并加入布局。
+4. LeftWidget 在自身构造阶段创建头像按钮和三个标签按钮。
+5. LeftWidget 初始化按钮图标资源映射、默认激活标签和信号槽。
+6. MidWidget 和 RightWidget 当前完成基础 objectName、尺寸约束和占位容器初始化。
 
-\_InitUI 的内部调用顺序为：
-
-1. \_InitMainWidget
-2. \_InitLeftWidget(ActiveTab::SessionTab)
-3. \_InitMidWidget
-4. \_InitRightWidget
-
-其中 \_InitMidWidget 和 \_InitRightWidget 当前仍为占位实现，说明项目目前处于“主窗口骨架已完成、业务区待填充”的阶段。
+当前初始化方式说明项目已经从“主窗口集中堆叠全部 UI 代码”调整为“主窗口装配 + 子窗口各自负责自身界面”的结构。
 
 ## 6. 信号槽绑定
 
