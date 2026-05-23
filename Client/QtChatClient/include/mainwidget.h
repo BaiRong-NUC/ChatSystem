@@ -31,10 +31,10 @@ class MainWidget : public QWidget
 
     // 按钮点击事件处理函数
     // - 左侧导航栏按钮点击事件处理函数
-    void _OnSessionTabClicked();                              // 会话标签按钮点击事件处理
-    void _OnFriendTabClicked();                               // 好友标签按钮点击事件处理
-    void _OnFriendRequestTabClicked();                        // 好友申请标签按钮点击事件处理
-    void _UpdateTabButtonStates(const ActiveTab &activeTab);  // 更新激活标签,和图标
+    void _OnSessionTabClicked();                        // 会话标签按钮点击事件处理
+    void _OnFriendTabClicked();                         // 好友标签按钮点击事件处理
+    void _OnFriendRequestTabClicked();                  // 好友申请标签按钮点击事件处理
+    void _SwitchTabButton(const ActiveTab &activeTab);  // 更新激活标签,和图标,和中间会话区
 
     struct TabIconInfo
     {
@@ -61,7 +61,7 @@ class MainWidget : public QWidget
     QPushButton *m_friendTabButton;
     // - 好友申请标签按钮
     QPushButton *m_friendRequestTabButton;
-    // - 当前激活的标签,默认是无标签,这会影响中间会话区和右侧信息区的显示内容
+    // - 当前激活的标签,默认是无标签,这会影响中间会话区
     ActiveTab m_activeTab = None;
 };
 #endif  // MAINWIDGET_H

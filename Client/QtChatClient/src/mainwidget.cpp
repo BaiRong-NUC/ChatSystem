@@ -122,8 +122,8 @@ void MainWidget::_InitLeftWidget(const ActiveTab &activeTab)
     leftLayout->addWidget(this->m_friendRequestTabButton);
     leftLayout->addStretch();
 
-    // 如果有默认激活标签,则更新按钮状态和当前激活标签
-    if (activeTab != None) { this->_UpdateTabButtonStates(activeTab); }
+    // 如果有默认激活标签,则更新按钮状态和当前激活标签和中间会话区显示内容
+    if (activeTab != None) { this->_SwitchTabButton(activeTab); }
 }
 
 void MainWidget::_InitMidWidget() {}
@@ -142,7 +142,7 @@ void MainWidget::_InitUI()
     this->_InitRightWidget();
 }
 
-void MainWidget::_UpdateTabButtonStates(const ActiveTab &activeTab)
+void MainWidget::_SwitchTabButton(const ActiveTab &activeTab)
 {
     if (this->m_activeTab == activeTab) { return; }
     this->m_activeTab = activeTab;
@@ -156,6 +156,8 @@ void MainWidget::_UpdateTabButtonStates(const ActiveTab &activeTab)
     setButtonIcon(this->m_sessionTabButton, activeTab == SessionTab);
     setButtonIcon(this->m_friendTabButton, activeTab == FriendTab);
     setButtonIcon(this->m_friendRequestTabButton, activeTab == FriendRequestTab);
+
+    // TODO: 切换到会话标签,更新中间会话区显示内容
 }
 
 void MainWidget::_OnSessionTabClicked()
@@ -163,7 +165,7 @@ void MainWidget::_OnSessionTabClicked()
     if (this->m_activeTab == SessionTab) { return; }
 
     // 更新按钮图标状态和当前激活标签
-    this->_UpdateTabButtonStates(SessionTab);
+    this->_SwitchTabButton(SessionTab);
 }
 
 void MainWidget::_OnFriendTabClicked()
@@ -171,7 +173,7 @@ void MainWidget::_OnFriendTabClicked()
     if (this->m_activeTab == FriendTab) { return; }
 
     // 更新按钮图标状态和当前激活标签
-    this->_UpdateTabButtonStates(FriendTab);
+    this->_SwitchTabButton(FriendTab);
 }
 
 void MainWidget::_OnFriendRequestTabClicked()
@@ -179,7 +181,7 @@ void MainWidget::_OnFriendRequestTabClicked()
     if (this->m_activeTab == FriendRequestTab) { return; }
 
     // 更新按钮图标状态和当前激活标签
-    this->_UpdateTabButtonStates(FriendRequestTab);
+    this->_SwitchTabButton(FriendRequestTab);
 }
 void MainWidget::_InitSignalSlots()
 {
