@@ -2,7 +2,11 @@
 
 MainWidget *MainWidget::s_instance = nullptr;  // 初始化单例实例指针
 
-MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {}
+MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
+{
+    this->setWindowTitle("Chat Client");
+    // this->setWindowIcon();
+}
 
 MainWidget::~MainWidget() = default;
 
@@ -12,7 +16,7 @@ MainWidget *MainWidget::GetInstance()
     if (MainWidget::s_instance == nullptr)
     {
         // 默认桌面为父窗口
-        MainWidget::s_instance = new MainWidget();
+        MainWidget::s_instance = new MainWidget(nullptr);
     }
     return MainWidget::s_instance;
 }

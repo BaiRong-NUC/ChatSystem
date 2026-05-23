@@ -16,3 +16,4 @@
 
 // mainwidget.h
 #include <QWidget>
+#include <QPushButton>
