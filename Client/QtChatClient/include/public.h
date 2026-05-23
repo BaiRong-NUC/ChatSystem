@@ -18,3 +18,4 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QHBoxLayout>  // 水平布局
+#include <QVBoxLayout>  // 垂直布局

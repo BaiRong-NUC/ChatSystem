@@ -6,9 +6,20 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
     this->setWindowTitle("Qt Chat Client");
     this->setWindowIcon(QIcon(":/images/logo.png"));
+
+    // 初始化窗口资源
+    // - 子窗口
     this->m_leftWidget = new QWidget(this);
     this->m_midWidget = new QWidget(this);
     this->m_rightWidget = new QWidget(this);
+    this->m_leftWidget->setObjectName("leftWidget");
+    this->m_midWidget->setObjectName("midWidget");
+    this->m_rightWidget->setObjectName("rightWidget");
+    // - 按钮
+    this->m_avatarButton = new QPushButton(this);
+    this->m_sessionTabButton = new QPushButton(this);
+    this->m_friendTabButton = new QPushButton(this);
+    this->m_friendRequestTabButton = new QPushButton(this);
 
     // 初始化UI界面
     this->_InitUI();
@@ -45,10 +56,11 @@ void MainWidget::_InitMainWidget()
     mainLayout->setContentsMargins(0, 0, 0, 0);  // 设置布局边距为0,让子窗口占满整个主窗口
     mainLayout->setSpacing(0);                   // 设置布局间距为0,让子窗口紧密排列在一起
 
-    // 设置窗口颜色
-    this->m_leftWidget->setStyleSheet("background-color: #000000;");
-    this->m_midWidget->setStyleSheet("background-color: #949ea9;");
-    this->m_rightWidget->setStyleSheet("background-color: #ecf0f1;");
+    // 将背景色限定到三栏容器本身,避免样式级联影响左侧按钮图标显示
+    this->setStyleSheet(
+        "QWidget#leftWidget { background-color: #000000; }"
+        "QWidget#midWidget { background-color: #949ea9; }"
+        "QWidget#rightWidget { background-color: #ecf0f1; }");
     mainLayout->addWidget(this->m_leftWidget);
     mainLayout->addWidget(this->m_midWidget);
     mainLayout->addWidget(this->m_rightWidget, 1);
@@ -56,7 +68,39 @@ void MainWidget::_InitMainWidget()
     this->resize(800, 700);
 }
 
-void MainWidget::_InitLeftWidget() {}
+void MainWidget::_InitLeftWidget()
+{
+    QVBoxLayout *leftLayout = new QVBoxLayout(this->m_leftWidget);
+    leftLayout->setSpacing(0);
+    // 创建按钮
+    if (this->m_avatarButton == nullptr || this->m_sessionTabButton == nullptr || this->m_friendTabButton == nullptr ||
+        this->m_friendRequestTabButton == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "主窗口初始化失败:左侧导航栏按钮指针为nullptr");
+        exit(-1);
+    }
+    auto initNavButton = [](QPushButton *button, const QString &iconPath)
+    {
+        button->setFixedSize(45, 45);
+        button->setIconSize(QSize(45, 45));
+        button->setIcon(QIcon(iconPath));
+        button->setFlat(true);
+    };
+
+    // 头像
+    initNavButton(this->m_avatarButton, ":/images/defaultAvatar.png");
+    // 会话
+    initNavButton(this->m_sessionTabButton, ":/images/session_active.png");
+    // 好友
+    initNavButton(this->m_friendTabButton, ":/images/friend_inactive.png");
+    // 好友申请
+    initNavButton(this->m_friendRequestTabButton, ":/images/apply_inactive.png");
+
+    leftLayout->addWidget(this->m_avatarButton, 1, Qt::AlignTop | Qt::AlignHCenter);
+    leftLayout->addWidget(this->m_sessionTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
+    leftLayout->addWidget(this->m_friendTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
+    leftLayout->addWidget(this->m_friendRequestTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
+}
 
 void MainWidget::_InitMidWidget() {}
 
