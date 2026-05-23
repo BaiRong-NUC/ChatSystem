@@ -21,6 +21,10 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     this->m_sessionTabButton = new QPushButton(this);
     this->m_friendTabButton = new QPushButton(this);
     this->m_friendRequestTabButton = new QPushButton(this);
+    this->m_addFriendButton = new QPushButton(this);
+
+    // - 输入框
+    this->m_searchLineEdit = new QLineEdit(this);
 
     // - Icon资源映射
     this->m_tabIconInfoMap = {
@@ -28,6 +32,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
         {this->m_friendTabButton, {":/images/friend_active.png", ":/images/friend_inactive.png"}},
         {this->m_friendRequestTabButton, {":/images/apply_active.png", ":/images/apply_inactive.png"}},
     };
+    this->m_addFriendButtonIconPath = ":/images/cross.png";
 
     // 初始化UI界面
     this->_InitUI();
@@ -126,7 +131,30 @@ void MainWidget::_InitLeftWidget(const ActiveTab &activeTab)
     if (activeTab != None) { this->_SwitchTabButton(activeTab); }
 }
 
-void MainWidget::_InitMidWidget() {}
+void MainWidget::_InitMidWidget()
+{
+    QGridLayout *midLayout = new QGridLayout(this->m_midWidget);
+    midLayout->setContentsMargins(0, 31, 0, 0);
+    midLayout->setSpacing(0);
+    this->m_midWidget->setLayout(midLayout);
+
+    if (this->m_searchLineEdit == nullptr || this->m_addFriendButton == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "主窗口初始化失败:中间会话区资源指针为nullptr");
+        exit(-1);
+    }
+    this->m_searchLineEdit->setPlaceholderText("搜索");
+    this->m_searchLineEdit->setFixedHeight(30);
+    this->m_searchLineEdit->setStyleSheet(
+        "QLineEdit { background-color: #b6bdc4; border: none; border-radius: 5px; padding-left: 10px; }"
+        "QLineEdit:hover { background-color: #c8ced4; }");
+
+    this->m_addFriendButton->setFixedSize(30, 30);
+    this->m_addFriendButton->setIcon(QIcon(this->m_addFriendButtonIconPath));
+    this->m_addFriendButton->setStyleSheet(
+        "QPushButton { background-color: #b6bdc4; border: none; }"
+        "QPushButton:hover { background-color: #c8ced4; border-radius: 5px; }");
+}
 
 void MainWidget::_InitRightWidget() {}
 

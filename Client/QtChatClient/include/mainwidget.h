@@ -63,5 +63,12 @@ class MainWidget : public QWidget
     QPushButton *m_friendRequestTabButton;
     // - 当前激活的标签,默认是无标签,这会影响中间会话区
     ActiveTab m_activeTab = None;
+
+    // 中间会话区
+    // - 搜索框
+    QLineEdit *m_searchLineEdit;
+    // - 添加好友按钮
+    QPushButton *m_addFriendButton;
+    const char *m_addFriendButtonIconPath;
 };
 #endif  // MAINWIDGET_H
