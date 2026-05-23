@@ -71,7 +71,9 @@ void MainWidget::_InitMainWidget()
 void MainWidget::_InitLeftWidget()
 {
     QVBoxLayout *leftLayout = new QVBoxLayout(this->m_leftWidget);
-    leftLayout->setSpacing(0);
+    leftLayout->setContentsMargins(0, 10, 0, 10);
+    leftLayout->setSpacing(14);  // 设置按钮之间的间距为14像素
+    leftLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     // 创建按钮
     if (this->m_avatarButton == nullptr || this->m_sessionTabButton == nullptr || this->m_friendTabButton == nullptr ||
         this->m_friendRequestTabButton == nullptr)
@@ -79,27 +81,34 @@ void MainWidget::_InitLeftWidget()
         LogInfo(LogLevel::ERROR, "主窗口初始化失败:左侧导航栏按钮指针为nullptr");
         exit(-1);
     }
-    auto initNavButton = [](QPushButton *button, const QString &iconPath)
+    auto initNavButton =
+        [](QPushButton *button, const QString &iconPath, const QSize &buttonSize, const QSize &iconSize)
     {
-        button->setFixedSize(45, 45);
-        button->setIconSize(QSize(45, 45));
+        button->setFixedSize(buttonSize);
+        button->setIconSize(iconSize);
         button->setIcon(QIcon(iconPath));
         button->setFlat(true);
+        button->setCursor(Qt::PointingHandCursor);  // 鼠标悬停时显示手型光标
+        button->setStyleSheet(
+            "QPushButton { background: transparent; border: none; }"
+            "QPushButton:hover { background: rgba(255, 255, 255, 0.08); border-radius: 10px; }");
     };
 
     // 头像
-    initNavButton(this->m_avatarButton, ":/images/defaultAvatar.png");
+    initNavButton(this->m_avatarButton, ":/images/defaultAvatar.png", QSize(44, 44), QSize(36, 36));
     // 会话
-    initNavButton(this->m_sessionTabButton, ":/images/session_active.png");
+    initNavButton(this->m_sessionTabButton, ":/images/session_active.png", QSize(42, 42), QSize(30, 30));
     // 好友
-    initNavButton(this->m_friendTabButton, ":/images/friend_inactive.png");
+    initNavButton(this->m_friendTabButton, ":/images/friend_inactive.png", QSize(42, 42), QSize(30, 30));
     // 好友申请
-    initNavButton(this->m_friendRequestTabButton, ":/images/apply_inactive.png");
+    initNavButton(this->m_friendRequestTabButton, ":/images/apply_inactive.png", QSize(42, 42), QSize(30, 30));
 
-    leftLayout->addWidget(this->m_avatarButton, 1, Qt::AlignTop | Qt::AlignHCenter);
-    leftLayout->addWidget(this->m_sessionTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
-    leftLayout->addWidget(this->m_friendTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
-    leftLayout->addWidget(this->m_friendRequestTabButton, 1, Qt::AlignTop | Qt::AlignHCenter);
+    leftLayout->addWidget(this->m_avatarButton);
+    leftLayout->addSpacing(5);
+    leftLayout->addWidget(this->m_sessionTabButton);
+    leftLayout->addWidget(this->m_friendTabButton);
+    leftLayout->addWidget(this->m_friendRequestTabButton);
+    leftLayout->addStretch();
 }
 
 void MainWidget::_InitMidWidget() {}
