@@ -8,7 +8,12 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        void _InitSessionFriendArea();  // 初始化好友信息区域
+        void _InitSessionFriendArea();            // 初始化好友信息区域
+        void _SetScrollBarVisible(bool visible);  // 按悬停状态切换滚动条显示
+
+       protected:
+        bool eventFilter(QObject *watched, QEvent *event) override;
+
        public:
         ~SessionFriendArea() override;
         explicit SessionFriendArea(QWidget *parent = nullptr);

@@ -1,7 +1,43 @@
 #include <widget/midwidget/session_friend_area.h>
 
+#include <QCursor>
+#include <QEvent>
+
 using namespace ChatWidget;
 using namespace Log;
+
+namespace
+{
+    // constexpr auto 让它们在编译期成为常量字符串
+    constexpr auto kSessionFriendAreaStyle =
+        "QScrollArea#sessionFriendArea { background-color: #949ea9; border: none; }"
+        "QWidget#friendListWidget { background-color: #949ea9; }";
+
+    constexpr auto kSessionFriendVerticalScrollBarStyle =
+        "QScrollBar:vertical {"
+        " background: #949ea9;"
+        " width: 12px;"
+        " margin: 0px;"
+        " border: none;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        " background: #c3c8ce;"
+        " min-height: 20px;"
+        " border-radius: 4px;"
+        " margin: 6px 2px;"
+        "}"
+        "QScrollBar::handle:vertical:hover {"
+        " background: #d1d6db;"
+        "}"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {"
+        " height: 0px;"
+        " border: none;"
+        " background: transparent;"
+        "}"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
+        " background: transparent;"
+        "}";
+}  // namespace
 
 SessionFriendArea::SessionFriendArea(QWidget *parent) : QScrollArea(parent)
 {
@@ -21,20 +57,18 @@ void SessionFriendArea::_InitSessionFriendArea()
     // 设置背景
     this->setObjectName("sessionFriendArea");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet("QWidget#sessionFriendArea { background-color: #949ea9; border: none;}");
     this->m_friendListWidget->setObjectName("friendListWidget");
     this->m_friendListWidget->setAttribute(Qt::WA_StyledBackground, true);
-    this->m_friendListWidget->setStyleSheet("QWidget#friendListWidget { background-color: #949ea9; }");
+    this->setStyleSheet(kSessionFriendAreaStyle);
 
     // 设置滚动区域属性
     this->setWidgetResizable(true);  // 设置滚动区域可调整大小
-    // 设置滚动条样式
-    this->verticalScrollBar()->setStyleSheet(
-        "QScrollBar:vertical { background: #aeb4ba; width: 10px; margin: 0px 0px 0px 0px; }");
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->verticalScrollBar()->setStyleSheet(kSessionFriendVerticalScrollBarStyle);
+    this->_SetScrollBarVisible(false);  // 开始时隐藏滚动条,按悬停状态切换显示
 
-    // 设置水平滚动条样式
-    this->horizontalScrollBar()->setStyleSheet(
-        "QScrollBar:horizontal { background: #aeb4ba; height: 0px; margin: 0px 0px 0px 0px; }");
+    this->installEventFilter(this);  // 安装事件过滤器,监听鼠标悬停事件以切换滚动条显示
+
     this->m_friendListWidget->setFixedWidth(200);  // 设置好友列表容器的固定宽度
     this->setWidget(this->m_friendListWidget);     // 将好友列表容器设置为滚动区域的子组件
 
@@ -53,6 +87,22 @@ void SessionFriendArea::_InitSessionFriendArea()
                             QString("最后一条消息%1").arg(i + 1));
     }
 #endif
+}
+
+void SessionFriendArea::_SetScrollBarVisible(bool visible)
+{
+    this->setVerticalScrollBarPolicy(visible ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
+}
+
+bool SessionFriendArea::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == this)
+    {
+        if (event->type() == QEvent::Enter) { this->_SetScrollBarVisible(true); }
+        else if (event->type() == QEvent::Leave) { this->_SetScrollBarVisible(false); }
+    }
+
+    return QScrollArea::eventFilter(watched, event);
 }
 
 bool SessionFriendArea::ClearFriendList()

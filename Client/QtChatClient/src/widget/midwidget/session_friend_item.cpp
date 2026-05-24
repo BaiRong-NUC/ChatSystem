@@ -34,9 +34,9 @@ void SessionFriendItem::_InitSessionFriendItem(QWidget *owner, QWidget *parent, 
     // 设置背景
     this->setObjectName("sessionFriendItem");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(
-        "QWidget#sessionFriendItem { background-color: #aeb4ba; border: none; }"
-        "QWidget#sessionFriendItem:hover { background-color: #ccd1d8; border: none;}");
+    this->setStyleSheet(  // 949ea9;aeb4ba;ccd1d8
+        "QWidget#sessionFriendItem { background-color: #949ea9; border: none; }"
+        "QWidget#sessionFriendItem:hover { background-color: #aeb4ba; border: none;}");
 
     // 布局
     QGridLayout *friendItemLayout = new QGridLayout(this);
