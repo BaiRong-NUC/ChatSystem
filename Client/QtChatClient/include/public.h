@@ -24,5 +24,8 @@
 #include <QLabel>       // 标签
 #include <QScrollArea>  // 滚动区域
 #include <QScrollBar>   // 滚动条
+#include <QCursor>
+#include <QEvent>
+#include <QResizeEvent>
 
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
