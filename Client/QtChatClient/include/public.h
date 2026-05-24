@@ -21,3 +21,7 @@
 #include <QVBoxLayout>  // 垂直布局
 #include <QGridLayout>  // 网格布局
 #include <QLineEdit>    // 输入框
+
+// widget/midwidget/session_friend_area.h
+#include <QScrollArea>  // 滚动区域
+#include <QScrollBar>   // 滚动条
