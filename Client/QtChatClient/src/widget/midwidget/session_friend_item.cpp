@@ -31,14 +31,18 @@ void SessionFriendItem::_InitSessionFriendItem(QWidget *owner, QWidget *parent, 
     }
 
     this->setFixedHeight(60);  // 设置好友项的固定高度
+    // 设置背景
+    this->setObjectName("sessionFriendItem");
+    this->setAttribute(Qt::WA_StyledBackground, true);
     this->setStyleSheet(
-        "QWidget { background-color: #aeb4ba; border: none;border-radius: 5px; }"
-        "QWidget:hover { background-color: #ccd1d8; border: none;border-radius: 5px; }");
+        "QWidget#sessionFriendItem { background-color: #aeb4ba; border: none; }"
+        "QWidget#sessionFriendItem:hover { background-color: #ccd1d8; border: none;}");
 
     // 布局
     QGridLayout *friendItemLayout = new QGridLayout(this);
-    friendItemLayout->setContentsMargins(0, 0, 0, 0);
-    friendItemLayout->setSpacing(0);
+    friendItemLayout->setContentsMargins(10, 0, 0, 0);
+    friendItemLayout->setHorizontalSpacing(10);
+    friendItemLayout->setVerticalSpacing(0);
     this->setLayout(friendItemLayout);
 
     // 好友头像按钮

@@ -5,12 +5,27 @@ using namespace Log;
 
 SessionFriendArea::SessionFriendArea(QWidget *parent) : QScrollArea(parent)
 {
+    // 初始化资源
+    this->m_friendListWidget = new QWidget(this);  // 创建好友列表容器
     // 初始化窗口
     this->_InitSessionFriendArea();
 }
 
 void SessionFriendArea::_InitSessionFriendArea()
 {
+    if (this->m_friendListWidget == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "friendListWidget资源初始化失败");
+        exit(-1);
+    }
+    // 设置背景
+    this->setObjectName("sessionFriendArea");
+    this->setAttribute(Qt::WA_StyledBackground, true);
+    this->setStyleSheet("QWidget#sessionFriendArea { background-color: #949ea9; border: none;}");
+    this->m_friendListWidget->setObjectName("friendListWidget");
+    this->m_friendListWidget->setAttribute(Qt::WA_StyledBackground, true);
+    this->m_friendListWidget->setStyleSheet("QWidget#friendListWidget { background-color: #949ea9; }");
+
     // 设置滚动区域属性
     this->setWidgetResizable(true);  // 设置滚动区域可调整大小
     // 设置滚动条样式
@@ -20,7 +35,6 @@ void SessionFriendArea::_InitSessionFriendArea()
     // 设置水平滚动条样式
     this->horizontalScrollBar()->setStyleSheet(
         "QScrollBar:horizontal { background: #aeb4ba; height: 0px; margin: 0px 0px 0px 0px; }");
-    this->m_friendListWidget = new QWidget(this);  // 创建好友列表容器
     this->m_friendListWidget->setFixedWidth(200);  // 设置好友列表容器的固定宽度
     this->setWidget(this->m_friendListWidget);     // 将好友列表容器设置为滚动区域的子组件
 
