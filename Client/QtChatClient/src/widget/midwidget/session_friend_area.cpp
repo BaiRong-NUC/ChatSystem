@@ -1,6 +1,7 @@
 #include <widget/midwidget/session_friend_area.h>
 
 using namespace ChatWidget;
+using namespace Log;
 
 SessionFriendArea::SessionFriendArea(QWidget *parent) : QScrollArea(parent)
 {
@@ -31,16 +32,58 @@ void SessionFriendArea::_InitSessionFriendArea()
 
     this->m_friendListWidget->setLayout(friendListLayout);  // 将布局设置为好友列表容器的布局
 
-    // Debug
+#if DEBUG_CODE
     for (int i = 0; i < 20; ++i)
     {
-        QPushButton *friendButton = new QPushButton(QString("好友%1").arg(i + 1), this->m_friendListWidget);
-        friendButton->setFixedHeight(40);
-        friendButton->setStyleSheet(
-            "QPushButton { background-color: #aeb4ba; border: none;border-radius: 5px; }"
-            "QPushButton:hover { background-color: #ccd1d8; border: none;border-radius: 5px; }");
-        friendListLayout->addWidget(friendButton);
+        this->AddFriendItem(QIcon(":/images/defaultAvatar.png"), QString("好友%1").arg(i + 1),
+                            QString("最后一条消息%1").arg(i + 1));
     }
+#endif
+}
+
+bool SessionFriendArea::ClearFriendList()
+{
+    // 获取好友列表布局
+    QVBoxLayout *friendListLayout = qobject_cast<QVBoxLayout *>(this->m_friendListWidget->layout());
+    if (friendListLayout == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "friendListLayout资源获取失败");
+        exit(-1);
+    }
+
+    // 删除所有好友项
+    QLayoutItem *child;
+    while ((child = friendListLayout->takeAt(0)) != nullptr)
+    {
+        if (child->widget() != nullptr)
+        {
+            child->widget()->deleteLater();  // 删除好友项组件
+        }
+        delete child;  // 删除布局项
+    }
+    return true;
+}
+
+bool SessionFriendArea::AddFriendItem(const QIcon &friendIcon, const QString &friendName, const QString &lastMessage)
+{
+    // 创建好友项
+    SessionFriendItem *friendItem =
+        new SessionFriendItem(this->m_friendListWidget, this->m_friendListWidget, friendIcon, friendName, lastMessage);
+    if (friendItem == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "好友项创建失败");
+        return false;
+    }
+
+    // 将好友项添加到好友列表布局
+    QVBoxLayout *friendListLayout = qobject_cast<QVBoxLayout *>(this->m_friendListWidget->layout());
+    if (friendListLayout == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "friendListLayout资源获取失败");
+        exit(-1);
+    }
+    friendListLayout->addWidget(friendItem);  // 添加好友项到布局
+    return true;
 }
 
 SessionFriendArea::~SessionFriendArea() = default;

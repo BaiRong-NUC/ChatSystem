@@ -21,7 +21,8 @@
 #include <QVBoxLayout>  // 垂直布局
 #include <QGridLayout>  // 网格布局
 #include <QLineEdit>    // 输入框
-
-// widget/midwidget/session_friend_area.h
+#include <QLabel>       // 标签
 #include <QScrollArea>  // 滚动区域
 #include <QScrollBar>   // 滚动条
+
+#define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭

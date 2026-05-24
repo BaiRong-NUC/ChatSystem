@@ -51,10 +51,6 @@ void MidWidget::_InitMidWidget()
     this->m_addFriendButton->setStyleSheet(
         "QPushButton { background-color: #aeb4ba; border: none;border-radius: 5px; }"
         "QPushButton:hover { background-color: #ccd1d8; border: none;border-radius: 5px; }");
-
-    // 好友信息框
-    SessionFriendArea *sessionFriendArea = new SessionFriendArea(this);
-
     // 布局
     QGridLayout *midLayout = new QGridLayout(this);
     midLayout->setContentsMargins(0, 17, 0, 0);
@@ -76,8 +72,11 @@ void MidWidget::_InitMidWidget()
     midLayout->addWidget(rightPlaceholder, 0, 4);
 
     QWidget *topPlaceholder = new QWidget(this);
-    topPlaceholder->setFixedHeight(13);
-    midLayout->addWidget(topPlaceholder, 1, 0, 1, 5);     // 占位,横跨一行,占满所有列
+    topPlaceholder->setFixedHeight(5);
+    midLayout->addWidget(topPlaceholder, 1, 0, 1, 5);  // 占位,横跨一行,占满所有列
+
+    // 好友信息框
+    SessionFriendArea *sessionFriendArea = new SessionFriendArea(this);
     midLayout->addWidget(sessionFriendArea, 2, 0, 1, 5);  // 好友信息框
 }
 
