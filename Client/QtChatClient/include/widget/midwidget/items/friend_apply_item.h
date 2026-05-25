@@ -10,6 +10,9 @@ namespace ChatWidget
         Q_OBJECT
        private:
         void _InitFriendApplyItem();  // 初始化好友申请项UI
+        // 保存两个按钮窗口
+        QWidget *m_buttonContainerWidget;
+
        public:
         explicit FriendApplyItem(QWidget *owner, const QString &friendUserId, QWidget *parent = nullptr,
                                  const QIcon &friendIcon = QIcon(), const QString &friendName = QString());
