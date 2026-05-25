@@ -5,7 +5,7 @@
 namespace ChatWidget
 {
     // 好友聊天会话item
-    class SessionFriendItem : public BaseItem
+    class ChatItem : public BaseItem
     {
         Q_OBJECT
        private:
@@ -13,9 +13,9 @@ namespace ChatWidget
         QString m_chatSessionId;
 
        public:
-        explicit SessionFriendItem(QWidget *owner, const QString &chatSessionId, QWidget *parent = nullptr,
+        explicit ChatItem(QWidget *owner, const QString &chatSessionId, QWidget *parent = nullptr,
                                    const QIcon &friendIcon = QIcon(), const QString &friendName = QString(),
                                    const QString &text = QString());
-        ~SessionFriendItem() override;
+        ~ChatItem() override;
     };
 }  // namespace ChatWidget

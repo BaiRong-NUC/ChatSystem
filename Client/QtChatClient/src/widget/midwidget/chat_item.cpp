@@ -3,11 +3,11 @@
 using namespace ChatWidget;
 using namespace Log;
 
-SessionFriendItem::SessionFriendItem(QWidget *owner, const QString &chatSessionId, QWidget *parent,
-                                     const QIcon &friendIcon, const QString &friendName, const QString &text)
+ChatItem::ChatItem(QWidget *owner, const QString &chatSessionId, QWidget *parent, const QIcon &friendIcon,
+                   const QString &friendName, const QString &text)
     : BaseItem(owner, parent, friendIcon, friendName, text)
 {
     this->m_chatSessionId = chatSessionId;  // 设置当前聊天会话id
 }
 
-SessionFriendItem::~SessionFriendItem() = default;
+ChatItem::~ChatItem() = default;

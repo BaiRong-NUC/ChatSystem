@@ -25,17 +25,17 @@ namespace
         " border-radius: 4px;"
         " margin: 0px 2px;"
         "}"
-        "QScrollBar#sessionFriendOverlayScrollBar::handle:vertical:hover {"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical:hover {"
         " background: #d1d6db;"
         "}"
-        "QScrollBar#sessionFriendOverlayScrollBar::add-line:vertical,"
-        "QScrollBar#sessionFriendOverlayScrollBar::sub-line:vertical {"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-line:vertical,"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-line:vertical {"
         " height: 0px;"
         " border: none;"
         " background: transparent;"
         "}"
-        "QScrollBar#sessionFriendOverlayScrollBar::add-page:vertical,"
-        "QScrollBar#sessionFriendOverlayScrollBar::sub-page:vertical {"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-page:vertical,"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-page:vertical {"
         " background: transparent;"
         "}";
 }  // namespace
@@ -183,10 +183,9 @@ bool MidSessionAreaWidget::ClearFriendList()
 
 bool MidSessionAreaWidget::AddFriendItem(const QIcon &friendIcon, const QString &friendName, const QString &lastMessage)
 {
-    // 创建好友项
-    SessionFriendItem *friendItem =
-        new SessionFriendItem(this, "", this->m_friendListWidget, friendIcon, friendName, lastMessage);
-    if (friendItem == nullptr)
+    // 创建好友聊天项
+    ChatItem *chatItem = new ChatItem(this, "", this->m_friendListWidget, friendIcon, friendName, lastMessage);
+    if (chatItem == nullptr)
     {
         LogInfo(LogLevel::ERROR, "好友项创建失败");
         return false;
@@ -199,7 +198,7 @@ bool MidSessionAreaWidget::AddFriendItem(const QIcon &friendIcon, const QString 
         LogInfo(LogLevel::ERROR, "friendListLayout资源获取失败");
         exit(-1);
     }
-    friendListLayout->addWidget(friendItem);  // 添加好友项到布局
+    friendListLayout->addWidget(chatItem);  // 添加好友项到布局
     this->_SyncOverlayScrollBarFromSource();
     return true;
 }
@@ -238,7 +237,7 @@ bool MidSessionAreaWidget::SelectFriendItem(int index)
         return false;
     }
 
-    SessionFriendItem *item = qobject_cast<SessionFriendItem *>(layoutItem->widget());
+    ChatItem *item = qobject_cast<ChatItem *>(layoutItem->widget());
     if (item != nullptr)
     {
         // 发送点击事件,触发选中逻辑
