@@ -185,7 +185,7 @@ bool MidSessionAreaWidget::AddFriendItem(const QIcon &friendIcon, const QString 
 {
     // 创建好友项
     SessionFriendItem *friendItem =
-        new SessionFriendItem(this, this->m_friendListWidget, friendIcon, friendName, lastMessage);
+        new SessionFriendItem(this, "", this->m_friendListWidget, friendIcon, friendName, lastMessage);
     if (friendItem == nullptr)
     {
         LogInfo(LogLevel::ERROR, "好友项创建失败");
