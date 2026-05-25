@@ -1,6 +1,6 @@
 #pragma once
 #include <public.h>
-#include <widget/midwidget/session_friend_item.h>
+#include <widget/midwidget/chat_item.h>
 #include <utils/log.h>
 class QResizeEvent;
 

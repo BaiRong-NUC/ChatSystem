@@ -1,4 +1,4 @@
-#include <widget/midwidget/session_friend_item.h>
+#include <widget/midwidget/chat_item.h>
 
 using namespace ChatWidget;
 using namespace Log;
