@@ -1,12 +1,14 @@
 #pragma once
 #include <public.h>
-#include <widget/midwidget/session_friend_item.h>
+#include <widget/midwidget/items/chat_item.h>
+#include <widget/midwidget/items/friend_item.h>
+#include <widget/midwidget/items/friend_apply_item.h>
 #include <utils/log.h>
 class QResizeEvent;
 
 namespace ChatWidget
 {
-    class SessionFriendArea : public QScrollArea
+    class MidSessionAreaWidget : public QScrollArea
     {
         Q_OBJECT
        private:
@@ -22,14 +24,17 @@ namespace ChatWidget
         void resizeEvent(QResizeEvent *event) override;
 
        public:
-        ~SessionFriendArea() override;
-        explicit SessionFriendArea(QWidget *parent = nullptr);
-        QWidget *m_friendListWidget;     // 好友列表容器
+        ~MidSessionAreaWidget() override;
+        explicit MidSessionAreaWidget(QWidget *parent = nullptr);
+        QWidget *m_sessionListWidget;    // 好友列表容器
         QScrollBar *m_overlayScrollBar;  // 叠放在好友列表上的竖向滚动条
 
         bool ClearFriendList();  // 清空好友列表
 
-        bool AddFriendItem(const QIcon &friendIcon, const QString &friendName,
-                           const QString &lastMessage);  // 添加好友项
+        bool AddItem(const ItemType &type, const QString &id, const QIcon &friendIcon, const QString &friendName,
+                     const QString &lastMessage);  // 添加项
+
+        // 选中特定的好友项
+        bool SelectFriendItem(int index);
     };
 }  // namespace ChatWidget
