@@ -13,10 +13,18 @@ namespace ChatWidget
         void _InitSessionFriendItem(QWidget *owner, QWidget *parent = nullptr, const QIcon &friendIcon = QIcon(),
                                     const QString &friendName = QString(), const QString &text = QString());
 
+        // 左键点击事件处理函数
+        void _HandleLeftClick();
+        // 右键点击事件处理函数
+        void _HandleRightClick();
+
        public:
         ~SessionFriendItem() override;
         explicit SessionFriendItem(QWidget *owner, QWidget *parent = nullptr, const QIcon &friendIcon = QIcon(),
                                    const QString &friendName = QString(), const QString &text = QString());
+
+        // 鼠标点击事件处理函数
+        void mousePressEvent(QMouseEvent *event) override;
 
         // frind_area区域(多态)
         QWidget *m_friendAreaWidget;  // 好友信息区域
