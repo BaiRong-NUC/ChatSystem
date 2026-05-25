@@ -87,16 +87,8 @@ void BaseItem::_InitBaseItem(QWidget *owner, QWidget *parent, const QIcon &icon,
 }
 
 // 鼠标点击事件处理函数
-void BaseItem::_HandleLeftClick()
-{
-    // 选中好友项,可以在这里添加打开聊天窗口的逻辑
-    LogInfo(LogLevel::INFO, "base item selected: " + this->m_nameLabel->text());
-}
-void BaseItem::_HandleRightClick()
-{
-    // 右键点击显示菜单,可以在这里添加显示好友操作菜单的逻辑
-    LogInfo(LogLevel::INFO, "base item right clicked: " + this->m_nameLabel->text());
-}
+void BaseItem::HandleLeftClick() {}
+void BaseItem::HandleRightClick() {}
 void BaseItem::mousePressEvent(QMouseEvent *event)
 {
     this->m_isSelected = true;
@@ -117,6 +109,14 @@ void BaseItem::mousePressEvent(QMouseEvent *event)
     }
 
     // 左键点击选中好友项,右键点击显示菜单
-    if (event->button() == Qt::LeftButton) { this->_HandleLeftClick(); }
-    else if (event->button() == Qt::RightButton) { this->_HandleRightClick(); }
+    if (event->button() == Qt::LeftButton)
+    {
+        // LogInfo(LogLevel::INFO, "left clicked: name = " + this->m_nameLabel->text());
+        this->HandleLeftClick();
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        // LogInfo(LogLevel::INFO, "right clicked: name = " + this->m_nameLabel->text());
+        this->HandleRightClick();
+    }
 }

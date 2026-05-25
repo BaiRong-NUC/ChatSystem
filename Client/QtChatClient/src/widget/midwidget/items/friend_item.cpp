@@ -11,3 +11,16 @@ FriendItem::FriendItem(QWidget *owner, const QString &friendUserId, QWidget *par
 }
 
 FriendItem::~FriendItem() = default;
+
+void FriendItem::HandleLeftClick()
+{
+    // 处理左键点击事件，例如切换到对应的聊天会话
+    LogInfo(LogLevel::INFO, "FriendItem clicked: friendUserId = " + m_friend_user_id);
+    // 这里可以添加切换聊天会话的逻辑，例如通知MidWidget切换到对应的聊天界面
+}
+
+void FriendItem::HandleRightClick()
+{
+    // 处理右键点击事件，例如显示上下文菜单
+    LogInfo(LogLevel::INFO, "FriendItem right-clicked: friendUserId = " + m_friend_user_id);
+}

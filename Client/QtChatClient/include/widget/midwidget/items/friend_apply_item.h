@@ -18,6 +18,10 @@ namespace ChatWidget
                                  const QIcon &friendIcon = QIcon(), const QString &friendName = QString());
         ~FriendApplyItem() override;
 
+        // 重写点击事件处理函数
+        void HandleLeftClick() override;
+        void HandleRightClick() override;
+
         // 申请人的用户id
         QString m_friend_user_id;
 

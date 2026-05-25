@@ -123,3 +123,16 @@ void FriendApplyItem::_InitFriendApplyItem()
         if (nameLabelWidget != nullptr) { nameLabelWidget->setAlignment(Qt::AlignCenter); }
     }
 }
+
+void FriendApplyItem::HandleLeftClick()
+{
+    // 处理左键点击事件，例如同意好友申请
+    LogInfo(LogLevel::INFO, "FriendApplyItem clicked: friendUserId = " + m_friend_user_id);
+    // 这里可以添加同意好友申请的逻辑，例如发送同意请求给服务器
+}
+
+void FriendApplyItem::HandleRightClick()
+{
+    // 处理右键点击事件，例如显示上下文菜单
+    LogInfo(LogLevel::INFO, "FriendApplyItem right-clicked: friendUserId = " + m_friend_user_id);
+}

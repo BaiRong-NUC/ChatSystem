@@ -14,8 +14,13 @@ namespace ChatWidget
 
        public:
         explicit ChatItem(QWidget *owner, const QString &chatSessionId, QWidget *parent = nullptr,
-                                   const QIcon &friendIcon = QIcon(), const QString &friendName = QString(),
-                                   const QString &text = QString());
+                          const QIcon &friendIcon = QIcon(), const QString &friendName = QString(),
+                          const QString &text = QString());
+
+        // 重写点击事件处理函数
+        void HandleLeftClick() override;
+        void HandleRightClick() override;
+
         ~ChatItem() override;
     };
 }  // namespace ChatWidget

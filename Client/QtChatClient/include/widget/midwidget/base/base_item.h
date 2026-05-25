@@ -20,15 +20,15 @@ namespace ChatWidget
         void _InitBaseItem(QWidget *owner, QWidget *parent = nullptr, const QIcon &icon = QIcon(),
                            const QString &name = QString(), const QString &text = QString());
 
-        // 左键点击事件处理函数
-        void _HandleLeftClick();
-        // 右键点击事件处理函数
-        void _HandleRightClick();
-
        public:
         ~BaseItem() override;
         explicit BaseItem(QWidget *owner, QWidget *parent = nullptr, const QIcon &icon = QIcon(),
                           const QString &name = QString(), const QString &text = QString());
+
+        // 左键点击事件处理
+        virtual void HandleLeftClick();
+        // 右键点击事件处理
+        virtual void HandleRightClick();
 
         // 鼠标点击事件处理函数
         void mousePressEvent(QMouseEvent *event) override;

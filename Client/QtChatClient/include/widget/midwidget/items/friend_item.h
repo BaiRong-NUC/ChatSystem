@@ -16,6 +16,11 @@ namespace ChatWidget
         explicit FriendItem(QWidget *owner, const QString &friendUserId, QWidget *parent = nullptr,
                             const QIcon &friendIcon = QIcon(), const QString &friendName = QString(),
                             const QString &description = QString());
+
+        // 重写点击事件处理函数
+        void HandleLeftClick() override;
+        void HandleRightClick() override;
+
         ~FriendItem() override;
     };
 }  // namespace ChatWidget
