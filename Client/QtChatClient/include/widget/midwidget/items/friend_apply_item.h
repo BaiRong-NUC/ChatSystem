@@ -9,12 +9,19 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        // 申请人的用户id
-        QString m_friend_user_id;
-
+        void _InitFriendApplyItem();  // 初始化好友申请项UI
        public:
         explicit FriendApplyItem(QWidget *owner, const QString &friendUserId, QWidget *parent = nullptr,
                                  const QIcon &friendIcon = QIcon(), const QString &friendName = QString());
         ~FriendApplyItem() override;
+
+        // 申请人的用户id
+        QString m_friend_user_id;
+
+        // 同意好友申请按钮
+        QPushButton *m_acceptButton;
+
+        // 拒绝好友申请按钮
+        QPushButton *m_rejectButton;
     };
 }  // namespace ChatWidget
