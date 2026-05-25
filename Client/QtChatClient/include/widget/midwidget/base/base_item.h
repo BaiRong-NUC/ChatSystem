@@ -3,6 +3,13 @@
 #include <utils/log.h>
 namespace ChatWidget
 {
+    enum ItemType
+    {
+        ChatItemType,        // 聊天项
+        FriendItemType,      // 好友项
+        FriendApplyItemType  // 好友申请项
+    };
+
     class BaseItem : public QWidget
     {
         // Qt的元对象系统宏，启用信号和槽机制
