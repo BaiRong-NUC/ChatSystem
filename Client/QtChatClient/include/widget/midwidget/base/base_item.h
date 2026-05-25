@@ -27,7 +27,7 @@ namespace ChatWidget
         void mousePressEvent(QMouseEvent *event) override;
 
         // midwidget_area区域(多态)
-        QWidget *m_midWidgetAreaWidget;  // midwidget信息区域
+        QWidget *m_midSessionAreaWidget;  // midwidget信息区域
 
         bool m_isSelected;  // 是否被选中
 

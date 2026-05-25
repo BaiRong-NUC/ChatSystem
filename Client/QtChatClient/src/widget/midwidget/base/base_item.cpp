@@ -26,8 +26,8 @@ BaseItem::BaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QSt
     : QWidget(parent)
 {
     // 初始化资源
-    this->m_midWidgetAreaWidget = owner;  // (item->parent(m_midWidgetListWidget)->parent(MidWidgetArea))
-    this->m_isSelected = false;           // 默认未选中
+    this->m_midSessionAreaWidget = owner;  // (item->parent(m_midWidgetListWidget)->parent(MidSessionWidgetArea))
+    this->m_isSelected = false;            // 默认未选中
     this->m_iconButton = new QPushButton(this);
     this->m_nameLabel = new QLabel(this);
     this->m_textLabel = new QLabel(this);
@@ -102,9 +102,9 @@ void BaseItem::mousePressEvent(QMouseEvent *event)
     this->m_isSelected = true;
     this->setStyleSheet(kBaseItemSelectedStyle);  // 更新样式为选中状态
     // 更新其他好友项的选中状态为未选中
-    if (this->m_midWidgetAreaWidget != nullptr)
+    if (this->m_midSessionAreaWidget != nullptr)
     {
-        QList<BaseItem *> friendItems = this->m_midWidgetAreaWidget->findChildren<BaseItem *>();
+        QList<BaseItem *> friendItems = this->m_midSessionAreaWidget->findChildren<BaseItem *>();
         for (BaseItem *item : friendItems)
         {
             if (item != this)

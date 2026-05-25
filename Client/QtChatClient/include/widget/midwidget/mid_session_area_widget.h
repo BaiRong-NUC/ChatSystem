@@ -6,7 +6,7 @@ class QResizeEvent;
 
 namespace ChatWidget
 {
-    class SessionFriendArea : public QScrollArea
+    class MidSessionAreaWidget : public QScrollArea
     {
         Q_OBJECT
        private:
@@ -22,8 +22,8 @@ namespace ChatWidget
         void resizeEvent(QResizeEvent *event) override;
 
        public:
-        ~SessionFriendArea() override;
-        explicit SessionFriendArea(QWidget *parent = nullptr);
+        ~MidSessionAreaWidget() override;
+        explicit MidSessionAreaWidget(QWidget *parent = nullptr);
         QWidget *m_friendListWidget;     // 好友列表容器
         QScrollBar *m_overlayScrollBar;  // 叠放在好友列表上的竖向滚动条
 

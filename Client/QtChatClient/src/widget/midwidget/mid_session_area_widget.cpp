@@ -1,4 +1,4 @@
-#include <widget/midwidget/session_friend_area.h>
+#include <widget/midwidget/mid_session_area_widget.h>
 
 using namespace ChatWidget;
 using namespace Log;
@@ -8,18 +8,18 @@ namespace
     constexpr int kOverlayScrollBarWidth = 12;
 
     // constexpr auto 让它们在编译期成为常量字符串
-    constexpr auto kSessionFriendAreaStyle =
-        "QScrollArea#sessionFriendArea { background-color: #949ea9; border: none; }"
+    constexpr auto kMidSessionAreaWidgetStyle =
+        "QScrollArea#midSessionAreaWidget { background-color: #949ea9; border: none; }"
         "QWidget#friendListWidget { background-color: #949ea9; }";
 
-    constexpr auto kSessionFriendOverlayScrollBarStyle =
-        "QScrollBar#sessionFriendOverlayScrollBar:vertical {"
+    constexpr auto kMidSessionAreaWidgetOverlayScrollBarStyle =
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar:vertical {"
         " background: transparent;"
         " width: 12px;"
         " margin: 4px 0px 4px 0px;"
         " border: none;"
         "}"
-        "QScrollBar#sessionFriendOverlayScrollBar::handle:vertical {"
+        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical {"
         " background: #c3c8ce;"
         " min-height: 20px;"
         " border-radius: 4px;"
@@ -40,7 +40,7 @@ namespace
         "}";
 }  // namespace
 
-SessionFriendArea::SessionFriendArea(QWidget *parent) : QScrollArea(parent)
+MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent)
 {
     // 初始化资源
     this->m_friendListWidget = new QWidget(this);                               // 创建好友列表容器
@@ -52,7 +52,7 @@ SessionFriendArea::SessionFriendArea(QWidget *parent) : QScrollArea(parent)
     this->_InitSignalSlots();
 }
 
-void SessionFriendArea::_InitSessionFriendArea()
+void MidSessionAreaWidget::_InitSessionFriendArea()
 {
     if (this->m_friendListWidget == nullptr || this->m_overlayScrollBar == nullptr)
     {
@@ -60,20 +60,20 @@ void SessionFriendArea::_InitSessionFriendArea()
         exit(-1);
     }
     // 设置背景
-    this->setObjectName("sessionFriendArea");
+    this->setObjectName("midSessionAreaWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->m_friendListWidget->setObjectName("friendListWidget");
     this->m_friendListWidget->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(kSessionFriendAreaStyle);
+    this->setStyleSheet(kMidSessionAreaWidgetStyle);
 
     // 设置滚动区域属性,隐藏默认滚动条,使用自定义的叠放滚动条
     this->setWidgetResizable(true);  // 设置滚动区域可调整大小
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    this->m_overlayScrollBar->setObjectName("sessionFriendOverlayScrollBar");
+    this->m_overlayScrollBar->setObjectName("midSessionAreaWidgetOverlayScrollBar");
     this->m_overlayScrollBar->setFixedWidth(kOverlayScrollBarWidth);
-    this->m_overlayScrollBar->setStyleSheet(kSessionFriendOverlayScrollBarStyle);
+    this->m_overlayScrollBar->setStyleSheet(kMidSessionAreaWidgetOverlayScrollBarStyle);
     this->m_overlayScrollBar->hide();
     // 将这个滚动条提升到父控件的最前面，保证它在可见时覆盖在其它控件之上。
     this->m_overlayScrollBar->raise();
@@ -103,7 +103,7 @@ void SessionFriendArea::_InitSessionFriendArea()
 #endif
 }
 
-void SessionFriendArea::_SetScrollBarVisible(bool visible)
+void MidSessionAreaWidget::_SetScrollBarVisible(bool visible)
 {
     if (this->m_overlayScrollBar == nullptr) { return; }
 
@@ -112,7 +112,7 @@ void SessionFriendArea::_SetScrollBarVisible(bool visible)
     if (visible && hasScrollableContent) { this->m_overlayScrollBar->raise(); }
 }
 
-void SessionFriendArea::_UpdateOverlayScrollBarGeometry()
+void MidSessionAreaWidget::_UpdateOverlayScrollBarGeometry()
 {
     if (this->m_overlayScrollBar == nullptr || this->viewport() == nullptr) { return; }
 
@@ -122,7 +122,7 @@ void SessionFriendArea::_UpdateOverlayScrollBarGeometry()
     this->m_overlayScrollBar->raise();
 }
 
-void SessionFriendArea::_SyncOverlayScrollBarFromSource()
+void MidSessionAreaWidget::_SyncOverlayScrollBarFromSource()
 {
     if (this->m_overlayScrollBar == nullptr) { return; }
 
@@ -137,7 +137,7 @@ void SessionFriendArea::_SyncOverlayScrollBarFromSource()
     this->_SetScrollBarVisible(this->underMouse());
 }
 
-bool SessionFriendArea::eventFilter(QObject *watched, QEvent *event)
+bool MidSessionAreaWidget::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == this)
     {
@@ -148,7 +148,7 @@ bool SessionFriendArea::eventFilter(QObject *watched, QEvent *event)
     return QScrollArea::eventFilter(watched, event);
 }
 
-void SessionFriendArea::resizeEvent(QResizeEvent *event)
+void MidSessionAreaWidget::resizeEvent(QResizeEvent *event)
 {
     QScrollArea::resizeEvent(event);
 
@@ -157,7 +157,7 @@ void SessionFriendArea::resizeEvent(QResizeEvent *event)
     this->_SyncOverlayScrollBarFromSource();
 }
 
-bool SessionFriendArea::ClearFriendList()
+bool MidSessionAreaWidget::ClearFriendList()
 {
     // 获取好友列表布局
     QVBoxLayout *friendListLayout = qobject_cast<QVBoxLayout *>(this->m_friendListWidget->layout());
@@ -181,11 +181,11 @@ bool SessionFriendArea::ClearFriendList()
     return true;
 }
 
-bool SessionFriendArea::AddFriendItem(const QIcon &friendIcon, const QString &friendName, const QString &lastMessage)
+bool MidSessionAreaWidget::AddFriendItem(const QIcon &friendIcon, const QString &friendName, const QString &lastMessage)
 {
     // 创建好友项
     SessionFriendItem *friendItem =
-        new SessionFriendItem(this->m_friendListWidget, this->m_friendListWidget, friendIcon, friendName, lastMessage);
+        new SessionFriendItem(this, this->m_friendListWidget, friendIcon, friendName, lastMessage);
     if (friendItem == nullptr)
     {
         LogInfo(LogLevel::ERROR, "好友项创建失败");
@@ -204,7 +204,7 @@ bool SessionFriendArea::AddFriendItem(const QIcon &friendIcon, const QString &fr
     return true;
 }
 
-void SessionFriendArea::_InitSignalSlots()
+void MidSessionAreaWidget::_InitSignalSlots()
 {
     // 实现了两个滚动条的双向同步
     connect(this->verticalScrollBar(), &QScrollBar::rangeChanged, this,
@@ -213,10 +213,10 @@ void SessionFriendArea::_InitSignalSlots()
     connect(this->m_overlayScrollBar, &QScrollBar::valueChanged, this->verticalScrollBar(), &QScrollBar::setValue);
 }
 
-SessionFriendArea::~SessionFriendArea() = default;
+MidSessionAreaWidget::~MidSessionAreaWidget() = default;
 
 // 选中特定的好友项
-bool SessionFriendArea::SelectFriendItem(int index)
+bool MidSessionAreaWidget::SelectFriendItem(int index)
 {
     QVBoxLayout *friendListLayout = qobject_cast<QVBoxLayout *>(this->m_friendListWidget->layout());
     if (friendListLayout == nullptr)
