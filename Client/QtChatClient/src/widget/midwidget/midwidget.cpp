@@ -78,6 +78,10 @@ void MidWidget::_InitMidWidget()
     // 好友信息框
     SessionFriendArea *sessionFriendArea = new SessionFriendArea(this);
     midLayout->addWidget(sessionFriendArea, 2, 0, 1, 5);  // 好友信息框
+
+#if DEBUG_CODE
+    sessionFriendArea->SelectFriendItem(0);
+#endif
 }
 
 void MidWidget::_InitSignalSlots() {}

@@ -214,3 +214,37 @@ void SessionFriendArea::_InitSignalSlots()
 }
 
 SessionFriendArea::~SessionFriendArea() = default;
+
+// 选中特定的好友项
+bool SessionFriendArea::SelectFriendItem(int index)
+{
+    QVBoxLayout *friendListLayout = qobject_cast<QVBoxLayout *>(this->m_friendListWidget->layout());
+    if (friendListLayout == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "friendListLayout资源获取失败");
+        exit(-1);
+    }
+
+    int itemCount = friendListLayout->count();
+    if (index < 0 || index >= itemCount)
+    {
+        LogInfo(LogLevel::WARNING, "选中好友项索引越界: " + QString::number(index));
+        return false;
+    }
+    QLayoutItem *layoutItem = friendListLayout->itemAt(index);
+    if (layoutItem == nullptr || layoutItem->widget() == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "选中好友项资源获取失败");
+        return false;
+    }
+
+    SessionFriendItem *item = qobject_cast<SessionFriendItem *>(layoutItem->widget());
+    if (item != nullptr)
+    {
+        // 发送点击事件,触发选中逻辑
+        QMouseEvent clickEvent(QEvent::MouseButtonPress, QPointF(1, 1), QPointF(1, 1), QPointF(1, 1), Qt::LeftButton,
+                               Qt::LeftButton, Qt::NoModifier);
+        QCoreApplication::sendEvent(item, &clickEvent);
+    }
+    return true;
+}

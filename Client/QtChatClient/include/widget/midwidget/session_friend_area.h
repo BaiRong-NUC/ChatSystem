@@ -31,5 +31,8 @@ namespace ChatWidget
 
         bool AddFriendItem(const QIcon &friendIcon, const QString &friendName,
                            const QString &lastMessage);  // 添加好友项
+
+        // 选中特定的好友项
+        bool SelectFriendItem(int index);
     };
 }  // namespace ChatWidget
