@@ -11,7 +11,7 @@ namespace
         " color: white;"
         " border: none;"
         " border-radius: 10px;"
-        " font-size: 16px;"
+        " font-size: 14.5px;"
         " font-weight: 600;"
         " padding: 0 12px;"
         "}"
@@ -28,7 +28,7 @@ namespace
         " color: #3c4a59;"
         " border: 1px solid #b6bec8;"
         " border-radius: 10px;"
-        " font-size: 16px;"
+        " font-size: 14.5px;"
         " font-weight: 600;"
         " padding: 0 12px;"
         "}"
@@ -49,6 +49,7 @@ FriendApplyItem::FriendApplyItem(QWidget *owner, const QString &friendUserId, QW
     this->m_friend_user_id = friendUserId;  // 设置申请人的用户id
     this->m_acceptButton = new QPushButton("同意", this);
     this->m_rejectButton = new QPushButton("拒绝", this);
+    this->m_buttonContainerWidget = new QWidget(this);  // 创建按钮容器窗口
 
     // 初始化UI资源
     this->_InitFriendApplyItem();
@@ -58,18 +59,35 @@ FriendApplyItem::~FriendApplyItem() = default;
 
 void FriendApplyItem::_InitFriendApplyItem()
 {
-    if (this->m_acceptButton == nullptr || this->m_rejectButton == nullptr)
+    if (this->m_acceptButton == nullptr || this->m_rejectButton == nullptr || this->m_buttonContainerWidget == nullptr)
     {
-        LogInfo(LogLevel::ERROR, "acceptButton或rejectButton资源初始化失败");
+        LogInfo(LogLevel::ERROR, "friend apply item资源初始化失败");
         exit(-1);
     }
-    // 创建同意按钮
-    this->m_acceptButton->setFixedSize(78, 34);  // 设置按钮大小
-    this->m_rejectButton->setFixedSize(78, 34);  // 设置按钮大小
+    // 设置按钮样式
+    // 高度34px，宽度根据文本内容自动调整
+    this->m_acceptButton->setFixedHeight(30);
+    this->m_rejectButton->setFixedHeight(30);
+    this->m_acceptButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    this->m_rejectButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->m_acceptButton->setCursor(Qt::PointingHandCursor);
     this->m_rejectButton->setCursor(Qt::PointingHandCursor);
     this->m_acceptButton->setStyleSheet(kFriendApplyAcceptButtonStyle);
     this->m_rejectButton->setStyleSheet(kFriendApplyRejectButtonStyle);
+
+    // 布局
+    this->m_buttonContainerWidget->setFixedHeight(30);  // 设置按钮容器窗口的固定高度
+    QHBoxLayout *buttonLayout = new QHBoxLayout(this->m_buttonContainerWidget);
+    buttonLayout->setContentsMargins(0, 0, 0, 0);
+    buttonLayout->setSpacing(5);
+    buttonLayout->addWidget(this->m_acceptButton);
+    buttonLayout->addWidget(this->m_rejectButton);
+    // 右占位(防止顶到滚动条)
+    QWidget *rightPlaceholder = new QWidget(this->m_buttonContainerWidget);
+    rightPlaceholder->setFixedWidth(7);
+    rightPlaceholder->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    buttonLayout->addWidget(rightPlaceholder);
+    this->m_buttonContainerWidget->setLayout(buttonLayout);
 
     // 移除多余的文本标签
     QGridLayout *mainLayout = qobject_cast<QGridLayout *>(this->layout());
@@ -82,18 +100,26 @@ void FriendApplyItem::_InitFriendApplyItem()
     this->m_textLabel->deleteLater();  // 删除文本标签组件
     this->m_textLabel = nullptr;
 
-    mainLayout->removeWidget(this->m_nameLabel);
-    this->m_nameLabel->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(this->m_nameLabel, 0, 2, 1, 2);  // 名字跨按钮区域居中
+    // 将按钮容器添加到布局的第二行第二列
+    mainLayout->addWidget(this->m_buttonContainerWidget, 1, 2, 1, 2);
 
-    QWidget *buttonWidget = new QWidget(this);
-    QHBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget);
-    buttonLayout->setContentsMargins(0, 0, 0, 0);
-    buttonLayout->setSpacing(10);
-    buttonLayout->addWidget(this->m_acceptButton);
-    buttonLayout->addWidget(this->m_rejectButton);
-    buttonWidget->setLayout(buttonLayout);
+    // 占位,防止按钮顶到边框最下方
+    QWidget *bottomPlaceholder = new QWidget(this);
+    bottomPlaceholder->setFixedHeight(3);
+    bottomPlaceholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    mainLayout->addWidget(bottomPlaceholder, 2, 0, 1, 4);  // 占位,横跨一行,占满所有列
 
-    // 将同意和拒绝按钮添加到布局
-    mainLayout->addWidget(buttonWidget, 1, 2, 1, 2, Qt::AlignCenter);  // 第二行按钮整体居中
+    // 将名字标签文字添加居中样式
+    QGridLayout *gridLayout = qobject_cast<QGridLayout *>(this->layout());
+    if (gridLayout == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "friend apply item gridLayout资源获取失败");
+        exit(-1);
+    }
+    QLayoutItem *nameLabelItem = gridLayout->itemAtPosition(0, 2);
+    if (nameLabelItem != nullptr)
+    {
+        QLabel *nameLabelWidget = qobject_cast<QLabel *>(nameLabelItem->widget());
+        if (nameLabelWidget != nullptr) { nameLabelWidget->setAlignment(Qt::AlignCenter); }
+    }
 }
