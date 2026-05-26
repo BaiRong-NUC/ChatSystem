@@ -10,7 +10,7 @@ namespace
     // constexpr auto 让它们在编译期成为常量字符串
     constexpr auto kMidSessionAreaWidgetStyle =
         "QScrollArea#midSessionAreaWidget { background-color: #949ea9; border: none; }"
-        "QWidget#friendListWidget { background-color: #949ea9; }";
+        "QWidget#sessionListWidget { background-color: #949ea9; }";
 
     constexpr auto kMidSessionAreaWidgetOverlayScrollBarStyle =
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar:vertical {"
@@ -46,13 +46,13 @@ MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent
     this->m_sessionListWidget = new QWidget(this);                              // 创建会话列表容器
     this->m_overlayScrollBar = new QScrollBar(Qt::Vertical, this->viewport());  // 创建叠放滚动条
     // 初始化窗口
-    this->_InitSessionFriendArea();
+    this->_InitSessionArea();
 
     // 初始化信号槽连接
     this->_InitSignalSlots();
 }
 
-void MidSessionAreaWidget::_InitSessionFriendArea()
+void MidSessionAreaWidget::_InitSessionArea()
 {
     if (this->m_sessionListWidget == nullptr || this->m_overlayScrollBar == nullptr)
     {
@@ -163,7 +163,7 @@ void MidSessionAreaWidget::resizeEvent(QResizeEvent *event)
     this->_SyncOverlayScrollBarFromSource();
 }
 
-bool MidSessionAreaWidget::ClearFriendList()
+bool MidSessionAreaWidget::ClearSessionList()
 {
     // 获取会话列表布局
     QVBoxLayout *sessionListLayout = qobject_cast<QVBoxLayout *>(this->m_sessionListWidget->layout());
@@ -238,8 +238,8 @@ void MidSessionAreaWidget::_InitSignalSlots()
 
 MidSessionAreaWidget::~MidSessionAreaWidget() = default;
 
-// 选中特定的好友项
-bool MidSessionAreaWidget::SelectFriendItem(int index)
+// 选中特定的会话项
+bool MidSessionAreaWidget::SelectSessionItem(int index)
 {
     QVBoxLayout *sessionListLayout = qobject_cast<QVBoxLayout *>(this->m_sessionListWidget->layout());
     if (sessionListLayout == nullptr)
@@ -261,7 +261,7 @@ bool MidSessionAreaWidget::SelectFriendItem(int index)
         return false;
     }
 
-    ChatItem *item = qobject_cast<ChatItem *>(layoutItem->widget());
+    BaseItem *item = qobject_cast<BaseItem *>(layoutItem->widget());
     if (item != nullptr)
     {
         // 发送点击事件,触发选中逻辑

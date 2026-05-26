@@ -80,7 +80,7 @@ void MidWidget::_InitMidWidget()
     midLayout->addWidget(sessionFriendArea, 2, 0, 1, 5);  // 好友信息框
 
 #if DEBUG_CODE
-    sessionFriendArea->SelectFriendItem(0);
+    sessionFriendArea->SelectSessionItem(0);
 #endif
 }
 

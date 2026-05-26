@@ -12,7 +12,7 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        void _InitSessionFriendArea();            // 初始化好友信息区域
+        void _InitSessionArea();                  // 初始化会话区域
         void _SetScrollBarVisible(bool visible);  // 按悬停状态切换滚动条显示
         void _UpdateOverlayScrollBarGeometry();   // 更新叠放滚动条的位置和大小
         void _SyncOverlayScrollBarFromSource();   // 同步真实滚动条状态到叠放滚动条
@@ -26,15 +26,15 @@ namespace ChatWidget
        public:
         ~MidSessionAreaWidget() override;
         explicit MidSessionAreaWidget(QWidget *parent = nullptr);
-        QWidget *m_sessionListWidget;    // 好友列表容器
-        QScrollBar *m_overlayScrollBar;  // 叠放在好友列表上的竖向滚动条
+        QWidget *m_sessionListWidget;    // 会话列表容器
+        QScrollBar *m_overlayScrollBar;  // 叠放在会话列表上的竖向滚动条
 
-        bool ClearFriendList();  // 清空好友列表
+        bool ClearSessionList();  // 清空会话列表
 
         bool AddItem(const ItemType &type, const QString &id, const QIcon &friendIcon, const QString &friendName,
                      const QString &lastMessage);  // 添加项
 
-        // 选中特定的好友项
-        bool SelectFriendItem(int index);
+        // 选中特定的会话项
+        bool SelectSessionItem(int index);
     };
 }  // namespace ChatWidget
