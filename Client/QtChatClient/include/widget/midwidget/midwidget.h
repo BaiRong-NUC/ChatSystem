@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <widget/midwidget/mid_session_area_widget.h>
+#include <utils/log.h>
 namespace ChatWidget
 {
     class MidWidget : public QWidget

@@ -6,7 +6,9 @@ namespace
 {
     constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #ecf0f1; }";
 
-    constexpr auto kTitleBarStyle = "QWidget#titleBar { background-color: #bdc3c7; }";
+    constexpr auto kTitleBarStyle =
+        "QWidget#titleBar { background-color: #bdc3c7; border-bottom: 1px solid #95a5a6; border-left: 1px solid "
+        "#95a5a6; border-right: 1px solid #95a5a6; }";
 
     constexpr auto kTitleBarLabelStyle = "QLabel { font-size: 18px; font-weight: bold; color: #2c3e50; }";
 
@@ -56,6 +58,7 @@ void RightWidget::_InitRightWidget()
     QVBoxLayout *rightLayout = new QVBoxLayout(this);
     rightLayout->setContentsMargins(0, 0, 0, 0);
     rightLayout->setSpacing(0);
+    rightLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     this->setLayout(rightLayout);
 
     // 上方标题栏
@@ -67,7 +70,7 @@ void RightWidget::_InitRightWidget()
     rightLayout->addWidget(this->m_titleBar);
     // 标签有一个label和一个按钮
     QHBoxLayout *titleBarLayout = new QHBoxLayout(this->m_titleBar);
-    titleBarLayout->setContentsMargins(0, 0, 0, 0);
+    titleBarLayout->setContentsMargins(10, 0, 10, 0);
     titleBarLayout->setSpacing(0);
     // - 标签
     this->m_titleLabel->setStyleSheet(kTitleBarLabelStyle);

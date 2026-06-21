@@ -1,5 +1,6 @@
 #include <widget/midwidget/midwidget.h>
 using namespace ChatWidget;
+using namespace Log;
 
 MidWidget *MidWidget::s_instance = nullptr;  // 初始化单例实例指针
 
@@ -80,6 +81,7 @@ void MidWidget::_InitMidWidget()
     midLayout->addWidget(sessionFriendArea, 2, 0, 1, 5);  // 好友信息框
 
 #if DEBUG_CODE
+    LogInfo(LogLevel::INFO, "MidWidget::_InitMidWidget() 添加测试项");
     sessionFriendArea->SelectSessionItem(0);
 #endif
 }
