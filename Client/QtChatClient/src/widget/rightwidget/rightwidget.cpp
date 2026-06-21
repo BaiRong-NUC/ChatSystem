@@ -30,9 +30,7 @@ RightWidget *RightWidget::GetInstance(QWidget *parent)
 RightWidget::RightWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
-    this->m_titleBar = new QWidget(this);
-    this->m_titleLabel = new QLabel(this->m_titleBar);
-    this->m_titleButton = new QPushButton(this->m_titleBar);
+    this->m_titleBar = RightWidgetTitle::GetInstance(this);    // 获取标题栏单例实例
     this->m_messageWidget = MessageWidget::GetInstance(this);  // 获取聊天窗口单例实例
 
     // 初始化UI界面
@@ -43,8 +41,7 @@ RightWidget::~RightWidget() = default;
 
 void RightWidget::_InitRightWidget()
 {
-    if (this->m_titleBar == nullptr || this->m_titleLabel == nullptr || this->m_titleButton == nullptr ||
-        this->m_messageWidget == nullptr)
+    if (this->m_titleBar == nullptr || this->m_messageWidget == nullptr)
     {
         LogInfo(LogLevel::ERROR, "右侧信息区资源初始化失败");
         exit(-1);
@@ -63,31 +60,8 @@ void RightWidget::_InitRightWidget()
     rightLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     this->setLayout(rightLayout);
 
-    // 上方标题栏
-    this->m_titleBar->setFixedHeight(50);
-    this->m_titleBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    this->m_titleBar->setObjectName("titleBar");
-    this->m_titleBar->setAttribute(Qt::WA_StyledBackground, true);
-    this->m_titleBar->setStyleSheet(kTitleBarStyle);
+    // 初始化标题栏
     rightLayout->addWidget(this->m_titleBar);
-    // 标签有一个label和一个按钮
-    QHBoxLayout *titleBarLayout = new QHBoxLayout(this->m_titleBar);
-    titleBarLayout->setContentsMargins(10, 0, 10, 0);
-    titleBarLayout->setSpacing(0);
-    // - 标签
-    this->m_titleLabel->setStyleSheet(kTitleBarLabelStyle);
-
-#if DEBUG_CODE
-    this->m_titleLabel->setText("聊天信息");
-#endif
-
-    titleBarLayout->addWidget(this->m_titleLabel);
-    // - 按钮
-    this->m_titleButton->setFixedSize(30, 30);
-    this->m_titleButton->setIconSize(QSize(30, 30));
-    this->m_titleButton->setIcon(QIcon(kTitleBarButtonIconPath));
-    this->m_titleButton->setStyleSheet(kTitleBarButtonStyle);
-    titleBarLayout->addWidget(this->m_titleButton);
 
     // 初始化聊天窗口
     rightLayout->addWidget(this->m_messageWidget);

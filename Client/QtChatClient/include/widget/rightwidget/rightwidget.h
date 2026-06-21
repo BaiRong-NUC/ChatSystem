@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <utils/log.h>
+#include <widget/rightwidget/right_widget_title.h>
 #include <widget/rightwidget/message_widget.h>
 namespace ChatWidget
 {
@@ -14,11 +15,8 @@ namespace ChatWidget
        public:
         ~RightWidget() override;
         static RightWidget *GetInstance(QWidget *parent = nullptr);  // 获取单例实例的静态方法
-
-        QWidget *m_titleBar;         // 上方标题栏
-        QLabel *m_titleLabel;        // 标题标签
-        QPushButton *m_titleButton;  // 标题按钮
-
+        // 上方的标题栏
+        RightWidgetTitle *m_titleBar;
         // 中间的聊天窗口
         MessageWidget *m_messageWidget;
     };
