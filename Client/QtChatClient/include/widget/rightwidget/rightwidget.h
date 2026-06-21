@@ -3,6 +3,7 @@
 #include <utils/log.h>
 #include <widget/rightwidget/right_widget_title.h>
 #include <widget/rightwidget/message_widget.h>
+#include <widget/rightwidget/message_edit.h>
 namespace ChatWidget
 {
     class RightWidget : public QWidget
@@ -19,5 +20,7 @@ namespace ChatWidget
         RightWidgetTitle *m_titleBar;
         // 中间的聊天窗口
         MessageWidget *m_messageWidget;
+        // 下方的输入框
+        MessageEdit *m_messageEdit;
     };
 }  // namespace ChatWidget
