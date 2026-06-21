@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <utils/log.h>
+#include <widget/rightwidget/message_widget.h>
 namespace ChatWidget
 {
     class RightWidget : public QWidget
@@ -17,5 +18,8 @@ namespace ChatWidget
         QWidget *m_titleBar;         // 上方标题栏
         QLabel *m_titleLabel;        // 标题标签
         QPushButton *m_titleButton;  // 标题按钮
+
+        // 中间的聊天窗口
+        MessageWidget *m_messageWidget;
     };
 }  // namespace ChatWidget

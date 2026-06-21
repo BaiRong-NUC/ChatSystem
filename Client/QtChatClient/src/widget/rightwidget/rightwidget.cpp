@@ -33,6 +33,7 @@ RightWidget::RightWidget(QWidget *parent) : QWidget(parent)
     this->m_titleBar = new QWidget(this);
     this->m_titleLabel = new QLabel(this->m_titleBar);
     this->m_titleButton = new QPushButton(this->m_titleBar);
+    this->m_messageWidget = MessageWidget::GetInstance(this);  // 获取聊天窗口单例实例
 
     // 初始化UI界面
     this->_InitRightWidget();
@@ -42,7 +43,8 @@ RightWidget::~RightWidget() = default;
 
 void RightWidget::_InitRightWidget()
 {
-    if (this->m_titleBar == nullptr || this->m_titleLabel == nullptr || this->m_titleButton == nullptr)
+    if (this->m_titleBar == nullptr || this->m_titleLabel == nullptr || this->m_titleButton == nullptr ||
+        this->m_messageWidget == nullptr)
     {
         LogInfo(LogLevel::ERROR, "右侧信息区资源初始化失败");
         exit(-1);
@@ -74,9 +76,11 @@ void RightWidget::_InitRightWidget()
     titleBarLayout->setSpacing(0);
     // - 标签
     this->m_titleLabel->setStyleSheet(kTitleBarLabelStyle);
+
 #if DEBUG_CODE
     this->m_titleLabel->setText("聊天信息");
 #endif
+
     titleBarLayout->addWidget(this->m_titleLabel);
     // - 按钮
     this->m_titleButton->setFixedSize(30, 30);
@@ -84,4 +88,7 @@ void RightWidget::_InitRightWidget()
     this->m_titleButton->setIcon(QIcon(kTitleBarButtonIconPath));
     this->m_titleButton->setStyleSheet(kTitleBarButtonStyle);
     titleBarLayout->addWidget(this->m_titleButton);
+
+    // 初始化聊天窗口
+    rightLayout->addWidget(this->m_messageWidget);
 }
