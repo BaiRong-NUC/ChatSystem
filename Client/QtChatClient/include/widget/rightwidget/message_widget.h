@@ -14,5 +14,7 @@ namespace ChatWidget
        public:
         ~MessageWidget() override;
         static MessageWidget *GetInstance(QWidget *parent = nullptr);  // 获取单例实例
+
+        QWidget *m_container;
     };
 }  // namespace ChatWidget

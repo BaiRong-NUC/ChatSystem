@@ -6,8 +6,7 @@ using namespace Log;
 namespace
 {
     constexpr auto kTitleBarStyle =
-        "QWidget#titleBar { background-color: #bdc3c7; border-bottom: 1px solid #95a5a6; border-left: 1px solid "
-        "#95a5a6; border-right: 1px solid #95a5a6; }";
+        "QWidget#titleBar { background-color: #bdc3c7; border-bottom: 1px solid #43414147;}";
 
     constexpr auto kTitleBarLabelStyle = "QLabel { font-size: 18px; font-weight: bold; color: #2c3e50; }";
 
@@ -46,7 +45,7 @@ void RightWidgetTitle::_InitRightWidgetTitle()
         exit(-1);
     }
     // 上方标题栏
-    this->setFixedHeight(50);
+    this->setFixedHeight(58);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->setObjectName("titleBar");
     this->setAttribute(Qt::WA_StyledBackground, true);
