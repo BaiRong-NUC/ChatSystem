@@ -5,18 +5,6 @@ using namespace Log;
 namespace
 {
     constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #ecf0f1; }";
-
-    constexpr auto kTitleBarStyle =
-        "QWidget#titleBar { background-color: #bdc3c7; border-bottom: 1px solid #95a5a6; border-left: 1px solid "
-        "#95a5a6; border-right: 1px solid #95a5a6; }";
-
-    constexpr auto kTitleBarLabelStyle = "QLabel { font-size: 18px; font-weight: bold; color: #2c3e50; }";
-
-    constexpr auto kTitleBarButtonIconPath = ":/images/more.png";
-    constexpr auto kTitleBarButtonStyle =
-        "QPushButton { background-color: transparent; border: none; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #ecf0f1; border: none; }"
-        "QPushButton:pressed { background-color: #bdc3c7; border: none; }";
 }  // namespace
 
 RightWidget *RightWidget::s_instance = nullptr;  // 初始化单例实例指针
