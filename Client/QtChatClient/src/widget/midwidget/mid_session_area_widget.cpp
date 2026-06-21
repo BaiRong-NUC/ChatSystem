@@ -103,7 +103,7 @@ void MidSessionAreaWidget::_InitSessionArea()
         // this->AddItem(ChatItemType, QString("friend%1").arg(i + 1), QIcon(":/images/defaultAvatar.png"),
         //               QString("好友%1").arg(i + 1), QString("最后一条消息%1").arg(i + 1));
 
-        this->AddItem(FriendApplyItemType, QString("friend%1").arg(i + 1), QIcon(":/images/defaultAvatar.png"),
+        this->AddItem(ChatItemType, QString("friend%1").arg(i + 1), QIcon(":/images/defaultAvatar.png"),
                       QString("好友%1").arg(i + 1), QString());
     }
 #endif

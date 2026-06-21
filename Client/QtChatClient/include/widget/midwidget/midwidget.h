@@ -1,5 +1,6 @@
 #pragma once
 #include <public.h>
+#include <widget/midwidget/mid_widget_title.h>
 #include <widget/midwidget/mid_session_area_widget.h>
 #include <utils/log.h>
 namespace ChatWidget
@@ -16,11 +17,9 @@ namespace ChatWidget
        public:
         ~MidWidget() override;
         static MidWidget *GetInstance(QWidget *parent = nullptr);  // 获取单例实例的静态方法
-        // 中间会话区
-        // - 搜索框
-        QLineEdit *m_searchLineEdit;
-        // - 添加好友按钮
-        QPushButton *m_addFriendButton;
-        const char *m_addFriendButtonIconPath;
+        // 中间会话区标题
+        MidWidgetTitle *m_titleBar;
+        // 中间会话区会话列表
+        MidSessionAreaWidget *m_sessionArea;
     };
 }  // namespace ChatWidget
