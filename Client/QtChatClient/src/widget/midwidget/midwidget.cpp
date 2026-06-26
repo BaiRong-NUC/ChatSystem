@@ -28,7 +28,11 @@ MidWidget::MidWidget(QWidget *parent) : QWidget(parent)
     this->_InitSignalSlots();
 }
 
-MidWidget::~MidWidget() = default;
+MidWidget::~MidWidget()
+{
+    if (this->m_sessionArea != nullptr) { delete this->m_sessionArea; }
+    this->m_sessionArea = nullptr;
+}
 
 void MidWidget::_InitMidWidget()
 {

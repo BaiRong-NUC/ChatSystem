@@ -36,7 +36,15 @@ BaseItem::BaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QSt
     this->_InitBaseItem(owner, parent, icon, name, text);
 }
 
-BaseItem::~BaseItem() = default;
+BaseItem::~BaseItem()
+{
+    if (this->m_iconButton != nullptr) { delete this->m_iconButton; }
+    if (this->m_nameLabel != nullptr) { delete this->m_nameLabel; }
+    if (this->m_textLabel != nullptr) { delete this->m_textLabel; }
+    this->m_iconButton = nullptr;
+    this->m_nameLabel = nullptr;
+    this->m_textLabel = nullptr;
+}
 
 void BaseItem::_InitBaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QString &name,
                              const QString &text)

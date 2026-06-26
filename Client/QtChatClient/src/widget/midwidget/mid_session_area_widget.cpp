@@ -52,6 +52,14 @@ MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent
     this->_InitSignalSlots();
 }
 
+MidSessionAreaWidget::~MidSessionAreaWidget()
+{
+    if (this->m_sessionListWidget != nullptr) { delete this->m_sessionListWidget; }
+    if (this->m_overlayScrollBar != nullptr) { delete this->m_overlayScrollBar; }
+    this->m_sessionListWidget = nullptr;
+    this->m_overlayScrollBar = nullptr;
+}
+
 void MidSessionAreaWidget::_InitSessionArea()
 {
     if (this->m_sessionListWidget == nullptr || this->m_overlayScrollBar == nullptr)
@@ -235,8 +243,6 @@ void MidSessionAreaWidget::_InitSignalSlots()
     connect(this->verticalScrollBar(), &QScrollBar::valueChanged, this->m_overlayScrollBar, &QScrollBar::setValue);
     connect(this->m_overlayScrollBar, &QScrollBar::valueChanged, this->verticalScrollBar(), &QScrollBar::setValue);
 }
-
-MidSessionAreaWidget::~MidSessionAreaWidget() = default;
 
 // 选中特定的会话项
 bool MidSessionAreaWidget::SelectSessionItem(int index)

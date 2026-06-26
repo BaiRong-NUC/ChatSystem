@@ -33,7 +33,13 @@ MidWidgetTitle::MidWidgetTitle(QWidget *parent) : QWidget(parent)
     this->_InitMidWidgetTitle();
 }
 
-MidWidgetTitle::~MidWidgetTitle() = default;
+MidWidgetTitle::~MidWidgetTitle()
+{
+    if (this->m_addFriendButton != nullptr) { delete this->m_addFriendButton; }
+    if (this->m_searchLineEdit != nullptr) { delete this->m_searchLineEdit; }
+    this->m_addFriendButton = nullptr;
+    this->m_searchLineEdit = nullptr;
+}
 
 void MidWidgetTitle::_InitMidWidgetTitle()
 {

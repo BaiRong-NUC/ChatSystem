@@ -35,7 +35,13 @@ RightWidgetTitle::RightWidgetTitle(QWidget *parent) : QWidget(parent)
     this->_InitRightWidgetTitle();
 }
 
-RightWidgetTitle::~RightWidgetTitle() = default;
+RightWidgetTitle::~RightWidgetTitle()
+{
+    if (this->m_titleLabel != nullptr) { delete this->m_titleLabel; }
+    if (this->m_titleButton != nullptr) { delete this->m_titleButton; }
+    this->m_titleLabel = nullptr;
+    this->m_titleButton = nullptr;
+}
 
 void RightWidgetTitle::_InitRightWidgetTitle()
 {

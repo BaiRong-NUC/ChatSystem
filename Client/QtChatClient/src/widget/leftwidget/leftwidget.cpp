@@ -35,7 +35,17 @@ LeftWidget::LeftWidget(QWidget *parent) : QWidget(parent)
     this->_InitSignalSlots();
 }
 
-LeftWidget::~LeftWidget() = default;
+LeftWidget::~LeftWidget()
+{
+    if (this->m_avatarButton != nullptr) { delete this->m_avatarButton; }
+    if (this->m_sessionTabButton != nullptr) { delete this->m_sessionTabButton; }
+    if (this->m_friendTabButton != nullptr) { delete this->m_friendTabButton; }
+    if (this->m_friendRequestTabButton != nullptr) { delete this->m_friendRequestTabButton; }
+    this->m_avatarButton = nullptr;
+    this->m_sessionTabButton = nullptr;
+    this->m_friendTabButton = nullptr;
+    this->m_friendRequestTabButton = nullptr;
+}
 
 void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
 {

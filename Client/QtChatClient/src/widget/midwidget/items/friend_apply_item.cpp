@@ -55,7 +55,15 @@ FriendApplyItem::FriendApplyItem(QWidget *owner, const QString &friendUserId, QW
     this->_InitFriendApplyItem();
 }
 
-FriendApplyItem::~FriendApplyItem() = default;
+FriendApplyItem::~FriendApplyItem()
+{
+    if (this->m_acceptButton != nullptr) { delete this->m_acceptButton; }
+    if (this->m_rejectButton != nullptr) { delete this->m_rejectButton; }
+    if (this->m_buttonContainerWidget != nullptr) { delete this->m_buttonContainerWidget; }
+    this->m_acceptButton = nullptr;
+    this->m_rejectButton = nullptr;
+    this->m_buttonContainerWidget = nullptr;
+}
 
 void FriendApplyItem::_InitFriendApplyItem()
 {

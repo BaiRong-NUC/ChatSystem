@@ -31,6 +31,12 @@ MessageWidget::MessageWidget(QWidget *parent) : QScrollArea(parent)
     this->_InitMessageWidget();
 }
 
+MessageWidget::~MessageWidget()
+{
+    if (this->m_container != nullptr) { delete this->m_container; }
+    this->m_container = nullptr;
+}
+
 MessageWidget *MessageWidget::GetInstance(QWidget *parent)
 {
     if (s_instance == nullptr) { s_instance = new MessageWidget(parent); }
@@ -61,5 +67,3 @@ void MessageWidget::_InitMessageWidget()
 
     this->setWidget(this->m_container);
 }
-
-MessageWidget::~MessageWidget() = default;
