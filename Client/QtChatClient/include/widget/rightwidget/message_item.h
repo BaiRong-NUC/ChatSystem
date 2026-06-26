@@ -7,6 +7,8 @@ namespace ChatWidget
     class MessageItem : public QWidget
     {
         Q_OBJECT
+       private:
+        void _InitMessageItem();  // 初始化消息项UI界面
        public:
         explicit MessageItem(QWidget *parent = nullptr, Model::Message *data = nullptr, bool isLeft = true);
         ~MessageItem() override;
