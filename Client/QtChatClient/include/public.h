@@ -27,5 +27,12 @@
 #include <QCursor>
 #include <QEvent>
 #include <QResizeEvent>
+#include <QFontMetrics>  // 计算字体需要的宽度
+
+#include <QPainter>  // 绘制不规则对话框背景 TextChatMessage
+#include <QPainterPath>
 
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
+
+// ChatMessage/TextChatMessage
+#define CHAT_MESSAGE_WIDTH 0.6  // 聊天消息内容控件宽度占父元素的比例,0.6表示占父元素宽度的60%

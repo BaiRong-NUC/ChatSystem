@@ -30,8 +30,6 @@ namespace ChatWidget
     class TextChatMessage : public QWidget
     {
         Q_OBJECT
-       private:
-        void _InitTextChatMessage();  // 初始化UI
 
        public:
         explicit TextChatMessage(QString &text, bool isLeft, QFont *textFont = new QFont("微软雅黑", 16),

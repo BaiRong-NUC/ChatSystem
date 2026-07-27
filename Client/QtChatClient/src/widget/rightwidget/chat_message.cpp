@@ -58,10 +58,63 @@ void ChatMessage::_InitChatMessage()
  *
  */
 // 重写绘制事件,绘制不规则对话框背景
-void TextChatMessage::paintEvent(QPaintEvent *event) {}
+void TextChatMessage::paintEvent(QPaintEvent *event)
+{
+    QObject *parent = this->parent();
+    // 1. 获取父元素大小
+    if (!parent->isWidgetType())
+    {
+        LogInfo(LogLevel::ERROR, "TextChatMessage父元素不是QWidget类型");
+        return;
+    }
+    QWidget *parentWidget = static_cast<QWidget *>(parent);
+    int width = parentWidget->width() * (CHAT_MESSAGE_WIDTH);
 
-TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont = new QFont("微软雅黑", 16),
-                                 QWidget *parent)
+    // 2. 计算行/高
+    // 计算如果放一行放置需要多宽
+    QFontMetrics fontMetrics(*this->m_textFont);
+    int textWidth = fontMetrics.horizontalAdvance(this->m_textLabel->text());
+    // 计算行数
+    int lineCount = (textWidth / (width - 40)) + 1;  // 左右空20px边距
+    if (lineCount == 1)
+    {
+        width = textWidth + 40;  // 左右空20px边距
+    }
+    // 根据行数计算高度,每行高度为字体高度+行间距
+    int height = lineCount * (this->m_textLabel->font().pixelSize()) * 1.5 + 20;
+
+    // 3. 设置控件大小
+    QPainter painter(this);
+    QPainterPath path;
+    // 设置抗锯齿
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    // 绘制圆角矩形背景
+    if (this->m_isLeft)
+    {
+        // 左侧消息,圆角矩形背景颜色为白色
+        painter.setBrush(QColor(255, 255, 255));
+        painter.setPen(QColor(255, 255, 255));
+
+        // 相对于父位置
+        painter.drawRoundedRect(10, 0, width, height, 10, 10);
+
+        // 画三角形
+        path.moveTo(10, 15);
+        path.lineTo(0, 20);
+        path.lineTo(10, 25);
+
+        painter.drawPath(path);
+    }
+    else
+    {
+        // 右侧消息,圆角矩形背景颜色为绿色
+        painter.setBrush(QColor(0, 255, 0));
+        painter.setPen(QColor(0, 255, 0));
+        painter.drawRoundedRect(0, 0, width, height, 10, 10);
+    }
+}
+
+TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont, QWidget *parent)
     : QWidget(parent), m_isLeft(isLeft), m_textFont(textFont)
 {
     // 资源初始化
@@ -71,12 +124,12 @@ TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont = n
     this->m_textLabel->setWordWrap(true);  // 设置文本自动换行
     this->m_textLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     this->m_textLabel->setStyleSheet(kTextLabelStyle);
-
-    // 初始化不规则对话框UI
-    this->_InitTextChatMessage();
 }
 
-// 初始化不规则对话框UI,适配文字长度
-void TextChatMessage::_InitTextChatMessage() {}
-
 void ChatMessage::_MakeTextMessage() {}
+
+void ChatMessage::_MakeImageMessage() {}
+
+void ChatMessage::_MakeFileMessage() {}
+
+void ChatMessage::_MakeSpeechMessage() {}
