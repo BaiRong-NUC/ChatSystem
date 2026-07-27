@@ -126,6 +126,14 @@ TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont, QW
     this->m_textLabel->setStyleSheet(kTextLabelStyle);
 }
 
+TextChatMessage::~TextChatMessage()
+{
+    if (this->m_textFont != nullptr) { delete this->m_textFont; }
+    if (this->m_textLabel != nullptr) { delete this->m_textLabel; }
+    this->m_textFont = nullptr;
+    this->m_textLabel = nullptr;
+}
+
 void ChatMessage::_MakeTextMessage() {}
 
 void ChatMessage::_MakeImageMessage() {}
