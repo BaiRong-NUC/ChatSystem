@@ -24,6 +24,7 @@ namespace ChatWidget
         bool m_isLeft;                // 是否是左侧消息,左侧消息和右侧消息不同
         QPushButton *m_avatarButton;  // 消息发送者头像按钮
         QLabel *m_timestamp;          // 消息发送的时间
+        QLabel *m_username;           // 消息发送者的用户名
         ChatMessage *m_chatMessage;   // 消息内容控件,根据消息类型创建不同的消息内容控件
     };
 }  // namespace ChatWidget
