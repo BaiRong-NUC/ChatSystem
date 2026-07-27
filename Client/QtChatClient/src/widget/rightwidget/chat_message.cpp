@@ -6,7 +6,7 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kTextLabelStyle = "QLabel { color: #2c3e50; font-size: 14px; }";
+    constexpr auto kTextLabelStyle = "QLabel { color: #2c3e50; line-height: 1.5; }";
 }
 
 ChatMessage::ChatMessage(Model::Message *message, QWidget *parent) : QWidget(parent), m_message(message)
@@ -51,8 +51,15 @@ void ChatMessage::_InitChatMessage()
 }
 
 /**
- * 初始化文本类型消息
+ *
+ *
+ *              一. 初始化文本类型消息
+ *
+ *
  */
+// 重写绘制事件,绘制不规则对话框背景
+void TextChatMessage::paintEvent(QPaintEvent *event) {}
+
 TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont = new QFont("微软雅黑", 16),
                                  QWidget *parent)
     : QWidget(parent), m_isLeft(isLeft), m_textFont(textFont)
@@ -64,16 +71,12 @@ TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont = n
     this->m_textLabel->setWordWrap(true);  // 设置文本自动换行
     this->m_textLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     this->m_textLabel->setStyleSheet(kTextLabelStyle);
+
+    // 初始化不规则对话框UI
+    this->_InitTextChatMessage();
 }
 
-void ChatMessage::_MakeTextMessage()
-{
-    // 创建文本消息内容控件
-    QLabel *textLabel = new QLabel(this);
-    textLabel->setText(this->m_message->m_content);
-    textLabel->setWordWrap(true);
-    textLabel->setStyleSheet(kTextLabelStyle);
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(textLabel);
-    this->setLayout(layout);
-}
+// 初始化不规则对话框UI,适配文字长度
+void TextChatMessage::_InitTextChatMessage() {}
+
+void ChatMessage::_MakeTextMessage() {}

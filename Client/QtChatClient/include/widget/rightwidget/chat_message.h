@@ -40,5 +40,8 @@ namespace ChatWidget
         QFont *m_textFont = nullptr;    // 文本消息字体
         QLabel *m_textLabel = nullptr;  // 文本消息内容控件
         bool m_isLeft = true;           // 是否是左侧消息,左侧消息和右侧消息不同
+
+        // 控件显示时,重写绘制事件,绘制不规则对话框背景
+        void paintEvent(QPaintEvent *event) override;
     };
 }  // namespace ChatWidget
