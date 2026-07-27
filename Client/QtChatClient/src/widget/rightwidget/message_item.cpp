@@ -9,7 +9,7 @@ namespace
         "QPushButton { background-color: transparent; border: none; border-radius: 20px; }"
         "QPushButton:hover { background-color: #ecf0f1; border: none; border-radius: 20px; }"
         "QPushButton:pressed { background-color: #bdc3c7; border: none; border-radius: 20px; }";
-    constexpr auto kTimestampLabelStyle = "QLabel#timestampLabel { color: #7f8c8d; font-size: 12px; }";
+    constexpr auto kTimestampUserLabelStyle = "QLabel#timestampUserLabel { color: #7f8c8d; font-size: 12px; }";
 }  // namespace
 
 MessageItem::MessageItem(QWidget *parent, Model::Message *data, bool isLeft) : QWidget(parent), m_isLeft(isLeft)
@@ -17,7 +17,6 @@ MessageItem::MessageItem(QWidget *parent, Model::Message *data, bool isLeft) : Q
     // 资源初始化
     this->m_avatarButton = new QPushButton(this);  // 头像
     this->m_timestamp = new QLabel(this);          // 时间
-    this->m_contentWidget = new QWidget(this);     // 消息内容控件
     this->m_chatMessage = new ChatMessage(data, this);  // 消息内容控件,根据消息类型创建不同的消息内容控件
 
     // 初始化UI界面
@@ -28,11 +27,9 @@ MessageItem::~MessageItem()
 {
     if (this->m_avatarButton != nullptr) { delete this->m_avatarButton; }
     if (this->m_timestamp != nullptr) { delete this->m_timestamp; }
-    if (this->m_contentWidget != nullptr) { delete this->m_contentWidget; }
     if (this->m_chatMessage != nullptr) { delete this->m_chatMessage; }
     this->m_avatarButton = nullptr;
     this->m_timestamp = nullptr;
-    this->m_contentWidget = nullptr;
     this->m_chatMessage = nullptr;
 }
 
@@ -45,7 +42,7 @@ MessageItem *MessageItem::CreateMessageItem(QWidget *parent, Model::Message *dat
 
 void MessageItem::_InitMessageItem()
 {
-    if (this->m_avatarButton == nullptr || this->m_chatMessage == nullptr || this->m_contentWidget == nullptr)
+    if (this->m_avatarButton == nullptr || this->m_chatMessage == nullptr)
     {
         LogInfo(LogLevel::ERROR, "消息项资源初始化失败");
         exit(-1);
@@ -70,17 +67,20 @@ void MessageItem::_InitMessageItem()
     if (this->m_isLeft) { layout->addWidget(this->m_avatarButton, 0, 0, 2, 1, Qt::AlignTop | Qt::AlignLeft); }
     else { layout->addWidget(this->m_avatarButton, 0, 1, 2, 1, Qt::AlignTop | Qt::AlignRight); }
 
-    // 设置时间标签样式
-    this->m_timestamp->setText(this->m_chatMessage->m_message->m_timestamp);
+    // 设置名字和时间标签样式
+    this->m_timestamp->setText(this->m_chatMessage->m_message->m_sender.m_userName + "|" +
+                               this->m_chatMessage->m_message->m_timestamp);
     this->m_timestamp->setAlignment(Qt::AlignBottom);
-    this->m_timestamp->setObjectName("timestampLabel");
-    this->m_timestamp->setStyleSheet(kTimestampLabelStyle);
+    this->m_timestamp->setObjectName("timestampUserLabel");
+    this->m_timestamp->setStyleSheet(kTimestampUserLabelStyle);
 
     // 根据消息左右设置布局
     if (this->m_isLeft) { layout->addWidget(this->m_timestamp, 1, 0, 1, 1, Qt::AlignBottom | Qt::AlignLeft); }
     else { layout->addWidget(this->m_timestamp, 1, 1, 1, 1, Qt::AlignBottom | Qt::AlignRight); }
 
     // 添加消息内容控件到布局中,根据消息类型分类
+    if (this->m_isLeft) { layout->addWidget(this->m_chatMessage, 0, 1, 1, 1, Qt::AlignTop | Qt::AlignLeft); }
+    else { layout->addWidget(this->m_chatMessage, 0, 0, 1, 1, Qt::AlignTop | Qt::AlignRight); }
 
     // 设置消息内容,根据消息类型分类
     this->setLayout(layout);
