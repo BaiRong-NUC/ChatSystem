@@ -7,29 +7,12 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kTitleBarStyleSheet =
-        "QWidget#titleBar { background-color: #191919; border-bottom: 1px solid #303030; }"
-        "QPushButton#windowButton { background-color: transparent; border: none; }"
-        "QPushButton#windowButton:hover { background-color: #2b2b2b; }"
-        "QPushButton#windowButton:pressed, QPushButton#windowButton:checked { background-color: #353535; }"
-        "QPushButton#closeButton { background-color: transparent; border: none; }"
-        "QPushButton#closeButton:hover { background-color: #c42b1c; }"
-        "QPushButton#closeButton:pressed { background-color: #a62316; }";
-
-    constexpr auto kTitleBarLabelStyleSheet =
-        "QLabel { font-size: 21px; font-weight: 500; color: #f0f0f0; background: transparent; }";
-
-    constexpr auto kMoreButtonStyleSheet =
-        "QPushButton { background-color: transparent; border: none; border-radius: 5px; padding: 0px; }"
-        "QPushButton:hover { background-color: #2b2b2b; }"
-        "QPushButton:pressed { background-color: #343434; }";
-
-    constexpr auto kPinIconPath = ":/icons/tabler/pin.svg";
-    constexpr auto kMinimizeIconPath = ":/icons/tabler/minus.svg";
-    constexpr auto kMaximizeIconPath = ":/icons/tabler/square.svg";
-    constexpr auto kRestoreIconPath = ":/icons/tabler/copy.svg";
-    constexpr auto kCloseIconPath = ":/icons/tabler/x.svg";
-    constexpr auto kMoreIconPath = ":/icons/tabler/dots.svg";
+    constexpr auto kPinIconPath = ":/images/icons/tabler/pin.svg";
+    constexpr auto kMinimizeIconPath = ":/images/icons/tabler/minus.svg";
+    constexpr auto kMaximizeIconPath = ":/images/icons/tabler/square.svg";
+    constexpr auto kRestoreIconPath = ":/images/icons/tabler/copy.svg";
+    constexpr auto kCloseIconPath = ":/images/icons/tabler/x.svg";
+    constexpr auto kMoreIconPath = ":/images/icons/tabler/dots.svg";
 }  // namespace
 
 RightWidgetTitle::RightWidgetTitle(QWidget *parent) : QWidget(parent)
@@ -62,7 +45,6 @@ void RightWidgetTitle::_InitRightWidgetTitle()
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->setObjectName("titleBar");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(kTitleBarStyleSheet);
 
     QVBoxLayout *titleBarLayout = new QVBoxLayout(this);
     titleBarLayout->setContentsMargins(24, 0, 0, 0);
@@ -83,6 +65,7 @@ void RightWidgetTitle::_InitRightWidgetTitle()
     for (QPushButton *button : windowButtons)
     {
         button->setObjectName("windowButton");
+        button->setProperty("variant", "icon");
         button->setFixedSize(38, 28);
         button->setIconSize(QSize(15, 15));
         button->setCursor(Qt::PointingHandCursor);
@@ -100,7 +83,7 @@ void RightWidgetTitle::_InitRightWidgetTitle()
     QHBoxLayout *contentLayout = new QHBoxLayout();
     contentLayout->setContentsMargins(0, 0, 18, 0);
     contentLayout->setSpacing(0);
-    this->m_titleLabel->setStyleSheet(kTitleBarLabelStyleSheet);
+    this->m_titleLabel->setObjectName("chatTitleLabel");
 
 #if DEBUG_CODE
     this->m_titleLabel->setText("好友1");
@@ -111,7 +94,8 @@ void RightWidgetTitle::_InitRightWidgetTitle()
     this->m_titleButton->setFixedSize(42, 36);
     this->m_titleButton->setIcon(QIcon(kMoreIconPath));
     this->m_titleButton->setIconSize(QSize(22, 22));
-    this->m_titleButton->setStyleSheet(kMoreButtonStyleSheet);
+    this->m_titleButton->setObjectName("moreButton");
+    this->m_titleButton->setProperty("variant", "icon");
     contentLayout->addWidget(this->m_titleButton);
     titleBarLayout->addLayout(contentLayout);
 }

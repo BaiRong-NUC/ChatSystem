@@ -2,11 +2,6 @@
 using namespace ChatWidget;
 using namespace Log;
 
-namespace
-{
-    constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #191919; }";
-}  // namespace
-
 RightWidget::RightWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
@@ -32,8 +27,6 @@ void RightWidget::_InitRightWidget()
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->setMinimumWidth(350);  // 设置右侧信息区最小高度,宽度,根据窗口大小自动调整
     this->setMinimumHeight(350);
-    // 背景
-    this->setStyleSheet(kRightWidgetStyle);
     // 布局
     QVBoxLayout *rightLayout = new QVBoxLayout(this);
     rightLayout->setContentsMargins(0, 0, 0, 0);

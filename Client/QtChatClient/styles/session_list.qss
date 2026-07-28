@@ -1,0 +1,112 @@
+QWidget#midWidget {
+    background-color: #232323;
+    border-right: 1px solid #303030;
+}
+
+QScrollArea#midSessionAreaWidget,
+QWidget#sessionListWidget {
+    background-color: #232323;
+    border: none;
+}
+
+QScrollBar#midSessionAreaWidgetOverlayScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 4px 0;
+    border: none;
+}
+
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical {
+    background: #505050;
+    min-height: 20px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical:hover {
+    background: #666666;
+}
+
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-line:vertical,
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-line:vertical {
+    height: 0;
+    border: none;
+    background: transparent;
+}
+
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-page:vertical,
+QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QWidget#baseItem {
+    background-color: #232323;
+    border: none;
+}
+
+QWidget#baseItem:hover {
+    background-color: #2d2d2d;
+}
+
+QWidget#baseItem[selected="true"],
+QWidget#baseItem[selected="true"]:hover {
+    background-color: #3a3a3a;
+}
+
+QPushButton#baseItemIconButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+}
+
+QLabel#baseItemNameLabel {
+    color: #ededed;
+    font-size: 15px;
+    font-weight: 500;
+    background: transparent;
+}
+
+QLabel#baseItemTextLabel {
+    color: #999999;
+    font-size: 13px;
+    background: transparent;
+}
+
+QPushButton#friendApplyAcceptButton {
+    background-color: #2f9e5b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 0 12px;
+}
+
+QPushButton#friendApplyAcceptButton:hover {
+    background-color: #38b368;
+}
+
+QPushButton#friendApplyAcceptButton:pressed {
+    background-color: #27854c;
+}
+
+QPushButton#friendApplyRejectButton {
+    background-color: #333333;
+    color: #d8d8d8;
+    border: 1px solid #484848;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 0 12px;
+}
+
+QPushButton#friendApplyRejectButton:hover {
+    background-color: #3d3d3d;
+    border-color: #5a5a5a;
+}
+
+QPushButton#friendApplyRejectButton:pressed {
+    background-color: #292929;
+}
+

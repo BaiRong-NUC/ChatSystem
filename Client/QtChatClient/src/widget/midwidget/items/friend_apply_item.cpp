@@ -3,44 +3,6 @@
 using namespace ChatWidget;
 using namespace Log;
 
-namespace
-{
-    constexpr auto kFriendApplyAcceptButtonStyle =
-        "QPushButton {"
-        " background-color: #2f9e5b;"
-        " color: white;"
-        " border: none;"
-        " border-radius: 10px;"
-        " font-size: 14.5px;"
-        " font-weight: 600;"
-        " padding: 0 12px;"
-        "}"
-        "QPushButton:hover {"
-        " background-color: #38b368;"
-        "}"
-        "QPushButton:pressed {"
-        " background-color: #27854c;"
-        "}";
-
-    constexpr auto kFriendApplyRejectButtonStyle =
-        "QPushButton {"
-        " background-color: #333333;"
-        " color: #d8d8d8;"
-        " border: 1px solid #484848;"
-        " border-radius: 10px;"
-        " font-size: 14.5px;"
-        " font-weight: 600;"
-        " padding: 0 12px;"
-        "}"
-        "QPushButton:hover {"
-        " background-color: #3d3d3d;"
-        " border-color: #5a5a5a;"
-        "}"
-        "QPushButton:pressed {"
-        " background-color: #292929;"
-        "}";
-}  // namespace
-
 FriendApplyItem::FriendApplyItem(QWidget *owner, const QString &friendUserId, QWidget *parent, const QIcon &friendIcon,
                                  const QString &friendName)
     : BaseItem(owner, parent, friendIcon, friendName)
@@ -66,15 +28,14 @@ void FriendApplyItem::_InitFriendApplyItem()
     }
     // 设置按钮样式
     // 高度34px，宽度根据文本内容自动调整
+    this->m_acceptButton->setObjectName("friendApplyAcceptButton");
+    this->m_rejectButton->setObjectName("friendApplyRejectButton");
     this->m_acceptButton->setFixedHeight(30);
     this->m_rejectButton->setFixedHeight(30);
     this->m_acceptButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->m_rejectButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->m_acceptButton->setCursor(Qt::PointingHandCursor);
     this->m_rejectButton->setCursor(Qt::PointingHandCursor);
-    this->m_acceptButton->setStyleSheet(kFriendApplyAcceptButtonStyle);
-    this->m_rejectButton->setStyleSheet(kFriendApplyRejectButtonStyle);
-
     // 布局
     this->m_buttonContainerWidget->setFixedHeight(30);  // 设置按钮容器窗口的固定高度
     QHBoxLayout *buttonLayout = new QHBoxLayout(this->m_buttonContainerWidget);

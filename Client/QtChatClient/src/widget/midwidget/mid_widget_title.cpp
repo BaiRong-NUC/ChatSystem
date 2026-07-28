@@ -6,14 +6,6 @@ using namespace Log;
 namespace
 {
     constexpr auto kSearchLineEditPlaceholderText = "搜索";          // 搜索框占位符文本
-    constexpr auto kSearchEditStyleSheet =
-        "QLineEdit { background-color: #303030; color: #e5e5e5; border: none; border-radius: 6px;"
-        " padding: 0 10px 0 38px; font-size: 14px; selection-background-color: #3b7f5b; }"
-        "QLineEdit:focus { background-color: #353535; }";
-    constexpr auto kAddFriendButtonStyleSheet =
-        "QPushButton { background-color: #303030; border: none; border-radius: 6px; }"
-        "QPushButton:hover { background-color: #3a3a3a; }"
-        "QPushButton:pressed { background-color: #424242; }";
 
     class SearchIconWidget : public QWidget
     {
@@ -73,18 +65,18 @@ void MidWidgetTitle::_InitMidWidgetTitle()
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     // 搜索框
+    this->m_searchLineEdit->setObjectName("sessionSearchEdit");
     this->m_searchLineEdit->setPlaceholderText(kSearchLineEditPlaceholderText);
     this->m_searchLineEdit->setFixedHeight(38);
-    this->m_searchLineEdit->setStyleSheet(kSearchEditStyleSheet);
     SearchIconWidget *searchIcon = new SearchIconWidget(this->m_searchLineEdit);
     searchIcon->move(10, 9);
     searchIcon->show();
 
     // 添加好友按钮
+    this->m_addFriendButton->setObjectName("addFriendButton");
     this->m_addFriendButton->setFixedSize(38, 38);
     this->m_addFriendButton->setIcon(MakePlusIcon());
     this->m_addFriendButton->setIconSize(QSize(20, 20));
-    this->m_addFriendButton->setStyleSheet(kAddFriendButtonStyleSheet);
     // 布局
     QGridLayout *midWidgetLayout = new QGridLayout(this);
     midWidgetLayout->setContentsMargins(14, 18, 14, 18);

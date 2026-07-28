@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/tabler/copy.svg</file>
-        <file>icons/tabler/dots.svg</file>
-        <file>icons/tabler/minus.svg</file>
-        <file>icons/tabler/pin.svg</file>
-        <file>icons/tabler/square.svg</file>
-        <file>icons/tabler/x.svg</file>
+        <file>images/icons/tabler/copy.svg</file>
+        <file>images/icons/tabler/dots.svg</file>
+        <file>images/icons/tabler/minus.svg</file>
+        <file>images/icons/tabler/pin.svg</file>
+        <file>images/icons/tabler/square.svg</file>
+        <file>images/icons/tabler/x.svg</file>
         <file>images/apply_active.png</file>
         <file>images/apply_inactive.png</file>
         <file>images/checked.png</file>
@@ -27,5 +27,10 @@
         <file>images/sound_active.png</file>
         <file>images/submit.png</file>
         <file>images/unchecked.png</file>
+        <file alias="styles/chat_view.qss">../styles/chat_view.qss</file>
+        <file alias="styles/common.qss">../styles/common.qss</file>
+        <file alias="styles/message_edit.qss">../styles/message_edit.qss</file>
+        <file alias="styles/navigation.qss">../styles/navigation.qss</file>
+        <file alias="styles/session_list.qss">../styles/session_list.qss</file>
     </qresource>
 </RCC>

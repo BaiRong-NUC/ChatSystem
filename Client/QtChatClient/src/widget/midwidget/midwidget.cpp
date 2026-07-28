@@ -2,12 +2,6 @@
 using namespace ChatWidget;
 using namespace Log;
 
-namespace
-{
-    constexpr auto kMidWidgetStyle =
-        "QWidget#midWidget { background-color: #232323; border-right: 1px solid #303030; }";
-}  // namespace
-
 MidWidget::MidWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化窗口资源
@@ -35,7 +29,6 @@ void MidWidget::_InitMidWidget()
     this->setObjectName("midWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->setFixedWidth(270);
-    this->setStyleSheet(kMidWidgetStyle);
 
     // 标题栏和会话列表横向铺满中栏，避免滚动区按sizeHint居中产生大块左右留白。
     QVBoxLayout *midLayout = new QVBoxLayout(this);

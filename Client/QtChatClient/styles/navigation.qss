@@ -1,0 +1,42 @@
+QWidget#leftWidget {
+    background-color: #171717;
+    border-right: 1px solid #202020;
+}
+
+QPushButton#navigationButton:hover {
+    background: #282828;
+    border-radius: 6px;
+}
+
+QPushButton#navigationButton:pressed {
+    background: #303030;
+    border-radius: 6px;
+}
+
+QLineEdit#sessionSearchEdit {
+    background-color: #303030;
+    color: #e5e5e5;
+    border: none;
+    border-radius: 6px;
+    padding: 0 10px 0 38px;
+    font-size: 14px;
+    selection-background-color: #3b7f5b;
+}
+
+QLineEdit#sessionSearchEdit:focus {
+    background-color: #353535;
+}
+
+QPushButton#addFriendButton {
+    background-color: #303030;
+    border: none;
+    border-radius: 6px;
+}
+
+QPushButton#addFriendButton:hover {
+    background-color: #3a3a3a;
+}
+
+QPushButton#addFriendButton:pressed {
+    background-color: #424242;
+}

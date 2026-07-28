@@ -1,0 +1,111 @@
+QWidget#rightWidget,
+QScrollArea#messageWidget,
+QWidget#messageContainer {
+    background-color: #191919;
+}
+
+QScrollArea#messageWidget {
+    border: none;
+}
+
+QWidget#titleBar {
+    background-color: #191919;
+    border-bottom: 1px solid #303030;
+}
+
+QPushButton#windowButton:hover {
+    background-color: #2b2b2b;
+}
+
+QPushButton#windowButton:pressed,
+QPushButton#windowButton:checked {
+    background-color: #353535;
+}
+
+QPushButton#closeButton:hover {
+    background-color: #c42b1c;
+}
+
+QPushButton#closeButton:pressed {
+    background-color: #a62316;
+}
+
+QLabel#chatTitleLabel {
+    font-size: 21px;
+    font-weight: 500;
+    color: #f0f0f0;
+    background: transparent;
+}
+
+QPushButton#moreButton {
+    border-radius: 5px;
+}
+
+QPushButton#moreButton:hover {
+    background-color: #2b2b2b;
+}
+
+QPushButton#moreButton:pressed {
+    background-color: #343434;
+}
+
+QScrollArea#messageWidget QScrollBar:horizontal {
+    height: 0;
+}
+
+QScrollArea#messageWidget QScrollBar:vertical {
+    background-color: #191919;
+    width: 8px;
+    margin: 0;
+}
+
+QScrollArea#messageWidget QScrollBar::handle:vertical {
+    background-color: #4a4a4a;
+    border-radius: 4px;
+    min-height: 24px;
+}
+
+QScrollArea#messageWidget QScrollBar::add-line:vertical,
+QScrollArea#messageWidget QScrollBar::sub-line:vertical {
+    height: 0;
+}
+
+QScrollArea#messageWidget QScrollBar::add-page:vertical,
+QScrollArea#messageWidget QScrollBar::sub-page:vertical {
+    background-color: #191919;
+}
+
+QPushButton#messageAvatarButton {
+    border-radius: 6px;
+}
+
+QPushButton#messageAvatarButton:hover {
+    background-color: #2a2a2a;
+}
+
+QPushButton#messageAvatarButton:pressed {
+    background-color: #333333;
+}
+
+QLabel#usernameLabel {
+    color: #e4e5e6;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QLabel#timestampLabel {
+    color: #8b8b8b;
+    font-size: 12px;
+}
+
+QLabel#messageTextLabel[side="left"] {
+    color: #f2f2f2;
+    background: transparent;
+    font-size: 12px;
+}
+
+QLabel#messageTextLabel[side="right"] {
+    color: #111111;
+    background: transparent;
+    font-size: 12px;
+}

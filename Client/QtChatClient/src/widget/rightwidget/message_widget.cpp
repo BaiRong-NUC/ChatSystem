@@ -4,19 +4,6 @@ using namespace ChatWidget;
 using namespace Log;
 using namespace Model;
 
-namespace
-{
-    constexpr auto kMessageWidgetStyle =
-        "QScrollArea#messageWidget { background-color: #191919; border: none; }"
-        "QWidget#messageContainer { background-color: #191919; }";
-
-    constexpr auto kMessageScollBarStyle =
-        "QScrollBar:vertical { background-color: #191919; width: 8px; margin: 0px; }"
-        "QScrollBar::handle:vertical { background-color: #4a4a4a; border-radius: 4px; min-height: 24px; }"
-        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
-        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #191919; }";
-}  // namespace
-
 MessageWidget::MessageWidget(QWidget *parent) : QScrollArea(parent)
 {
     // 包含的内容
@@ -32,15 +19,10 @@ void MessageWidget::_InitMessageWidget()
     // 设置属性
     this->setObjectName("messageWidget");
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    this->setStyleSheet(kMessageWidgetStyle);
     this->setWidgetResizable(true);
     // 滚动条区域
     this->m_container->setObjectName("messageContainer");
     this->m_container->setAttribute(Qt::WA_StyledBackground, true);
-
-    // 隐藏水平滚动条，设置垂直滚动条样式
-    this->horizontalScrollBar()->setStyleSheet("QScrollBar:horizontal { height: 0px; }");
-    this->verticalScrollBar()->setStyleSheet(kMessageScollBarStyle);
 
     // 布局管理器
     QVBoxLayout *messageLayout = new QVBoxLayout(this->m_container);

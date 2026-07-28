@@ -6,38 +6,6 @@ using namespace Log;
 namespace
 {
     constexpr int kOverlayScrollBarWidth = 8;
-
-    // constexpr auto 让它们在编译期成为常量字符串
-    constexpr auto kMidSessionAreaWidgetStyle =
-        "QScrollArea#midSessionAreaWidget { background-color: #232323; border: none; }"
-        "QWidget#sessionListWidget { background-color: #232323; }";
-
-    constexpr auto kMidSessionAreaWidgetOverlayScrollBarStyle =
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar:vertical {"
-        " background: transparent;"
-        " width: 8px;"
-        " margin: 4px 0px 4px 0px;"
-        " border: none;"
-        "}"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical {"
-        " background: #505050;"
-        " min-height: 20px;"
-        " border-radius: 4px;"
-        " margin: 0px 2px;"
-        "}"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical:hover {"
-        " background: #666666;"
-        "}"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-line:vertical,"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-line:vertical {"
-        " height: 0px;"
-        " border: none;"
-        " background: transparent;"
-        "}"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-page:vertical,"
-        "QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-page:vertical {"
-        " background: transparent;"
-        "}";
 }  // namespace
 
 MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent)
@@ -66,7 +34,6 @@ void MidSessionAreaWidget::_InitSessionArea()
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->m_sessionListWidget->setObjectName("sessionListWidget");
     this->m_sessionListWidget->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(kMidSessionAreaWidgetStyle);
 
     // 设置滚动区域属性,隐藏默认滚动条,使用自定义的叠放滚动条
     this->setWidgetResizable(true);  // 设置滚动区域可调整大小
@@ -75,7 +42,6 @@ void MidSessionAreaWidget::_InitSessionArea()
 
     this->m_overlayScrollBar->setObjectName("midSessionAreaWidgetOverlayScrollBar");
     this->m_overlayScrollBar->setFixedWidth(kOverlayScrollBarWidth);
-    this->m_overlayScrollBar->setStyleSheet(kMidSessionAreaWidgetOverlayScrollBarStyle);
     this->m_overlayScrollBar->hide();
     // 将这个滚动条提升到父控件的最前面，保证它在可见时覆盖在其它控件之上。
     this->m_overlayScrollBar->raise();

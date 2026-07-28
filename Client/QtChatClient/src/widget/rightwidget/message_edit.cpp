@@ -5,27 +5,6 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kMessageEditPanelStyleSheet =
-        "QWidget#messageEditPanel { background-color: #191919; border-top: 1px solid #303030; }"
-        "QPushButton#toolButton { background-color: transparent; border: none; border-radius: 4px; }"
-        "QPushButton#toolButton:hover { background-color: #2b2b2b; }"
-        "QPushButton#toolButton:pressed { background-color: #343434; }"
-        "QPushButton#sendButton { color: #777777; background-color: #292929; border: none;"
-        " border-radius: 5px; font-size: 13px; padding: 0 18px; }"
-        "QPushButton#sendButton:hover { color: #d8d8d8; background-color: #333333; }";
-
-    constexpr auto kPlainMessageTextEditStyleSheet =
-        "QPlainTextEdit { color: #eeeeee; background-color: #191919; border: none; font-size: 14px;"
-        " selection-background-color: #3b7f5b; padding: 0px; }"
-        "QPlainTextEdit QScrollBar:vertical { background: transparent; width: 8px; margin: 0px; }"
-        "QPlainTextEdit QScrollBar::handle:vertical { background-color: #4a4a4a; border-radius: 4px;"
-        " min-height: 24px; }"
-        "QPlainTextEdit QScrollBar::handle:vertical:hover { background-color: #5a5a5a; }"
-        "QPlainTextEdit QScrollBar::add-line:vertical,"
-        "QPlainTextEdit QScrollBar::sub-line:vertical { width: 0px; height: 0px; }"
-        "QPlainTextEdit QScrollBar::add-page:vertical,"
-        "QPlainTextEdit QScrollBar::sub-page:vertical { background: transparent; }";
-
     constexpr auto kSendImageButtonIconPath = ":/images/image.png";
     constexpr auto kSendFileButtonIconPath = ":/images/file.png";
     constexpr auto kSendSpeechButtonIconPath = ":/images/sound.png";
@@ -63,7 +42,6 @@ void MessageEdit::_InitMessageEdit()
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->setFixedHeight(180);
-    this->setStyleSheet(kMessageEditPanelStyleSheet);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(18, 10, 18, 12);
@@ -76,6 +54,7 @@ void MessageEdit::_InitMessageEdit()
     auto initToolButton = [toolLayout](QPushButton *button, const char *iconPath)
     {
         button->setObjectName("toolButton");
+        button->setProperty("variant", "icon");
         button->setFixedSize(34, 30);
         button->setIcon(MakeTintedIcon(iconPath, QColor("#c8c8c8"), QSize(20, 20)));
         button->setIconSize(QSize(20, 20));
@@ -91,8 +70,8 @@ void MessageEdit::_InitMessageEdit()
     toolLayout->addStretch();
     mainLayout->addLayout(toolLayout);
 
+    this->m_textEdit->setObjectName("messageTextEdit");
     this->m_textEdit->setPlaceholderText("请输入消息内容...");
-    this->m_textEdit->setStyleSheet(kPlainMessageTextEditStyleSheet);
     mainLayout->addWidget(this->m_textEdit);
 
     QHBoxLayout *sendLayout = new QHBoxLayout();

@@ -1,11 +1,5 @@
 #include <widget/mainwidget.h>
 
-namespace
-{
-    constexpr auto kMainWidgetStyleSheet =
-        "QWidget#mainWidget { background-color: #191919; border: 1px solid #303030; }";
-}  // namespace
-
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
     // 设置主窗口标题和图标
@@ -23,7 +17,6 @@ void MainWidget::_InitMainWidget()
 {
     this->setObjectName("mainWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(kMainWidgetStyleSheet);
 
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     this->setLayout(mainLayout);

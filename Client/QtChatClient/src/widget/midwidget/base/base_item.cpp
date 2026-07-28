@@ -1,23 +1,17 @@
 #include <widget/midwidget/base/base_item.h>
+#include <QStyle>
 
 using namespace ChatWidget;
 using namespace Log;
 
 namespace
 {
-    constexpr auto kBaseItemDefaultStyle =
-        "QWidget#baseItem { background-color: #232323; border: none; }"
-        "QWidget#baseItem:hover { background-color: #2d2d2d; border: none;}";
-    constexpr auto kBaseItemSelectedStyle = "QWidget#baseItem { background-color: #3a3a3a; border: none; }";
-
-    // item头像按钮样式
-    constexpr auto kBaseItemIconButtonStyle =
-        "QPushButton { background-color: transparent; border: none; border-radius: 6px; padding: 0px; }";
-    constexpr auto kBaseItemNameLabelStyle =
-        "QLabel { color: #ededed; font-size: 15px; font-weight: 500; background: transparent; }";
-    constexpr auto kBaseItemTextLabelStyle =
-        "QLabel { color: #999999; font-size: 13px; background: transparent; }";
-
+    void RefreshStyle(QWidget *widget)
+    {
+        widget->style()->unpolish(widget);
+        widget->style()->polish(widget);
+        widget->update();
+    }
 }  // namespace
 
 BaseItem::BaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QString &name, const QString &text)
@@ -47,8 +41,8 @@ void BaseItem::_InitBaseItem(const QIcon &icon, const QString &name, const QStri
     this->setFixedHeight(76);
     // 设置背景
     this->setObjectName("baseItem");
+    this->setProperty("selected", false);
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet(kBaseItemDefaultStyle);
 
     // 布局
     QGridLayout *baseItemLayout = new QGridLayout(this);
@@ -61,17 +55,15 @@ void BaseItem::_InitBaseItem(const QIcon &icon, const QString &name, const QStri
     this->m_iconButton->setFixedSize(52, 52);
     this->m_iconButton->setIconSize(QSize(52, 52));
     this->m_iconButton->setIcon(icon);
+    this->m_iconButton->setObjectName("baseItemIconButton");
     // base项名称标签
     this->m_nameLabel->setText(name);
     this->m_nameLabel->setFixedHeight(28);
+    this->m_nameLabel->setObjectName("baseItemNameLabel");
     // base项文本标签
     this->m_textLabel->setText(text);
     this->m_textLabel->setFixedHeight(26);
-
-    // 样式
-    this->m_iconButton->setStyleSheet(kBaseItemIconButtonStyle);
-    this->m_nameLabel->setStyleSheet(kBaseItemNameLabelStyle);
-    this->m_textLabel->setStyleSheet(kBaseItemTextLabelStyle);
+    this->m_textLabel->setObjectName("baseItemTextLabel");
 
     this->m_iconButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  // 设置按钮大小策略为固定
     this->m_nameLabel->setSizePolicy(QSizePolicy::Expanding,
@@ -90,7 +82,8 @@ void BaseItem::HandleRightClick() {}
 void BaseItem::mousePressEvent(QMouseEvent *event)
 {
     this->m_isSelected = true;
-    this->setStyleSheet(kBaseItemSelectedStyle);  // 更新样式为选中状态
+    this->setProperty("selected", true);
+    RefreshStyle(this);
     // 更新其他好友项的选中状态为未选中
     if (this->m_midSessionAreaWidget != nullptr)
     {
@@ -100,8 +93,8 @@ void BaseItem::mousePressEvent(QMouseEvent *event)
             if (item != this)
             {
                 item->m_isSelected = false;
-                item->setStyleSheet(kBaseItemDefaultStyle);  // 更新样式为未选中状态
-                item->update();                              // 更新其他好友项的显示状态
+                item->setProperty("selected", false);
+                RefreshStyle(item);
             }
         }
     }

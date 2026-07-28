@@ -4,14 +4,6 @@ using namespace ChatWidget;
 using namespace Model;
 using namespace Log;
 
-namespace
-{
-    constexpr auto kLeftTextLabelStyle =
-        "QLabel { color: #f2f2f2; background: transparent; font-size: 12px; }";
-    constexpr auto kRightTextLabelStyle =
-        "QLabel { color: #111111; background: transparent; font-size: 12px; }";
-}
-
 ChatMessage::ChatMessage(const Model::Message &message, bool isLeft, const QFont &textFont, QWidget *parent)
     : QWidget(parent), m_message(std::make_unique<Model::Message>(message)), m_textFont(textFont), m_isLeft(isLeft)
 {
@@ -103,7 +95,8 @@ TextChatMessage::TextChatMessage(const QString &text, bool isLeft, const QFont &
     this->m_textLabel->setFont(this->m_textFont);
     this->m_textLabel->setWordWrap(true);
     this->m_textLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    this->m_textLabel->setStyleSheet(this->m_isLeft ? kLeftTextLabelStyle : kRightTextLabelStyle);
+    this->m_textLabel->setObjectName("messageTextLabel");
+    this->m_textLabel->setProperty("side", this->m_isLeft ? "left" : "right");
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     if (this->m_isLeft)

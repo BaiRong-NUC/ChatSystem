@@ -3,16 +3,6 @@
 using namespace ChatWidget;
 using namespace Log;
 
-namespace
-{
-    constexpr auto KIconButtonStyle =
-        "QPushButton { background-color: transparent; border: none; border-radius: 6px; padding: 0px; }"
-        "QPushButton:hover { background-color: #2a2a2a; }"
-        "QPushButton:pressed { background-color: #333333; }";
-    constexpr auto kUsernameLabelStyle = "QLabel#usernameLabel { color: #e4e5e6; font-size: 14px; font-weight: bold; }";
-    constexpr auto kTimestampLabelStyle = "QLabel#timestampLabel { color: #8b8b8b; font-size: 12px; }";
-}  // namespace
-
 MessageItem::MessageItem(QWidget *parent, const Model::Message &data, bool isLeft, const QFont &textFont)
     : QWidget(parent), m_isLeft(isLeft)
 {
@@ -58,14 +48,13 @@ void MessageItem::_InitMessageItem()
     this->m_avatarButton->setIcon(avatar);
     this->m_avatarButton->setIconSize(QSize(44, 44));
     this->m_avatarButton->setFixedSize(44, 44);
-    this->m_avatarButton->setObjectName("iconButton");
-    this->m_avatarButton->setStyleSheet(KIconButtonStyle);
+    this->m_avatarButton->setObjectName("messageAvatarButton");
+    this->m_avatarButton->setProperty("variant", "icon");
 
     // 设置用户名标签样式
     this->m_username->setText(this->m_chatMessage->m_message->m_sender.m_userName);
     this->m_username->setAlignment(Qt::AlignBottom);
     this->m_username->setObjectName("usernameLabel");
-    this->m_username->setStyleSheet(kUsernameLabelStyle);
     this->m_username->hide();
     // 设置时间标签样式
     const QDateTime timestamp =
@@ -74,7 +63,6 @@ void MessageItem::_InitMessageItem()
                                                    : this->m_chatMessage->m_message->m_timestamp);
     this->m_timestamp->setAlignment(Qt::AlignCenter);
     this->m_timestamp->setObjectName("timestampLabel");
-    this->m_timestamp->setStyleSheet(kTimestampLabelStyle);
 
     // 根据消息位置(左侧或右侧)设置布局
     if (this->m_isLeft)

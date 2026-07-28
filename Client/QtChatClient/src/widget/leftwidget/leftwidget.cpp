@@ -35,7 +35,6 @@ void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
     // 设置背景
     this->setObjectName("leftWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet("QWidget#leftWidget { background-color: #171717; border-right: 1px solid #202020; }");
 
     QVBoxLayout *leftLayout = new QVBoxLayout(this);
     leftLayout->setContentsMargins(0, 18, 0, 18);
@@ -57,10 +56,8 @@ void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
         button->setIcon(QIcon(iconPath));
         button->setFlat(true);
         button->setCursor(Qt::PointingHandCursor);  // 鼠标悬停时显示手型光标
-        button->setStyleSheet(
-            "QPushButton { background: transparent; border: none; }"
-            "QPushButton:hover { background: #282828; border-radius: 6px; }"
-            "QPushButton:pressed { background: #303030; border-radius: 6px; }");
+        button->setObjectName("navigationButton");
+        button->setProperty("variant", "icon");
     };
 
     // 头像
