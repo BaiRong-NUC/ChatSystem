@@ -2,6 +2,8 @@
 #include <utils/log.h>
 #include <public.h>
 #include <QFrame>
+#include <QMouseEvent>
+#include <QStyle>
 
 using namespace ChatWidget;
 using namespace Log;
@@ -17,6 +19,7 @@ SelfWidget::SelfWidget(const UserInfo &userInfo, QWidget *parent) : QDialog(pare
     // 初始化原有业务控件资源
     this->m_avatarButton = new QPushButton(this);
     this->m_userIdValueLabel = new QLabel(this);
+    this->m_phoneDisplayWidget = new QWidget(this);
     this->m_phoneVerificationStatusLabel = new QLabel(this);
     this->m_phoneVerificationCodeTitleLabel = new QLabel(this);
     this->m_phoneVerificationCodeEdit = new QLineEdit(this);
@@ -28,8 +31,6 @@ SelfWidget::SelfWidget(const UserInfo &userInfo, QWidget *parent) : QDialog(pare
         editableRow.titleLabel = new QLabel(this);
         editableRow.valueLabel = new QLabel(this);
         editableRow.editor = new QLineEdit(this);
-        editableRow.editButton = new QPushButton(this);
-        editableRow.submitButton = new QPushButton(this);
     };
     createEditableRow(this->m_userNameRow);
     createEditableRow(this->m_userTagRow);
@@ -44,10 +45,10 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     auto editableRowIsNull = [](const EditableRow &editableRow)
     {
         return editableRow.titleLabel == nullptr || editableRow.valueLabel == nullptr ||
-               editableRow.editor == nullptr || editableRow.editButton == nullptr ||
-               editableRow.submitButton == nullptr;
+               editableRow.editor == nullptr;
     };
     if (this->m_avatarButton == nullptr || this->m_userIdValueLabel == nullptr ||
+        this->m_phoneDisplayWidget == nullptr ||
         this->m_phoneVerificationStatusLabel == nullptr || this->m_phoneVerificationCodeTitleLabel == nullptr ||
         this->m_phoneVerificationCodeEdit == nullptr || this->m_submitVerificationCodeButton == nullptr ||
         this->m_feedbackLabel == nullptr || editableRowIsNull(this->m_userNameRow) ||
@@ -75,20 +76,41 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     mainLayout->setHorizontalSpacing(12);
     mainLayout->setVerticalSpacing(8);
     mainLayout->setContentsMargins(24, 20, 24, 18);
-    mainLayout->setColumnMinimumWidth(0, 88);
+    mainLayout->setColumnMinimumWidth(0, 100);
     mainLayout->setColumnMinimumWidth(1, 44);
-    mainLayout->setColumnMinimumWidth(3, 44);
     mainLayout->setColumnStretch(2, 1);
 
-    // 2. 头像
+    // 2. 头像和系统分配的用户ID
     this->m_avatarButton->setFixedSize(82, 82);
     this->m_avatarButton->setIconSize(QSize(78, 78));
     this->m_avatarButton->setIcon(userInfo.m_avatar.isNull() ? QIcon(kAvatarDefaultIconPath) : userInfo.m_avatar);
     this->m_avatarButton->setObjectName("selfAvatarButton");
     this->m_avatarButton->setCursor(Qt::PointingHandCursor);
-    mainLayout->addWidget(this->m_avatarButton, 0, 0, 4, 1, Qt::AlignTop | Qt::AlignHCenter);
 
-    // 3. 可编辑资料控件。当前只搭建UI，不连接编辑和提交槽函数。
+    auto *identityWidget = new QWidget(this);
+    identityWidget->setObjectName("selfIdentityWidget");
+    auto *identityLayout = new QVBoxLayout(identityWidget);
+    identityLayout->setContentsMargins(0, 0, 0, 0);
+    identityLayout->setSpacing(8);
+    identityLayout->addWidget(this->m_avatarButton, 0, Qt::AlignHCenter);
+
+    auto *userIdLayout = new QHBoxLayout();
+    userIdLayout->setContentsMargins(0, 0, 0, 0);
+    userIdLayout->setSpacing(4);
+    auto *userIdTitleLabel = new QLabel("ID：", this);
+    userIdTitleLabel->setObjectName("selfMetaTitleLabel");
+    this->m_userIdValueLabel->setText(displayText(userInfo.m_userId, "未分配"));
+    this->m_userIdValueLabel->setObjectName("selfInfoValueLabel");
+    this->m_userIdValueLabel->setProperty("role", "meta");
+    userIdLayout->addStretch();
+    userIdLayout->addWidget(userIdTitleLabel);
+    userIdLayout->addWidget(this->m_userIdValueLabel);
+    userIdLayout->addStretch();
+    identityLayout->addLayout(userIdLayout);
+    identityLayout->addStretch();
+    mainLayout->addWidget(identityWidget, 0, 0, 3, 1, Qt::AlignTop);
+
+    // 3. 点击文字进入编辑状态，按回车确认。
     auto initEditableRow = [this, mainLayout, &displayText](EditableRow &editableRow, const QString &title,
                                                            const QString &value, const QString &placeholder, int row)
     {
@@ -98,6 +120,10 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
 
         editableRow.valueLabel->setText(displayText(value, "未设置"));
         editableRow.valueLabel->setObjectName("selfInfoValueLabel");
+        editableRow.valueLabel->setProperty("editable", true);
+        editableRow.valueLabel->setCursor(Qt::PointingHandCursor);
+        editableRow.valueLabel->setToolTip(title.isEmpty() ? "点击修改名字" : "点击修改" + title);
+        editableRow.valueLabel->installEventFilter(this);
 
         editableRow.editor->setText(value);
         editableRow.editor->setPlaceholderText(placeholder);
@@ -105,23 +131,13 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
         editableRow.editor->setObjectName("selfInfoEditor");
         editableRow.editor->hide();
 
-        editableRow.editButton->setText("修改");
-        editableRow.editButton->setObjectName("selfEditButton");
-        editableRow.editButton->setCursor(Qt::PointingHandCursor);
-        editableRow.editButton->setToolTip(title.isEmpty() ? "修改名字" : "修改" + title);
-        editableRow.editButton->setFixedSize(42, 24);
-
-        editableRow.submitButton->setText("提交");
-        editableRow.submitButton->setObjectName("selfSubmitButton");
-        editableRow.submitButton->setCursor(Qt::PointingHandCursor);
-        editableRow.submitButton->setFixedSize(42, 24);
-        editableRow.submitButton->hide();
+        EditableRow *editableRowPointer = &editableRow;
+        connect(editableRow.editor, &QLineEdit::returnPressed, this,
+                [this, editableRowPointer]() { this->_FinishEdit(*editableRowPointer); });
 
         mainLayout->addWidget(editableRow.titleLabel, row, 1, Qt::AlignVCenter);
-        mainLayout->addWidget(editableRow.valueLabel, row, 2, Qt::AlignVCenter);
+        mainLayout->addWidget(editableRow.valueLabel, row, 2);
         mainLayout->addWidget(editableRow.editor, row, 2, Qt::AlignVCenter);
-        mainLayout->addWidget(editableRow.editButton, row, 3, Qt::AlignRight | Qt::AlignVCenter);
-        mainLayout->addWidget(editableRow.submitButton, row, 3, Qt::AlignRight | Qt::AlignVCenter);
     };
 
     // 4. 顶部主要资料
@@ -132,24 +148,18 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     mainLayout->addWidget(this->m_userNameRow.valueLabel, 0, 1, 1, 2);
     mainLayout->addWidget(this->m_userNameRow.editor, 0, 1, 1, 2);
 
-    auto *userIdTitleLabel = new QLabel("ID：", this);
-    userIdTitleLabel->setObjectName("selfMetaTitleLabel");
-    this->m_userIdValueLabel->setText(displayText(userInfo.m_userId, "未分配"));
-    this->m_userIdValueLabel->setObjectName("selfInfoValueLabel");
-    this->m_userIdValueLabel->setProperty("role", "meta");
-    mainLayout->addWidget(userIdTitleLabel, 1, 1);
-    mainLayout->addWidget(this->m_userIdValueLabel, 1, 2, 1, 2);
-
-    initEditableRow(this->m_userTagRow, "昵称", userInfo.m_userTag, "请输入昵称", 2);
-    initEditableRow(this->m_signatureRow, "签名", userInfo.m_description, "请输入个性签名", 3);
+    initEditableRow(this->m_userTagRow, "昵称", userInfo.m_userTag, "请输入昵称", 1);
+    initEditableRow(this->m_signatureRow, "签名", userInfo.m_description, "请输入个性签名", 2);
+    this->m_signatureRow.valueLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    this->m_signatureRow.valueLabel->setMinimumWidth(0);
 
     // 5. 电话资料单独分区，方便后续添加验证码交互。
     auto *sectionDivider = new QFrame(this);
     sectionDivider->setObjectName("selfSectionDivider");
     sectionDivider->setFrameShape(QFrame::HLine);
-    mainLayout->addWidget(sectionDivider, 4, 0, 1, 4);
+    mainLayout->addWidget(sectionDivider, 3, 0, 1, 3);
 
-    initEditableRow(this->m_phoneRow, "电话", userInfo.m_phone, "请输入电话号码", 5);
+    initEditableRow(this->m_phoneRow, "电话", userInfo.m_phone, "请输入电话号码", 4);
 
     this->m_phoneVerificationStatusLabel->setText(userInfo.m_phoneVerified ? "已验证" : "待验证");
     this->m_phoneVerificationStatusLabel->setObjectName("selfPhoneStatusLabel");
@@ -157,16 +167,15 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_phoneVerificationStatusLabel->setToolTip(userInfo.m_phoneVerified ? "该手机号已完成验证"
                                                                              : "该手机号尚未验证");
 
-    auto *phoneDisplayWidget = new QWidget(this);
-    phoneDisplayWidget->setObjectName("selfPhoneDisplayWidget");
-    auto *phoneDisplayLayout = new QHBoxLayout(phoneDisplayWidget);
+    this->m_phoneDisplayWidget->setObjectName("selfPhoneDisplayWidget");
+    auto *phoneDisplayLayout = new QHBoxLayout(this->m_phoneDisplayWidget);
     phoneDisplayLayout->setContentsMargins(0, 0, 0, 0);
     phoneDisplayLayout->setSpacing(8);
     mainLayout->removeWidget(this->m_phoneRow.valueLabel);
     phoneDisplayLayout->addWidget(this->m_phoneRow.valueLabel, 0, Qt::AlignVCenter);
     phoneDisplayLayout->addWidget(this->m_phoneVerificationStatusLabel, 0, Qt::AlignVCenter);
     phoneDisplayLayout->addStretch();
-    mainLayout->addWidget(phoneDisplayWidget, 5, 2, Qt::AlignVCenter);
+    mainLayout->addWidget(this->m_phoneDisplayWidget, 4, 2, Qt::AlignVCenter);
 
     // 6. 验证码和反馈控件仅预留，后续实现槽函数时再显示。
     this->m_phoneVerificationCodeTitleLabel->setText("验证码");
@@ -177,9 +186,9 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_submitVerificationCodeButton->setText("验证");
     this->m_submitVerificationCodeButton->setObjectName("selfSubmitButton");
 
-    mainLayout->addWidget(this->m_phoneVerificationCodeTitleLabel, 7, 1);
-    mainLayout->addWidget(this->m_phoneVerificationCodeEdit, 7, 2);
-    mainLayout->addWidget(this->m_submitVerificationCodeButton, 7, 3);
+    mainLayout->addWidget(this->m_phoneVerificationCodeTitleLabel, 5, 1);
+    mainLayout->addWidget(this->m_phoneVerificationCodeEdit, 5, 2);
+    mainLayout->addWidget(this->m_submitVerificationCodeButton, 5, 3);
     this->m_phoneVerificationCodeTitleLabel->hide();
     this->m_phoneVerificationCodeEdit->hide();
     this->m_submitVerificationCodeButton->hide();
@@ -187,5 +196,101 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_feedbackLabel->setObjectName("selfFeedbackLabel");
     this->m_feedbackLabel->setAlignment(Qt::AlignCenter);
     this->m_feedbackLabel->hide();
-    mainLayout->addWidget(this->m_feedbackLabel, 8, 0, 1, 4);
+    mainLayout->addWidget(this->m_feedbackLabel, 6, 0, 1, 4);
+
+    this->_UpdateSignatureDisplay();
+}
+
+void SelfWidget::_BeginEdit(EditableRow &editableRow)
+{
+    EditableRow *allRows[] = {
+        &this->m_userNameRow,
+        &this->m_userTagRow,
+        &this->m_signatureRow,
+        &this->m_phoneRow,
+    };
+    for (EditableRow *otherRow : allRows)
+    {
+        if (otherRow != &editableRow && otherRow->editor->isVisible()) { this->_FinishEdit(*otherRow); }
+    }
+
+    editableRow.valueLabel->hide();
+    if (&editableRow == &this->m_phoneRow) { this->m_phoneDisplayWidget->hide(); }
+    editableRow.editor->show();
+    editableRow.editor->setFocus(Qt::MouseFocusReason);
+    editableRow.editor->selectAll();
+}
+
+void SelfWidget::_FinishEdit(EditableRow &editableRow)
+{
+    const QString value = editableRow.editor->text();
+    const QString fallback = &editableRow == &this->m_userNameRow ? "未设置名字" : "未设置";
+    const bool phoneChanged =
+        &editableRow == &this->m_phoneRow && editableRow.valueLabel->text() != value;
+
+    editableRow.editor->hide();
+    editableRow.valueLabel->show();
+    if (&editableRow == &this->m_signatureRow)
+    {
+        this->_UpdateSignatureDisplay();
+    }
+    else
+    {
+        editableRow.valueLabel->setText(value.trimmed().isEmpty() ? fallback : value);
+    }
+    if (&editableRow == &this->m_phoneRow)
+    {
+        if (phoneChanged)
+        {
+            this->m_phoneVerificationStatusLabel->setText("待验证");
+            this->m_phoneVerificationStatusLabel->setProperty("verified", false);
+            this->m_phoneVerificationStatusLabel->setToolTip("手机号已修改，请重新验证");
+            this->m_phoneVerificationStatusLabel->style()->unpolish(this->m_phoneVerificationStatusLabel);
+            this->m_phoneVerificationStatusLabel->style()->polish(this->m_phoneVerificationStatusLabel);
+        }
+        this->m_phoneDisplayWidget->show();
+    }
+}
+
+void SelfWidget::_UpdateSignatureDisplay()
+{
+    if (this->m_signatureRow.valueLabel == nullptr || this->m_signatureRow.editor == nullptr) { return; }
+
+    const QString signature = this->m_signatureRow.editor->text();
+    const QString displaySignature = signature.trimmed().isEmpty() ? "未设置" : signature;
+    const int availableWidth = qMax(0, this->m_signatureRow.valueLabel->contentsRect().width() - 8);
+    const QString elidedSignature =
+        this->m_signatureRow.valueLabel->fontMetrics().elidedText(displaySignature, Qt::ElideRight, availableWidth);
+    this->m_signatureRow.valueLabel->setText(elidedSignature);
+    this->m_signatureRow.valueLabel->setToolTip(elidedSignature == displaySignature ? "点击修改签名"
+                                                                                   : displaySignature);
+}
+
+bool SelfWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == this->m_signatureRow.valueLabel && event->type() == QEvent::Resize)
+    {
+        this->_UpdateSignatureDisplay();
+    }
+
+    if (event->type() == QEvent::MouseButtonRelease &&
+        static_cast<QMouseEvent *>(event)->button() == Qt::LeftButton)
+    {
+        EditableRow *allRows[] = {
+            &this->m_userNameRow,
+            &this->m_userTagRow,
+            &this->m_signatureRow,
+            &this->m_phoneRow,
+        };
+        for (EditableRow *editableRow : allRows)
+        {
+            if (watched == editableRow->valueLabel)
+            {
+                this->_BeginEdit(*editableRow);
+                return true;
+            }
+        }
+    }
+
+    return QDialog::eventFilter(watched, event);
 }

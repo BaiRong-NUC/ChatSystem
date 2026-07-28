@@ -16,11 +16,13 @@ namespace ChatWidget
             QPointer<QLabel> titleLabel;
             QPointer<QLabel> valueLabel;
             QPointer<QLineEdit> editor;
-            QPointer<QPushButton> editButton;
-            QPointer<QPushButton> submitButton;
         };
 
         void _InitSelfWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
+        void _BeginEdit(EditableRow &editableRow);
+        void _FinishEdit(EditableRow &editableRow);
+        void _UpdateSignatureDisplay();
+        bool eventFilter(QObject *watched, QEvent *event) override;
 
        public:
         explicit SelfWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
@@ -34,6 +36,7 @@ namespace ChatWidget
         EditableRow m_signatureRow;
         EditableRow m_phoneRow;
 
+        QPointer<QWidget> m_phoneDisplayWidget;
         QPointer<QLabel> m_phoneVerificationStatusLabel;
         QPointer<QLabel> m_phoneVerificationCodeTitleLabel;
         QPointer<QLineEdit> m_phoneVerificationCodeEdit;
