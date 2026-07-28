@@ -1,0 +1,115 @@
+QDialog#selfWidget {
+    background-color: #2b2b2b;
+    border: 1px solid #484848;
+}
+
+QDialog#selfWidget QPushButton#selfAvatarButton {
+    background-color: #353535;
+    border: none;
+    border-radius: 8px;
+    padding: 2px;
+}
+
+QDialog#selfWidget QPushButton#selfAvatarButton:hover {
+    background-color: #383838;
+    border-color: #6a6a6a;
+}
+
+QDialog#selfWidget QLabel#selfInfoTitleLabel {
+    color: #a6a6a6;
+    background: transparent;
+    font-size: 13px;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel {
+    color: #dddddd;
+    background: transparent;
+    font-size: 14px;
+    padding: 0 4px;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel[role="primary"] {
+    color: #f4f4f4;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel[role="meta"],
+QDialog#selfWidget QLabel#selfMetaTitleLabel {
+    color: #9b9b9b;
+    background: transparent;
+    font-size: 13px;
+    padding: 0;
+}
+
+QDialog#selfWidget QLineEdit#selfInfoEditor {
+    color: #f2f2f2;
+    background-color: #303030;
+    border: 1px solid #505050;
+    border-radius: 6px;
+    padding: 6px 9px;
+    selection-background-color: #3b7f5b;
+}
+
+QDialog#selfWidget QLineEdit#selfInfoEditor:focus {
+    border-color: #43a36c;
+}
+
+QDialog#selfWidget QPushButton#selfEditButton,
+QDialog#selfWidget QPushButton#selfSubmitButton {
+    min-width: 46px;
+    min-height: 26px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+QDialog#selfWidget QPushButton#selfEditButton {
+    color: #dadada;
+    background-color: #353535;
+}
+
+QDialog#selfWidget QPushButton#selfEditButton:hover {
+    background-color: #414141;
+}
+
+QDialog#selfWidget QPushButton#selfEditButton:pressed {
+    background-color: #2d2d2d;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton {
+    color: #ffffff;
+    background-color: #2f8f58;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton:hover {
+    background-color: #38a868;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton:pressed {
+    background-color: #28784b;
+}
+
+QDialog#selfWidget QLabel#selfPhoneStatusLabel {
+    color: #9b9b9b;
+    background: transparent;
+    font-size: 12px;
+    padding-left: 4px;
+}
+
+QDialog#selfWidget QLabel#selfFeedbackLabel {
+    color: #8fcaa5;
+    background: transparent;
+    font-size: 12px;
+}
+
+QDialog#selfWidget QLabel#selfFeedbackLabel[status="error"] {
+    color: #e47777;
+}
+
+QDialog#selfWidget QFrame#selfSectionDivider {
+    color: #3b3b3b;
+    background-color: #3b3b3b;
+    border: none;
+    max-height: 1px;
+}

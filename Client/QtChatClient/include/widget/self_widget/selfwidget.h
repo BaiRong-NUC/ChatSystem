@@ -2,23 +2,13 @@
 
 #include <public.h>
 
-namespace Model
-{
-    class UserInfo;
-}
-
 namespace ChatWidget
 {
     class SelfWidget final : public QDialog
     {
         Q_OBJECT
 
-        void _InitSelfWidget();  // 初始化UI界面
-
        public:
-        explicit SelfWidget(QWidget *parent = nullptr);
-        ~SelfWidget() override = default;
-
         struct EditableRow
         {
             QPointer<QLabel> titleLabel;
@@ -27,6 +17,10 @@ namespace ChatWidget
             QPointer<QPushButton> editButton;
             QPointer<QPushButton> submitButton;
         };
+
+        explicit SelfWidget(QWidget *parent = nullptr);
+        ~SelfWidget() override = default;
+
         QPointer<QPushButton> m_avatarButton;
         QPointer<QLabel> m_userIdValueLabel;
 
@@ -40,5 +34,10 @@ namespace ChatWidget
         QPointer<QLineEdit> m_phoneVerificationCodeEdit;
         QPointer<QPushButton> m_submitVerificationCodeButton;
         QPointer<QLabel> m_feedbackLabel;
+
+       private:
+        void _InitSelfWidget();  // 初始化UI界面
+        void _InitEditableRow(EditableRow &editableRow, const QString &title, const QString &placeholder,
+                              QGridLayout *mainLayout, int row);
     };
 }  // namespace ChatWidget
