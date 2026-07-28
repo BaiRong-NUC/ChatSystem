@@ -1,10 +1,4 @@
 #include <widget/self_widget/selfwidget.h>
-#include <utils/log.h>
-#include <public.h>
-#include <QFrame>
-#include <QMouseEvent>
-#include <QScreen>
-#include <QStyle>
 
 using namespace ChatWidget;
 using namespace Log;

@@ -3,7 +3,6 @@
 #include <public.h>
 #include <utils/log.h>
 #include <model/data.h>
-#include <QTimer>
 
 namespace ChatWidget
 {

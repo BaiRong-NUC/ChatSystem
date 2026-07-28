@@ -37,6 +37,13 @@
 #include <memory>
 #include <QDialog>
 
+// self_widget/selfwidget.h
+#include <QFrame>
+#include <QMouseEvent>
+#include <QScreen>
+#include <QStyle>
+#include <QTimer>
+
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
 
 // ChatMessage/TextChatMessage
