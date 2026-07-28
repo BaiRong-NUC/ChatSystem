@@ -4,7 +4,7 @@
 
 namespace ChatWidget
 {
-    class MessageEdit : public QLineEdit
+    class MessageEdit : public QWidget
     {
         Q_OBJECT
        private:
@@ -14,5 +14,8 @@ namespace ChatWidget
        public:
         ~MessageEdit() override;
         static MessageEdit *GetInstance(QWidget *parent = nullptr);  // 获取单例实例的静态方法
+
+        QTextEdit *m_textEdit = nullptr;
+        QPushButton *m_sendButton = nullptr;
     };
 }  // namespace ChatWidget

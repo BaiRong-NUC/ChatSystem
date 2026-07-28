@@ -6,11 +6,11 @@ using namespace Log;
 namespace
 {
     constexpr auto KIconButtonStyle =
-        "QPushButton { background-color: transparent; border: none; border-radius: 20px; }"
-        "QPushButton:hover { background-color: #ecf0f1; border: none; border-radius: 20px; }"
-        "QPushButton:pressed { background-color: #bdc3c7; border: none; border-radius: 20px; }";
+        "QPushButton { background-color: transparent; border: none; border-radius: 6px; padding: 0px; }"
+        "QPushButton:hover { background-color: #2a2a2a; }"
+        "QPushButton:pressed { background-color: #333333; }";
     constexpr auto kUsernameLabelStyle = "QLabel#usernameLabel { color: #e4e5e6; font-size: 14px; font-weight: bold; }";
-    constexpr auto kTimestampLabelStyle = "QLabel#timestampLabel { color: #7f8c8d; font-size: 12px; }";
+    constexpr auto kTimestampLabelStyle = "QLabel#timestampLabel { color: #8b8b8b; font-size: 12px; }";
 }  // namespace
 
 MessageItem::MessageItem(QWidget *parent, Model::Message *data, bool isLeft) : QWidget(parent), m_isLeft(isLeft)
@@ -19,7 +19,9 @@ MessageItem::MessageItem(QWidget *parent, Model::Message *data, bool isLeft) : Q
     this->m_avatarButton = new QPushButton(this);  // 头像
     this->m_username = new QLabel(this);           // 用户名
     this->m_timestamp = new QLabel(this);          // 时间
-    this->m_chatMessage = new ChatMessage(data, this);  // 消息内容控件,根据消息类型创建不同的消息内容控件
+    // ChatMessage拥有消息副本，避免调用方传入局部变量后产生悬空指针。
+    Model::Message *messageCopy = data != nullptr ? new Model::Message(*data) : nullptr;
+    this->m_chatMessage = new ChatMessage(messageCopy, isLeft, this);
 
     // 初始化UI界面
     this->_InitMessageItem();
@@ -53,24 +55,20 @@ void MessageItem::_InitMessageItem()
         exit(-1);
     }
 
-    // 设置消息最小高度
-    this->setMinimumHeight(100);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     // 布局管理
     QGridLayout *layout = new QGridLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setHorizontalSpacing(8);
-    layout->setVerticalSpacing(4);
-
-    // 第一行展示用户名和发送时间，第二行展示消息内容
-    QHBoxLayout *messageInfoLayout = new QHBoxLayout();
-    messageInfoLayout->setContentsMargins(0, 0, 0, 0);
-    messageInfoLayout->setSpacing(16);
+    layout->setContentsMargins(24, 10, 24, 10);
+    layout->setHorizontalSpacing(12);
+    layout->setVerticalSpacing(8);
 
     // 设置头像按钮样式
-    this->m_avatarButton->setIcon(this->m_chatMessage->m_message->m_sender.m_avatar);
-    this->m_avatarButton->setIconSize(QSize(40, 40));
-    this->m_avatarButton->setFixedSize(40, 40);
+    QIcon avatar = this->m_chatMessage->m_message->m_sender.m_avatar;
+    if (avatar.isNull()) { avatar = QIcon(":/images/defaultAvatar.png"); }
+    this->m_avatarButton->setIcon(avatar);
+    this->m_avatarButton->setIconSize(QSize(44, 44));
+    this->m_avatarButton->setFixedSize(44, 44);
     this->m_avatarButton->setObjectName("iconButton");
     this->m_avatarButton->setStyleSheet(KIconButtonStyle);
 
@@ -79,36 +77,32 @@ void MessageItem::_InitMessageItem()
     this->m_username->setAlignment(Qt::AlignBottom);
     this->m_username->setObjectName("usernameLabel");
     this->m_username->setStyleSheet(kUsernameLabelStyle);
+    this->m_username->hide();
     // 设置时间标签样式
-    this->m_timestamp->setText(this->m_chatMessage->m_message->m_timestamp);
-    this->m_timestamp->setAlignment(Qt::AlignBottom);
+    const QDateTime timestamp =
+        QDateTime::fromString(this->m_chatMessage->m_message->m_timestamp, "yyyy-MM-dd HH:mm:ss");
+    this->m_timestamp->setText(timestamp.isValid() ? timestamp.toString("M月d日 HH:mm")
+                                                   : this->m_chatMessage->m_message->m_timestamp);
+    this->m_timestamp->setAlignment(Qt::AlignCenter);
     this->m_timestamp->setObjectName("timestampLabel");
     this->m_timestamp->setStyleSheet(kTimestampLabelStyle);
 
     // 根据消息位置(左侧或右侧)设置布局
     if (this->m_isLeft)
     {
-        // 对方消息：头像在左，右边依次为“名字 日期”和消息内容
-        messageInfoLayout->addWidget(this->m_username);
-        messageInfoLayout->addWidget(this->m_timestamp);
-        messageInfoLayout->addStretch();
-
-        layout->addWidget(this->m_avatarButton, 0, 0, 2, 1, Qt::AlignTop | Qt::AlignLeft);
-        layout->addLayout(messageInfoLayout, 0, 1, Qt::AlignLeft | Qt::AlignBottom);
+        // 对方消息：头像在左，气泡紧随头像。
+        layout->addWidget(this->m_timestamp, 0, 0, 1, 3, Qt::AlignCenter);
+        layout->addWidget(this->m_avatarButton, 1, 0, Qt::AlignTop | Qt::AlignLeft);
         layout->addWidget(this->m_chatMessage, 1, 1, Qt::AlignTop | Qt::AlignLeft);
         layout->setColumnStretch(2, 1);
     }
     else
     {
-        // 自己消息：左边依次为“日期 名字”和消息内容，头像在右
-        messageInfoLayout->addStretch();
-        messageInfoLayout->addWidget(this->m_timestamp);
-        messageInfoLayout->addWidget(this->m_username);
-
+        // 自己消息：气泡靠右，头像在最右侧。
+        layout->addWidget(this->m_timestamp, 0, 0, 1, 3, Qt::AlignCenter);
         layout->setColumnStretch(0, 1);
-        layout->addLayout(messageInfoLayout, 0, 1, Qt::AlignRight | Qt::AlignBottom);
         layout->addWidget(this->m_chatMessage, 1, 1, Qt::AlignTop | Qt::AlignRight);
-        layout->addWidget(this->m_avatarButton, 0, 2, 2, 1, Qt::AlignTop | Qt::AlignRight);
+        layout->addWidget(this->m_avatarButton, 1, 2, Qt::AlignTop | Qt::AlignRight);
     }
 
     // 设置消息内容,根据消息类型分类

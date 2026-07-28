@@ -21,7 +21,5 @@ namespace ChatWidget
         QPushButton *m_addFriendButton;
         // 搜索框
         QLineEdit *m_searchLineEdit;
-        // Icon
-        QString m_addFriendButtonIconPath;
     };
 }  // namespace ChatWidget

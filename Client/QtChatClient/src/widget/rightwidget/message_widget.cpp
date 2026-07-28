@@ -7,19 +7,14 @@ using namespace Model;
 namespace
 {
     constexpr auto kMessageWidgetStyle =
-        "QScrollArea#messageWidget { background-color: #ffffff; border: none; }"
-        "QWidget#messageContainer { background-color: #bdc3c7; }";
+        "QScrollArea#messageWidget { background-color: #191919; border: none; }"
+        "QWidget#messageContainer { background-color: #191919; }";
 
     constexpr auto kMessageScollBarStyle =
-        "QScrollBar:vertical { background-color: #bdc3c7; width: 12px; margin: 0px 0px 0px 0px; }"
-        "QScrollBar::handle:vertical { background-color: #95a5a6; border-radius: 6px; min-height: 20px; }"
-        "QScrollBar::add-line:vertical { background-color: #bdc3c7; height: 12px; subcontrol-position: bottom; "
-        "subcontrol-origin: margin; }"
-        "QScrollBar::sub-line:vertical { background-color: #bdc3c7; height: 12px; subcontrol-position: top; "
-        "subcontrol-origin: margin; }"
-        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical { background-color: #bdc3c7; width: 12px; "
-        "height: 12px; }"
-        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #bdc3c7; }";
+        "QScrollBar:vertical { background-color: #191919; width: 8px; margin: 0px; }"
+        "QScrollBar::handle:vertical { background-color: #4a4a4a; border-radius: 4px; min-height: 24px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #191919; }";
 }  // namespace
 
 MessageWidget *MessageWidget::s_instance = nullptr;  // 初始化单例实例指针
@@ -62,8 +57,8 @@ void MessageWidget::_InitMessageWidget()
     // 布局管理器
     QVBoxLayout *messageLayout = new QVBoxLayout(this->m_container);
 
-    messageLayout->setContentsMargins(0, 0, 0, 0);
-    messageLayout->setSpacing(0);
+    messageLayout->setContentsMargins(0, 12, 0, 12);
+    messageLayout->setSpacing(4);
     messageLayout->setAlignment(Qt::AlignTop);
 
     // DEBUG
@@ -71,10 +66,17 @@ void MessageWidget::_InitMessageWidget()
     UserInfo testUser;
     testUser.m_userId = "testUserId";
     testUser.m_userName = "Test User";
-    testUser.m_avatar = QIcon(":/resources/images/avatar.png");
+    testUser.m_avatar = QIcon(":/images/defaultAvatar.png");
     Model::Message testMessage =
-        Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser, "Hello, this is a test", "");
+        Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser, "你好，这是一条测试消息", "");
     this->AddMessage(true, testMessage);
+
+    UserInfo currentUser = testUser;
+    currentUser.m_userName = "我";
+    Model::Message replyMessage = Model::Message::CreateMessage(
+        Model::MessageType::Text, "chatSessionId", currentUser,
+        QString("整体界面已经切换为深色聊天风格，消息气泡也会根据内容自动换行。").toUtf8(), "");
+    this->AddMessage(false, replyMessage);
 #endif
 
     this->setWidget(this->m_container);
@@ -83,7 +85,16 @@ void MessageWidget::_InitMessageWidget()
 void MessageWidget::AddMessage(bool isLeft, Model::Message &message, QFont *textFont)
 {
     MessageItem *item = MessageItem::CreateMessageItem(this->m_container, &message, isLeft);
-    this->m_container->layout()->addWidget(item);
+    QLayout *layout = this->m_container->layout();
+    if (layout->count() > 0)
+    {
+        MessageItem *previousItem = qobject_cast<MessageItem *>(layout->itemAt(layout->count() - 1)->widget());
+        if (previousItem != nullptr && previousItem->m_timestamp->text() == item->m_timestamp->text())
+        {
+            item->m_timestamp->hide();
+        }
+    }
+    layout->addWidget(item);
 }
 
 void MessageWidget::AddFrontMessage(bool isLeft, Model::Message &message, QFont *textFont)

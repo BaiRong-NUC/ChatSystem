@@ -2,6 +2,7 @@
 
 // model/data.h; utils/utils.h; utils/log.h;
 #include <QString>     // 字符串类
+#include <QStringList> // 字符串列表
 #include <QIcon>       // 图标资源
 #include <QByteArray>  // 二进制数据
 #include <QUuid>       // 生成唯一ID
@@ -21,6 +22,7 @@
 #include <QVBoxLayout>  // 垂直布局
 #include <QGridLayout>  // 网格布局
 #include <QLineEdit>    // 输入框
+#include <QTextEdit>    // 多行消息输入框
 #include <QLabel>       // 标签
 #include <QScrollArea>  // 滚动区域
 #include <QScrollBar>   // 滚动条

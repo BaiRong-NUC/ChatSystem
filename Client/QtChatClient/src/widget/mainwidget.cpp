@@ -30,7 +30,8 @@ void MainWidget::_InitMainWidget()
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     this->setLayout(mainLayout);
 
-    this->resize(800, 700);
+    this->setMinimumSize(960, 640);
+    this->resize(1200, 760);
 
     // 创建子窗口
     this->m_leftWidget = LeftWidget::GetInstance(this);

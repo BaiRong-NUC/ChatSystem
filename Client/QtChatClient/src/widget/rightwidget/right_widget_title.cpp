@@ -6,15 +6,16 @@ using namespace Log;
 namespace
 {
     constexpr auto kTitleBarStyle =
-        "QWidget#titleBar { background-color: #bdc3c7; border-bottom: 1px solid #43414147;}";
+        "QWidget#titleBar { background-color: #191919; border-bottom: 1px solid #303030;}";
 
-    constexpr auto kTitleBarLabelStyle = "QLabel { font-size: 18px; font-weight: bold; color: #2c3e50; }";
+    constexpr auto kTitleBarLabelStyle =
+        "QLabel { font-size: 21px; font-weight: 500; color: #f0f0f0; background: transparent; }";
 
-    constexpr auto kTitleBarButtonIconPath = ":/images/more.png";
     constexpr auto kTitleBarButtonStyle =
-        "QPushButton { background-color: transparent; border: none; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #ecf0f1; border: none; }"
-        "QPushButton:pressed { background-color: #bdc3c7; border: none; }";
+        "QPushButton { color: #d8d8d8; background-color: transparent; border: none; border-radius: 5px;"
+        " font-size: 20px; padding-bottom: 8px; }"
+        "QPushButton:hover { background-color: #2b2b2b; }"
+        "QPushButton:pressed { background-color: #343434; }";
 }  // namespace
 
 RightWidgetTitle *RightWidgetTitle::s_instance = nullptr;  // 初始化单例实例指针
@@ -51,7 +52,7 @@ void RightWidgetTitle::_InitRightWidgetTitle()
         exit(-1);
     }
     // 上方标题栏
-    this->setFixedHeight(58);
+    this->setFixedHeight(74);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     this->setObjectName("titleBar");
     this->setAttribute(Qt::WA_StyledBackground, true);
@@ -59,20 +60,19 @@ void RightWidgetTitle::_InitRightWidgetTitle()
 
     // 标签有一个label和一个按钮
     QHBoxLayout *titleBarLayout = new QHBoxLayout(this);
-    titleBarLayout->setContentsMargins(10, 0, 10, 0);
+    titleBarLayout->setContentsMargins(24, 0, 18, 0);
     titleBarLayout->setSpacing(0);
     // - 标签
     this->m_titleLabel->setStyleSheet(kTitleBarLabelStyle);
 
 #if DEBUG_CODE
-    this->m_titleLabel->setText("聊天信息");
+    this->m_titleLabel->setText("好友1");
 #endif
 
     titleBarLayout->addWidget(this->m_titleLabel);
     // - 按钮
-    this->m_titleButton->setFixedSize(30, 30);
-    this->m_titleButton->setIconSize(QSize(30, 30));
-    this->m_titleButton->setIcon(QIcon(kTitleBarButtonIconPath));
+    this->m_titleButton->setFixedSize(42, 36);
+    this->m_titleButton->setText("•••");
     this->m_titleButton->setStyleSheet(kTitleBarButtonStyle);
     titleBarLayout->addWidget(this->m_titleButton);
 }

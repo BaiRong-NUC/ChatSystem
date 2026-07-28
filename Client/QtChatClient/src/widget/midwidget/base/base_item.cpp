@@ -5,20 +5,18 @@ using namespace Log;
 
 namespace
 {
-    // 样式常量 // 949ea9;aeb4ba;ccd1d8
-    // item项样式
     constexpr auto kBaseItemDefaultStyle =
-        "QWidget#baseItem { background-color: #949ea9; border: none; }"
-        "QWidget#baseItem:hover { background-color: #aeb4ba; border: none;}";
-    // item点击选中样式
-    constexpr auto kBaseItemSelectedStyle = "QWidget#baseItem { background-color: #ccd1d8; border: none; }";
+        "QWidget#baseItem { background-color: #232323; border: none; }"
+        "QWidget#baseItem:hover { background-color: #2d2d2d; border: none;}";
+    constexpr auto kBaseItemSelectedStyle = "QWidget#baseItem { background-color: #3a3a3a; border: none; }";
 
     // item头像按钮样式
     constexpr auto kBaseItemIconButtonStyle =
-        "QPushButton { background-color: transparent; border: none; }"
-        "QPushButton:hover { background-color: transparent; border: none; }";
-    // item名称标签样式
-    constexpr auto kBaseItemNameLabelStyle = "QLabel{font-size:18px;font-weight:600;}";
+        "QPushButton { background-color: transparent; border: none; border-radius: 6px; padding: 0px; }";
+    constexpr auto kBaseItemNameLabelStyle =
+        "QLabel { color: #ededed; font-size: 15px; font-weight: 500; background: transparent; }";
+    constexpr auto kBaseItemTextLabelStyle =
+        "QLabel { color: #999999; font-size: 13px; background: transparent; }";
 
 }  // namespace
 
@@ -55,7 +53,7 @@ void BaseItem::_InitBaseItem(QWidget *owner, QWidget *parent, const QIcon &icon,
         exit(-1);
     }
 
-    this->setFixedHeight(60);  // 设置base项的固定高度
+    this->setFixedHeight(76);
     // 设置背景
     this->setObjectName("baseItem");
     this->setAttribute(Qt::WA_StyledBackground, true);
@@ -63,25 +61,26 @@ void BaseItem::_InitBaseItem(QWidget *owner, QWidget *parent, const QIcon &icon,
 
     // 布局
     QGridLayout *baseItemLayout = new QGridLayout(this);
-    baseItemLayout->setContentsMargins(10, 0, 0, 0);
-    baseItemLayout->setHorizontalSpacing(10);
+    baseItemLayout->setContentsMargins(14, 8, 12, 8);
+    baseItemLayout->setHorizontalSpacing(12);
     baseItemLayout->setVerticalSpacing(0);
     this->setLayout(baseItemLayout);
 
     // base项头像按钮
-    this->m_iconButton->setFixedHeight(40);
-    this->m_iconButton->setIconSize(QSize(40, 40));
+    this->m_iconButton->setFixedSize(52, 52);
+    this->m_iconButton->setIconSize(QSize(52, 52));
     this->m_iconButton->setIcon(icon);
     // base项名称标签
     this->m_nameLabel->setText(name);
-    this->m_nameLabel->setFixedHeight(30);
+    this->m_nameLabel->setFixedHeight(28);
     // base项文本标签
     this->m_textLabel->setText(text);
-    this->m_textLabel->setFixedHeight(30);
+    this->m_textLabel->setFixedHeight(26);
 
     // 样式
     this->m_iconButton->setStyleSheet(kBaseItemIconButtonStyle);
     this->m_nameLabel->setStyleSheet(kBaseItemNameLabelStyle);
+    this->m_textLabel->setStyleSheet(kBaseItemTextLabelStyle);
 
     this->m_iconButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  // 设置按钮大小策略为固定
     this->m_nameLabel->setSizePolicy(QSizePolicy::Expanding,
