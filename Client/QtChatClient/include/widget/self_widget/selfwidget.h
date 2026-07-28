@@ -1,12 +1,6 @@
 #pragma once
 
-#include <QDialog>
-#include <QString>
-
-class QGridLayout;
-class QLabel;
-class QLineEdit;
-class QPushButton;
+#include <public.h>
 
 namespace Model
 {
@@ -27,24 +21,24 @@ namespace ChatWidget
 
         struct EditableRow
         {
-            QLabel *titleLabel = nullptr;
-            QLabel *valueLabel = nullptr;
-            QLineEdit *editor = nullptr;
-            QPushButton *editButton = nullptr;
-            QPushButton *submitButton = nullptr;
+            QPointer<QLabel> titleLabel;
+            QPointer<QLabel> valueLabel;
+            QPointer<QLineEdit> editor;
+            QPointer<QPushButton> editButton;
+            QPointer<QPushButton> submitButton;
         };
-        QPushButton *m_avatarButton = nullptr;
-        QLabel *m_userIdValueLabel = nullptr;
+        QPointer<QPushButton> m_avatarButton;
+        QPointer<QLabel> m_userIdValueLabel;
 
         EditableRow m_userNameRow;
         EditableRow m_userTagRow;
         EditableRow m_signatureRow;
         EditableRow m_phoneRow;
 
-        QLabel *m_phoneVerificationStatusLabel = nullptr;
-        QLabel *m_phoneVerificationCodeTitleLabel = nullptr;
-        QLineEdit *m_phoneVerificationCodeEdit = nullptr;
-        QPushButton *m_submitVerificationCodeButton = nullptr;
-        QLabel *m_feedbackLabel = nullptr;
+        QPointer<QLabel> m_phoneVerificationStatusLabel;
+        QPointer<QLabel> m_phoneVerificationCodeTitleLabel;
+        QPointer<QLineEdit> m_phoneVerificationCodeEdit;
+        QPointer<QPushButton> m_submitVerificationCodeButton;
+        QPointer<QLabel> m_feedbackLabel;
     };
 }  // namespace ChatWidget
