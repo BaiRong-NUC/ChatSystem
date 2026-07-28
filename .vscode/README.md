@@ -11,7 +11,7 @@
 ## 当前关键路径
 
 - Qt 安装目录：/home/bairong/Qt6/6.9.3/gcc_64
-- 编译数据库：${workspaceFolder}/Client/QtChatClient/build/cmake-verify/compile_commands.json
+- 编译数据库：${workspaceFolder}/build/compile_commands.json
 - 编译器：/usr/bin/g++
 
 ## 何时需要修改配置
@@ -28,7 +28,7 @@
 如果 IntelliSense 再次出现无法打开 Qt 头文件的问题，按这个顺序检查：
 
 1. 确认 QtChatClient 可以被 CMake 正常配置和构建。
-2. 确认 build/cmake-verify/compile_commands.json 仍然存在。
+2. 确认工作区根目录下的 build/compile_commands.json 仍然存在。
 3. 确认 c_cpp_properties.json 里的 Qt include 路径仍然有效。
 4. 在 VS Code 中重置 IntelliSense 数据库，或直接重载窗口。
 

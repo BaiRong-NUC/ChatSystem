@@ -1,4 +1,4 @@
-#include <widget/mainwidget.h>
+#include <widget/main_widget/mainwidget.h>
 #include <QApplication>
 #include <QTimer>
 #include <model/data.h>
