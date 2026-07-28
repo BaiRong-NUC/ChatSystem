@@ -127,4 +127,12 @@ void LeftWidget::_InitSignalSlots()
     connect(this->m_sessionTabButton, &QPushButton::clicked, this, &LeftWidget::_OnSessionTabClicked);
     connect(this->m_friendTabButton, &QPushButton::clicked, this, &LeftWidget::_OnFriendTabClicked);
     connect(this->m_friendRequestTabButton, &QPushButton::clicked, this, &LeftWidget::_OnFriendRequestTabClicked);
+
+    // 头像按钮点击事件连接到显示个人信息窗口的槽函数
+    connect(this->m_avatarButton, &QPushButton::clicked, this,
+            [this]()
+            {
+                SelfWidget selfWidget(this);
+                selfWidget.show();  // 非模态对话框
+            });
 }

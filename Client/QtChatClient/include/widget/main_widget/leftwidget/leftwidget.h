@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <utils/log.h>
+#include <widget/self_widget/selfwidget.h>
 namespace ChatWidget
 {
     class LeftWidget : public QWidget

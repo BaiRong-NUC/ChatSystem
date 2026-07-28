@@ -23,7 +23,6 @@ namespace ChatWidget
         explicit SelfWidget(QWidget *parent = nullptr);
         ~SelfWidget() override = default;
 
-       private:
         struct EditableRow
         {
             QLabel *titleLabel = nullptr;
