@@ -7,19 +7,14 @@ using namespace Model;
 namespace
 {
     constexpr auto kMessageWidgetStyle =
-        "QScrollArea#messageWidget { background-color: #ffffff; border: none; }"
-        "QWidget#messageContainer { background-color: #bdc3c7; }";
+        "QScrollArea#messageWidget { background-color: #181818; border: none; }"
+        "QWidget#messageContainer { background-color: #181818; }";
 
     constexpr auto kMessageScollBarStyle =
-        "QScrollBar:vertical { background-color: #bdc3c7; width: 12px; margin: 0px 0px 0px 0px; }"
-        "QScrollBar::handle:vertical { background-color: #95a5a6; border-radius: 6px; min-height: 20px; }"
-        "QScrollBar::add-line:vertical { background-color: #bdc3c7; height: 12px; subcontrol-position: bottom; "
-        "subcontrol-origin: margin; }"
-        "QScrollBar::sub-line:vertical { background-color: #bdc3c7; height: 12px; subcontrol-position: top; "
-        "subcontrol-origin: margin; }"
-        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical { background-color: #bdc3c7; width: 12px; "
-        "height: 12px; }"
-        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #bdc3c7; }";
+        "QScrollBar:vertical { background-color: #181818; width: 8px; margin: 0px; }"
+        "QScrollBar::handle:vertical { background-color: #4a4a4a; border-radius: 4px; min-height: 24px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #181818; }";
 }  // namespace
 
 MessageWidget *MessageWidget::s_instance = nullptr;  // 初始化单例实例指针
@@ -62,8 +57,8 @@ void MessageWidget::_InitMessageWidget()
     // 布局管理器
     QVBoxLayout *messageLayout = new QVBoxLayout(this->m_container);
 
-    messageLayout->setContentsMargins(0, 0, 0, 0);
-    messageLayout->setSpacing(0);
+    messageLayout->setContentsMargins(0, 12, 0, 12);
+    messageLayout->setSpacing(4);
     messageLayout->setAlignment(Qt::AlignTop);
 
     // DEBUG
@@ -71,7 +66,7 @@ void MessageWidget::_InitMessageWidget()
     UserInfo testUser;
     testUser.m_userId = "testUserId";
     testUser.m_userName = "Test User";
-    testUser.m_avatar = QIcon(":/resources/images/avatar.png");
+    testUser.m_avatar = QIcon(":/resources/images/defaultAvatar.png");
     Model::Message testMessage =
         Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser, "Hello, this is a test", "");
     this->AddMessage(true, testMessage);

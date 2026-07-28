@@ -19,11 +19,12 @@ namespace ChatWidget
         void _MakeSpeechMessage();  // 创建语音消息内容控件
 
        public:
-        explicit ChatMessage(Model::Message *message = nullptr, QWidget *parent = nullptr);
+        explicit ChatMessage(Model::Message *message = nullptr, bool isLeft = true, QWidget *parent = nullptr);
         ~ChatMessage() override;
 
         // 聊天消息
         Model::Message *m_message = nullptr;
+        bool m_isLeft = true;
     };
 
     // 文本消息展示
@@ -32,10 +33,11 @@ namespace ChatWidget
         Q_OBJECT
 
        public:
-        explicit TextChatMessage(const QString &text, bool isLeft, QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16),
+        explicit TextChatMessage(const QString &text, bool isLeft,
+                                 const QFont &textFont = QFont(DEFAULT_CHAT_FONT, 14),
                                  QWidget *parent = nullptr);
         ~TextChatMessage() override;
-        QFont *m_textFont = nullptr;    // 文本消息字体
+        QFont m_textFont;               // 文本消息字体
         QLabel *m_textLabel = nullptr;  // 文本消息内容控件
         bool m_isLeft = true;           // 是否是左侧消息,左侧消息和右侧消息不同
 
