@@ -4,7 +4,7 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #ecf0f1; }";
+    constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #191919; }";
 }  // namespace
 
 RightWidget *RightWidget::s_instance = nullptr;  // 初始化单例实例指针

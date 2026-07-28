@@ -64,7 +64,9 @@ void MessageItem::_InitMessageItem()
     layout->setVerticalSpacing(8);
 
     // 设置头像按钮样式
-    this->m_avatarButton->setIcon(this->m_chatMessage->m_message->m_sender.m_avatar);
+    QIcon avatar = this->m_chatMessage->m_message->m_sender.m_avatar;
+    if (avatar.isNull()) { avatar = QIcon(":/images/defaultAvatar.png"); }
+    this->m_avatarButton->setIcon(avatar);
     this->m_avatarButton->setIconSize(QSize(44, 44));
     this->m_avatarButton->setFixedSize(44, 44);
     this->m_avatarButton->setObjectName("iconButton");
@@ -77,7 +79,10 @@ void MessageItem::_InitMessageItem()
     this->m_username->setStyleSheet(kUsernameLabelStyle);
     this->m_username->hide();
     // 设置时间标签样式
-    this->m_timestamp->setText(this->m_chatMessage->m_message->m_timestamp);
+    const QDateTime timestamp =
+        QDateTime::fromString(this->m_chatMessage->m_message->m_timestamp, "yyyy-MM-dd HH:mm:ss");
+    this->m_timestamp->setText(timestamp.isValid() ? timestamp.toString("M月d日 HH:mm")
+                                                   : this->m_chatMessage->m_message->m_timestamp);
     this->m_timestamp->setAlignment(Qt::AlignCenter);
     this->m_timestamp->setObjectName("timestampLabel");
     this->m_timestamp->setStyleSheet(kTimestampLabelStyle);

@@ -6,7 +6,10 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kTextLabelStyle = "QLabel { color: #f2f2f2; background: transparent; }";
+    constexpr auto kLeftTextLabelStyle =
+        "QLabel { color: #f2f2f2; background: transparent; font-size: 12px; }";
+    constexpr auto kRightTextLabelStyle =
+        "QLabel { color: #111111; background: transparent; font-size: 12px; }";
 }
 
 ChatMessage::ChatMessage(Model::Message *message, bool isLeft, QWidget *parent)
@@ -63,7 +66,7 @@ void TextChatMessage::paintEvent(QPaintEvent *event)
 
     constexpr int arrowWidth = 9;
     constexpr int radius = 7;
-    const QColor bubbleColor = this->m_isLeft ? QColor("#3a3a3d") : QColor("#45b978");
+    const QColor bubbleColor = this->m_isLeft ? QColor("#363638") : QColor("#43c780");
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -97,14 +100,14 @@ TextChatMessage::TextChatMessage(const QString &text, bool isLeft, const QFont &
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     this->setMinimumHeight(44);
-    this->setMaximumWidth(540);
+    this->setMaximumWidth(500);
 
     this->m_textLabel = new QLabel(this);
     this->m_textLabel->setText(text);
     this->m_textLabel->setFont(this->m_textFont);
     this->m_textLabel->setWordWrap(true);
     this->m_textLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    this->m_textLabel->setStyleSheet(kTextLabelStyle);
+    this->m_textLabel->setStyleSheet(this->m_isLeft ? kLeftTextLabelStyle : kRightTextLabelStyle);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     if (this->m_isLeft)
@@ -124,7 +127,7 @@ void ChatMessage::_MakeTextMessage()
 {
     TextChatMessage *textMessage =
         new TextChatMessage(QString::fromUtf8(this->m_message->m_content), this->m_isLeft,
-                            QFont(DEFAULT_CHAT_FONT, 14), this);
+                            QFont(DEFAULT_CHAT_FONT, 12), this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);

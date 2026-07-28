@@ -5,28 +5,28 @@ using namespace Log;
 
 namespace
 {
-    constexpr int kOverlayScrollBarWidth = 12;
+    constexpr int kOverlayScrollBarWidth = 8;
 
     // constexpr auto 让它们在编译期成为常量字符串
     constexpr auto kMidSessionAreaWidgetStyle =
-        "QScrollArea#midSessionAreaWidget { background-color: #949ea9; border: none; }"
-        "QWidget#sessionListWidget { background-color: #949ea9; }";
+        "QScrollArea#midSessionAreaWidget { background-color: #232323; border: none; }"
+        "QWidget#sessionListWidget { background-color: #232323; }";
 
     constexpr auto kMidSessionAreaWidgetOverlayScrollBarStyle =
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar:vertical {"
         " background: transparent;"
-        " width: 12px;"
+        " width: 8px;"
         " margin: 4px 0px 4px 0px;"
         " border: none;"
         "}"
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical {"
-        " background: #c3c8ce;"
+        " background: #505050;"
         " min-height: 20px;"
         " border-radius: 4px;"
         " margin: 0px 2px;"
         "}"
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar::handle:vertical:hover {"
-        " background: #d1d6db;"
+        " background: #666666;"
         "}"
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar::add-line:vertical,"
         "QScrollBar#midSessionAreaWidgetOverlayScrollBar::sub-line:vertical {"
@@ -112,7 +112,7 @@ void MidSessionAreaWidget::_InitSessionArea()
         //               QString("好友%1").arg(i + 1), QString("最后一条消息%1").arg(i + 1));
 
         this->AddItem(ChatItemType, QString("friend%1").arg(i + 1), QIcon(":/images/defaultAvatar.png"),
-                      QString("好友%1").arg(i + 1), QString());
+                      QString("好友%1").arg(i + 1), QString("最后一条消息 %1").arg(i + 1));
     }
 #endif
 }

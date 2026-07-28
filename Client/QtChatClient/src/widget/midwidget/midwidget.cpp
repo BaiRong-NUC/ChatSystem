@@ -4,7 +4,8 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kMidWidgetStyle = "QWidget#midWidget { background-color: #949ea9; }";
+    constexpr auto kMidWidgetStyle =
+        "QWidget#midWidget { background-color: #232323; border-right: 1px solid #303030; }";
 }  // namespace
 
 MidWidget *MidWidget::s_instance = nullptr;  // 初始化单例实例指针
@@ -45,20 +46,20 @@ void MidWidget::_InitMidWidget()
     // 窗口名称,大小和背景
     this->setObjectName("midWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setFixedWidth(200);
+    this->setFixedWidth(270);
     this->setStyleSheet(kMidWidgetStyle);
 
-    // 布局
-    QGridLayout *midLayout = new QGridLayout(this);
+    // 标题栏和会话列表横向铺满中栏，避免滚动区按sizeHint居中产生大块左右留白。
+    QVBoxLayout *midLayout = new QVBoxLayout(this);
     midLayout->setContentsMargins(0, 0, 0, 0);
     midLayout->setSpacing(0);
-    midLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    midLayout->setAlignment(Qt::AlignTop);
     this->setLayout(midLayout);
 
     // 标题栏
-    midLayout->addWidget(this->m_titleBar, 0, 0, 1, 5);  // 标题栏占据第一行的所有列
+    midLayout->addWidget(this->m_titleBar);
     // 好友信息框
-    midLayout->addWidget(this->m_sessionArea, 2, 0, 1, 5);  // 好友信息框占据第三行的所有列
+    midLayout->addWidget(this->m_sessionArea, 1);
 
 #if DEBUG_CODE
     LogInfo(LogLevel::INFO, "MidWidget::_InitMidWidget() 添加测试项");

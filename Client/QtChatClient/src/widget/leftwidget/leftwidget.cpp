@@ -49,15 +49,15 @@ LeftWidget::~LeftWidget()
 
 void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
 {
-    this->setFixedWidth(50);  // 设置左侧导航栏固定宽度
+    this->setFixedWidth(72);  // 接近桌面聊天软件的窄导航栏比例
     // 设置背景
     this->setObjectName("leftWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
-    this->setStyleSheet("QWidget#leftWidget { background-color: #000000; }");
+    this->setStyleSheet("QWidget#leftWidget { background-color: #171717; border-right: 1px solid #202020; }");
 
     QVBoxLayout *leftLayout = new QVBoxLayout(this);
-    leftLayout->setContentsMargins(0, 10, 0, 10);
-    leftLayout->setSpacing(14);  // 设置按钮之间的间距为14像素
+    leftLayout->setContentsMargins(0, 18, 0, 18);
+    leftLayout->setSpacing(14);
     leftLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     // 创建按钮
     if (this->m_avatarButton == nullptr || this->m_sessionTabButton == nullptr || this->m_friendTabButton == nullptr ||
@@ -77,17 +77,18 @@ void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
         button->setCursor(Qt::PointingHandCursor);  // 鼠标悬停时显示手型光标
         button->setStyleSheet(
             "QPushButton { background: transparent; border: none; }"
-            "QPushButton:hover { background: rgba(255, 255, 255, 0.08); border-radius: 10px; }");
+            "QPushButton:hover { background: #282828; border-radius: 6px; }"
+            "QPushButton:pressed { background: #303030; border-radius: 6px; }");
     };
 
     // 头像
-    initNavButton(this->m_avatarButton, QSize(44, 44), QSize(36, 36));
+    initNavButton(this->m_avatarButton, QSize(48, 48), QSize(42, 42));
     // 会话
-    initNavButton(this->m_sessionTabButton, QSize(42, 42), QSize(30, 30));
+    initNavButton(this->m_sessionTabButton, QSize(46, 46), QSize(30, 30));
     // 好友
-    initNavButton(this->m_friendTabButton, QSize(42, 42), QSize(30, 30));
+    initNavButton(this->m_friendTabButton, QSize(46, 46), QSize(30, 30));
     // 好友申请
-    initNavButton(this->m_friendRequestTabButton, QSize(42, 42), QSize(30, 30));
+    initNavButton(this->m_friendRequestTabButton, QSize(46, 46), QSize(30, 30));
 
     leftLayout->addWidget(this->m_avatarButton);
     leftLayout->addSpacing(5);

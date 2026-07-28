@@ -24,20 +24,20 @@ namespace
 
     constexpr auto kFriendApplyRejectButtonStyle =
         "QPushButton {"
-        " background-color: #eff2f5;"
-        " color: #3c4a59;"
-        " border: 1px solid #b6bec8;"
+        " background-color: #333333;"
+        " color: #d8d8d8;"
+        " border: 1px solid #484848;"
         " border-radius: 10px;"
         " font-size: 14.5px;"
         " font-weight: 600;"
         " padding: 0 12px;"
         "}"
         "QPushButton:hover {"
-        " background-color: #e2e7ec;"
-        " border-color: #9ea8b4;"
+        " background-color: #3d3d3d;"
+        " border-color: #5a5a5a;"
         "}"
         "QPushButton:pressed {"
-        " background-color: #d5dbe2;"
+        " background-color: #292929;"
         "}";
 }  // namespace
 
