@@ -15,13 +15,15 @@
 
 ### 1.1 UserInfo
 
-| 字段          | 类型    | 含义       |
-| ------------- | ------- | ---------- |
-| m_userId      | QString | 用户 ID    |
-| m_userName    | QString | 用户名     |
-| m_description | QString | 用户签名   |
-| m_phone       | QString | 用户手机号 |
-| m_avatar      | QIcon   | 用户头像   |
+| 字段            | 类型    | 含义                 |
+| --------------- | ------- | -------------------- |
+| m_userId        | QString | 用户 ID              |
+| m_userName      | QString | 用户名               |
+| m_userTag       | QString | 用户昵称             |
+| m_description   | QString | 用户签名             |
+| m_phone         | QString | 用户手机号           |
+| m_phoneVerified | bool    | 用户手机号是否已验证 |
+| m_avatar        | QIcon   | 用户头像             |
 
 ### 1.2 ChatSessionInfo
 

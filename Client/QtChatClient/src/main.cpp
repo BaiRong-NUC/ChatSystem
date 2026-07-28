@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LoadApplicationStyle(a);
-    auto w = std::make_unique<MainWidget>();
+    auto w = std::make_unique<ChatWidget::MainWidget>();
     w->show();
 
     // 为AddressSanitizer/CI提供可正常析构并退出的无交互冒烟模式。

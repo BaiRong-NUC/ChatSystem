@@ -34,8 +34,8 @@
 
 #include <QPainter>  // 绘制不规则对话框背景 TextChatMessage
 #include <QPainterPath>
-
 #include <memory>
+#include <QDialog>
 
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
 

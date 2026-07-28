@@ -11,8 +11,10 @@ namespace Model
        public:
         QString m_userId = "";       // 用户ID
         QString m_userName = "";     // 用户名
+        QString m_userTag = "";      // 用户昵称
         QString m_description = "";  // 用户签名
         QString m_phone = "";        // 用户手机号
+        bool m_phoneVerified = false;  // 用户手机号是否已验证
         QIcon m_avatar;              // 用户头像
     };
 
