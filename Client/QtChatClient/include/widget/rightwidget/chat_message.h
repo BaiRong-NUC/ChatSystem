@@ -19,11 +19,12 @@ namespace ChatWidget
         void _MakeSpeechMessage();  // 创建语音消息内容控件
 
        public:
-        explicit ChatMessage(Model::Message *message = nullptr, bool isLeft = true, QWidget *parent = nullptr);
+        explicit ChatMessage(const Model::Message &message, bool isLeft = true,
+                             const QFont &textFont = QFont(DEFAULT_CHAT_FONT, 14), QWidget *parent = nullptr);
         ~ChatMessage() override;
 
-        // 聊天消息
-        Model::Message *m_message = nullptr;
+        std::unique_ptr<Model::Message> m_message;
+        QFont m_textFont;
         bool m_isLeft = true;
     };
 
@@ -38,7 +39,7 @@ namespace ChatWidget
                                  QWidget *parent = nullptr);
         ~TextChatMessage() override;
         QFont m_textFont;               // 文本消息字体
-        QLabel *m_textLabel = nullptr;  // 文本消息内容控件
+        QPointer<QLabel> m_textLabel;  // Qt父对象拥有，成员仅观察
         bool m_isLeft = true;           // 是否是左侧消息,左侧消息和右侧消息不同
 
         // 控件显示时,重写绘制事件,绘制不规则对话框背景

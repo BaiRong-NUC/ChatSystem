@@ -13,18 +13,14 @@ class MainWidget : public QWidget
 {
     Q_OBJECT
    private:
-    static MainWidget *s_instance;  // 单例实例指针
-    explicit MainWidget(QWidget *parent = nullptr);
-
     void _InitMainWidget();  // 初始化主窗口
 
    public:
+    explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget() override;
-    // 获取单例实例的静态方法
-    static MainWidget *GetInstance();
 
-    LeftWidget *m_leftWidget;    // 左侧导航栏
-    MidWidget *m_midWidget;      // 中间会话区
-    RightWidget *m_rightWidget;  // 右侧信息区
+    QPointer<LeftWidget> m_leftWidget;    // Qt父对象拥有，成员仅观察
+    QPointer<MidWidget> m_midWidget;      // Qt父对象拥有，成员仅观察
+    QPointer<RightWidget> m_rightWidget;  // Qt父对象拥有，成员仅观察
 };
 #endif  // MAINWIDGET_H

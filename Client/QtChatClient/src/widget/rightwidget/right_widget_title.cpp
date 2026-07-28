@@ -32,14 +32,6 @@ namespace
     constexpr auto kMoreIconPath = ":/icons/tabler/dots.svg";
 }  // namespace
 
-RightWidgetTitle *RightWidgetTitle::s_instance = nullptr;  // 初始化单例实例指针
-
-RightWidgetTitle *RightWidgetTitle::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new RightWidgetTitle(parent); }
-    return s_instance;
-}
-
 RightWidgetTitle::RightWidgetTitle(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
@@ -55,21 +47,7 @@ RightWidgetTitle::RightWidgetTitle(QWidget *parent) : QWidget(parent)
     this->_InitSignalSlots();
 }
 
-RightWidgetTitle::~RightWidgetTitle()
-{
-    if (this->m_titleLabel != nullptr) { delete this->m_titleLabel; }
-    if (this->m_titleButton != nullptr) { delete this->m_titleButton; }
-    if (this->m_pinButton != nullptr) { delete this->m_pinButton; }
-    if (this->m_minimizeButton != nullptr) { delete this->m_minimizeButton; }
-    if (this->m_maximizeButton != nullptr) { delete this->m_maximizeButton; }
-    if (this->m_closeButton != nullptr) { delete this->m_closeButton; }
-    this->m_titleLabel = nullptr;
-    this->m_titleButton = nullptr;
-    this->m_pinButton = nullptr;
-    this->m_minimizeButton = nullptr;
-    this->m_maximizeButton = nullptr;
-    this->m_closeButton = nullptr;
-}
+RightWidgetTitle::~RightWidgetTitle() = default;
 
 void RightWidgetTitle::_InitRightWidgetTitle()
 {

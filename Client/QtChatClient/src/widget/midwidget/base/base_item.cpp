@@ -31,21 +31,12 @@ BaseItem::BaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QSt
     this->m_textLabel = new QLabel(this);
 
     // 初始化窗口UI资源
-    this->_InitBaseItem(owner, parent, icon, name, text);
+    this->_InitBaseItem(icon, name, text);
 }
 
-BaseItem::~BaseItem()
-{
-    if (this->m_iconButton != nullptr) { delete this->m_iconButton; }
-    if (this->m_nameLabel != nullptr) { delete this->m_nameLabel; }
-    if (this->m_textLabel != nullptr) { delete this->m_textLabel; }
-    this->m_iconButton = nullptr;
-    this->m_nameLabel = nullptr;
-    this->m_textLabel = nullptr;
-}
+BaseItem::~BaseItem() = default;
 
-void BaseItem::_InitBaseItem(QWidget *owner, QWidget *parent, const QIcon &icon, const QString &name,
-                             const QString &text)
+void BaseItem::_InitBaseItem(const QIcon &icon, const QString &name, const QString &text)
 {
     if (this->m_iconButton == nullptr || this->m_nameLabel == nullptr || this->m_textLabel == nullptr)
     {

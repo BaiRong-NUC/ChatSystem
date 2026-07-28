@@ -8,19 +8,17 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        explicit MessageEdit(QWidget *parent = nullptr);
-        void _InitMessageEdit();         // 初始化消息输入框
-        static MessageEdit *s_instance;  // 单例实例指针
+        void _InitMessageEdit();  // 初始化消息输入框
        public:
+        explicit MessageEdit(QWidget *parent = nullptr);
         ~MessageEdit() override;
-        static MessageEdit *GetInstance(QWidget *parent = nullptr);  // 获取单例实例的静态方法
 
-        QPlainTextEdit *m_textEdit = nullptr;
-        QPushButton *m_sendButton = nullptr;
+        QPointer<QPlainTextEdit> m_textEdit;
+        QPointer<QPushButton> m_sendButton;
 
-        QPushButton *m_sendImageButton = nullptr;
-        QPushButton *m_sendFileButton = nullptr;
-        QPushButton *m_sendSpeechButton = nullptr;
-        QPushButton *m_historyButton = nullptr;
+        QPointer<QPushButton> m_sendImageButton;
+        QPointer<QPushButton> m_sendFileButton;
+        QPointer<QPushButton> m_sendSpeechButton;
+        QPointer<QPushButton> m_historyButton;
     };
 }  // namespace ChatWidget

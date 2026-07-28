@@ -26,6 +26,7 @@
 #include <QLabel>          // 标签
 #include <QScrollArea>     // 滚动区域
 #include <QScrollBar>      // 滚动条
+#include <QPointer>        // Qt对象的安全观察指针
 #include <QCursor>
 #include <QEvent>
 #include <QResizeEvent>
@@ -33,6 +34,8 @@
 
 #include <QPainter>  // 绘制不规则对话框背景 TextChatMessage
 #include <QPainterPath>
+
+#include <memory>
 
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
 

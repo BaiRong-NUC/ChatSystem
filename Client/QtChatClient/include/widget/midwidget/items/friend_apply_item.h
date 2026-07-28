@@ -11,7 +11,7 @@ namespace ChatWidget
        private:
         void _InitFriendApplyItem();  // 初始化好友申请项UI
         // 保存两个按钮窗口
-        QWidget *m_buttonContainerWidget;
+        QPointer<QWidget> m_buttonContainerWidget;
 
        public:
         explicit FriendApplyItem(QWidget *owner, const QString &friendUserId, QWidget *parent = nullptr,
@@ -26,9 +26,9 @@ namespace ChatWidget
         QString m_friend_user_id;
 
         // 同意好友申请按钮
-        QPushButton *m_acceptButton;
+        QPointer<QPushButton> m_acceptButton;
 
         // 拒绝好友申请按钮
-        QPushButton *m_rejectButton;
+        QPointer<QPushButton> m_rejectButton;
     };
 }  // namespace ChatWidget

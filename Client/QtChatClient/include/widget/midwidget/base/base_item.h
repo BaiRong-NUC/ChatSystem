@@ -17,8 +17,8 @@ namespace ChatWidget
 
        private:
         // 初始化好友项UI
-        void _InitBaseItem(QWidget *owner, QWidget *parent = nullptr, const QIcon &icon = QIcon(),
-                           const QString &name = QString(), const QString &text = QString());
+        void _InitBaseItem(const QIcon &icon = QIcon(), const QString &name = QString(),
+                           const QString &text = QString());
 
        public:
         ~BaseItem() override;
@@ -34,12 +34,12 @@ namespace ChatWidget
         void mousePressEvent(QMouseEvent *event) override;
 
         // midwidget_area区域(多态)
-        QWidget *m_midSessionAreaWidget;  // midwidget信息区域
+        QPointer<QWidget> m_midSessionAreaWidget;  // midwidget信息区域，非拥有观察指针
 
         bool m_isSelected;  // 是否被选中
 
-        QPushButton *m_iconButton;  // 图标按钮
-        QLabel *m_nameLabel;        // 名称标签
-        QLabel *m_textLabel;        // 文本标签
+        QPointer<QPushButton> m_iconButton;  // 图标按钮
+        QPointer<QLabel> m_nameLabel;        // 名称标签
+        QPointer<QLabel> m_textLabel;        // 文本标签
     };
 }  // namespace ChatWidget

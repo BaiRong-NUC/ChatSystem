@@ -13,37 +13,26 @@ namespace
     constexpr auto kTimestampLabelStyle = "QLabel#timestampLabel { color: #8b8b8b; font-size: 12px; }";
 }  // namespace
 
-MessageItem::MessageItem(QWidget *parent, Model::Message *data, bool isLeft) : QWidget(parent), m_isLeft(isLeft)
+MessageItem::MessageItem(QWidget *parent, const Model::Message &data, bool isLeft, const QFont &textFont)
+    : QWidget(parent), m_isLeft(isLeft)
 {
     // 资源初始化
     this->m_avatarButton = new QPushButton(this);  // 头像
     this->m_username = new QLabel(this);           // 用户名
     this->m_timestamp = new QLabel(this);          // 时间
-    // ChatMessage拥有消息副本，避免调用方传入局部变量后产生悬空指针。
-    Model::Message *messageCopy = data != nullptr ? new Model::Message(*data) : nullptr;
-    this->m_chatMessage = new ChatMessage(messageCopy, isLeft, this);
+    // ChatMessage通过unique_ptr拥有消息副本，避免调用方传入局部变量后产生悬空指针。
+    this->m_chatMessage = new ChatMessage(data, isLeft, textFont, this);
 
     // 初始化UI界面
     this->_InitMessageItem();
 }
 
-MessageItem::~MessageItem()
-{
-    if (this->m_avatarButton != nullptr) { delete this->m_avatarButton; }
-    if (this->m_username != nullptr) { delete this->m_username; }
-    if (this->m_timestamp != nullptr) { delete this->m_timestamp; }
-    if (this->m_chatMessage != nullptr) { delete this->m_chatMessage; }
-    this->m_avatarButton = nullptr;
-    this->m_username = nullptr;
-    this->m_timestamp = nullptr;
-    this->m_chatMessage = nullptr;
-}
+MessageItem::~MessageItem() = default;
 
-MessageItem *MessageItem::CreateMessageItem(QWidget *parent, Model::Message *data, bool isLeft)
+std::unique_ptr<MessageItem> MessageItem::CreateMessageItem(QWidget *parent, const Model::Message &data, bool isLeft,
+                                                            const QFont &textFont)
 {
-    MessageItem *item = new MessageItem(parent, data, isLeft);
-
-    return item;
+    return std::make_unique<MessageItem>(parent, data, isLeft, textFont);
 }
 
 void MessageItem::_InitMessageItem()

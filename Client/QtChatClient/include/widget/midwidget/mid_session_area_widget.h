@@ -26,8 +26,8 @@ namespace ChatWidget
        public:
         ~MidSessionAreaWidget() override;
         explicit MidSessionAreaWidget(QWidget *parent = nullptr);
-        QWidget *m_sessionListWidget;    // 会话列表容器
-        QScrollBar *m_overlayScrollBar;  // 叠放在会话列表上的竖向滚动条
+        QPointer<QWidget> m_sessionListWidget;    // QScrollArea拥有，成员仅观察
+        QPointer<QScrollBar> m_overlayScrollBar;  // viewport拥有，成员仅观察
 
         bool ClearSessionList();  // 清空会话列表
 

@@ -50,14 +50,6 @@ namespace
     }
 }  // namespace
 
-MidWidgetTitle *MidWidgetTitle::s_instance = nullptr;  // 初始化单例实例指针
-
-MidWidgetTitle *MidWidgetTitle::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new MidWidgetTitle(parent); }
-    return s_instance;
-}
-
 MidWidgetTitle::MidWidgetTitle(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
@@ -67,13 +59,7 @@ MidWidgetTitle::MidWidgetTitle(QWidget *parent) : QWidget(parent)
     this->_InitMidWidgetTitle();
 }
 
-MidWidgetTitle::~MidWidgetTitle()
-{
-    if (this->m_addFriendButton != nullptr) { delete this->m_addFriendButton; }
-    if (this->m_searchLineEdit != nullptr) { delete this->m_searchLineEdit; }
-    this->m_addFriendButton = nullptr;
-    this->m_searchLineEdit = nullptr;
-}
+MidWidgetTitle::~MidWidgetTitle() = default;
 
 void MidWidgetTitle::_InitMidWidgetTitle()
 {

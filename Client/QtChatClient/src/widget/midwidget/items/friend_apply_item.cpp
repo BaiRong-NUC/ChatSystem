@@ -55,15 +55,7 @@ FriendApplyItem::FriendApplyItem(QWidget *owner, const QString &friendUserId, QW
     this->_InitFriendApplyItem();
 }
 
-FriendApplyItem::~FriendApplyItem()
-{
-    if (this->m_acceptButton != nullptr) { delete this->m_acceptButton; }
-    if (this->m_rejectButton != nullptr) { delete this->m_rejectButton; }
-    if (this->m_buttonContainerWidget != nullptr) { delete this->m_buttonContainerWidget; }
-    this->m_acceptButton = nullptr;
-    this->m_rejectButton = nullptr;
-    this->m_buttonContainerWidget = nullptr;
-}
+FriendApplyItem::~FriendApplyItem() = default;
 
 void FriendApplyItem::_InitFriendApplyItem()
 {
@@ -105,8 +97,11 @@ void FriendApplyItem::_InitFriendApplyItem()
         exit(-1);
     }
     mainLayout->removeWidget(this->m_textLabel);
-    this->m_textLabel->deleteLater();  // 删除文本标签组件
-    this->m_textLabel = nullptr;
+    {
+        // 组件已从布局移除，用unique_ptr确保在本作用域立即释放。
+        std::unique_ptr<QLabel> removedTextLabel(this->m_textLabel.data());
+        this->m_textLabel.clear();
+    }
 
     // 将按钮容器添加到布局的第二行第二列
     mainLayout->addWidget(this->m_buttonContainerWidget, 1, 2, 1, 2);

@@ -12,17 +12,13 @@ namespace
         "QLabel { color: #111111; background: transparent; font-size: 12px; }";
 }
 
-ChatMessage::ChatMessage(Model::Message *message, bool isLeft, QWidget *parent)
-    : QWidget(parent), m_message(message), m_isLeft(isLeft)
+ChatMessage::ChatMessage(const Model::Message &message, bool isLeft, const QFont &textFont, QWidget *parent)
+    : QWidget(parent), m_message(std::make_unique<Model::Message>(message)), m_textFont(textFont), m_isLeft(isLeft)
 {
     // 初始化UI
     this->_InitChatMessage();
 }
-ChatMessage::~ChatMessage()
-{
-    if (this->m_message != nullptr) { delete this->m_message; }
-    this->m_message = nullptr;
-}
+ChatMessage::~ChatMessage() = default;
 
 void ChatMessage::_InitChatMessage()
 {
@@ -95,7 +91,7 @@ void TextChatMessage::paintEvent(QPaintEvent *event)
 }
 
 TextChatMessage::TextChatMessage(const QString &text, bool isLeft, const QFont &textFont, QWidget *parent)
-    : QWidget(parent), m_isLeft(isLeft), m_textFont(textFont)
+    : QWidget(parent), m_textFont(textFont), m_isLeft(isLeft)
 {
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -125,13 +121,12 @@ TextChatMessage::~TextChatMessage() = default;
 
 void ChatMessage::_MakeTextMessage()
 {
-    TextChatMessage *textMessage =
-        new TextChatMessage(QString::fromUtf8(this->m_message->m_content), this->m_isLeft,
-                            QFont(DEFAULT_CHAT_FONT, 12), this);
+    auto textMessage = std::make_unique<TextChatMessage>(
+        QString::fromUtf8(this->m_message->m_content), this->m_isLeft, this->m_textFont, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(textMessage);
+    layout->addWidget(textMessage.release());  // 所有权交给ChatMessage的Qt对象树
     this->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 }
 

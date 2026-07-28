@@ -52,13 +52,7 @@ MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent
     this->_InitSignalSlots();
 }
 
-MidSessionAreaWidget::~MidSessionAreaWidget()
-{
-    if (this->m_sessionListWidget != nullptr) { delete this->m_sessionListWidget; }
-    if (this->m_overlayScrollBar != nullptr) { delete this->m_overlayScrollBar; }
-    this->m_sessionListWidget = nullptr;
-    this->m_overlayScrollBar = nullptr;
-}
+MidSessionAreaWidget::~MidSessionAreaWidget() = default;
 
 void MidSessionAreaWidget::_InitSessionArea()
 {
@@ -182,14 +176,10 @@ bool MidSessionAreaWidget::ClearSessionList()
     }
 
     // 删除所有会话项
-    QLayoutItem *child;
-    while ((child = sessionListLayout->takeAt(0)) != nullptr)
+    while (auto child = std::unique_ptr<QLayoutItem>(sessionListLayout->takeAt(0)))
     {
-        if (child->widget() != nullptr)
-        {
-            child->widget()->deleteLater();  // 删除会话项组件
-        }
-        delete child;  // 删除布局项
+        // 立即销毁而不是deleteLater，清空操作完成时内存也已经释放。
+        std::unique_ptr<QWidget> widget(child->widget());
     }
     this->_SyncOverlayScrollBarFromSource();
     return true;
@@ -198,18 +188,18 @@ bool MidSessionAreaWidget::ClearSessionList()
 bool MidSessionAreaWidget::AddItem(const ItemType &type, const QString &id, const QIcon &friendIcon,
                                    const QString &friendName, const QString &lastMessage)
 {
-    BaseItem *item = nullptr;
+    std::unique_ptr<BaseItem> item;
     if (type == ChatItemType)
     {
-        item = new ChatItem(this, id, this->m_sessionListWidget, friendIcon, friendName, lastMessage);
+        item = std::make_unique<ChatItem>(this, id, this->m_sessionListWidget, friendIcon, friendName, lastMessage);
     }
     else if (type == FriendItemType)
     {
-        item = new FriendItem(this, id, this->m_sessionListWidget, friendIcon, friendName, lastMessage);
+        item = std::make_unique<FriendItem>(this, id, this->m_sessionListWidget, friendIcon, friendName, lastMessage);
     }
     else if (type == FriendApplyItemType)
     {
-        item = new FriendApplyItem(this, id, this->m_sessionListWidget, friendIcon, friendName);
+        item = std::make_unique<FriendApplyItem>(this, id, this->m_sessionListWidget, friendIcon, friendName);
     }
     else
     {
@@ -230,7 +220,7 @@ bool MidSessionAreaWidget::AddItem(const ItemType &type, const QString &id, cons
         LogInfo(LogLevel::ERROR, "sessionListLayout资源获取失败");
         exit(-1);
     }
-    sessionListLayout->addWidget(item);  // 添加项到布局
+    sessionListLayout->addWidget(item.release());  // 所有权交给m_sessionListWidget的Qt对象树
     this->_SyncOverlayScrollBarFromSource();
     return true;
 }

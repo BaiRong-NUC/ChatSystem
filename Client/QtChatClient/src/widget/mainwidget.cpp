@@ -6,8 +6,6 @@ namespace
         "QWidget#mainWidget { background-color: #191919; border: 1px solid #303030; }";
 }  // namespace
 
-MainWidget *MainWidget::s_instance = nullptr;  // 初始化单例实例指针
-
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
     // 设置主窗口标题和图标
@@ -20,17 +18,6 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 }
 
 MainWidget::~MainWidget() = default;
-
-MainWidget *MainWidget::GetInstance()
-{
-    // 不需要多线程,在有多线程前已经创建好了实例,所以不需要加锁
-    if (MainWidget::s_instance == nullptr)
-    {
-        // 默认桌面为父窗口
-        MainWidget::s_instance = new MainWidget(nullptr);
-    }
-    return MainWidget::s_instance;
-}
 
 void MainWidget::_InitMainWidget()
 {
@@ -45,9 +32,9 @@ void MainWidget::_InitMainWidget()
     this->resize(1200, 760);
 
     // 创建子窗口
-    this->m_leftWidget = LeftWidget::GetInstance(this);
-    this->m_midWidget = MidWidget::GetInstance(this);
-    this->m_rightWidget = RightWidget::GetInstance(this);
+    this->m_leftWidget = new LeftWidget(this);
+    this->m_midWidget = new MidWidget(this);
+    this->m_rightWidget = new RightWidget(this);
 
     if (this->m_leftWidget == nullptr || this->m_midWidget == nullptr || this->m_rightWidget == nullptr)
     {

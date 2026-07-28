@@ -3,6 +3,7 @@ project(QtChatClient LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_AUTORCC ON)
+option(QTCHATCLIENT_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 
 file(GLOB_RECURSE QTCHATCLIENT_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
@@ -43,11 +44,27 @@ target_include_directories(QtChatClient
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_compile_features(QtChatClient PRIVATE cxx_std_17)
+
 target_link_libraries(QtChatClient
     PRIVATE
         Qt::Core
         Qt::Widgets
 )
+
+if(QTCHATCLIENT_ENABLE_SANITIZERS)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(QtChatClient PRIVATE
+            -fsanitize=address,undefined
+            -fno-omit-frame-pointer
+        )
+        target_link_options(QtChatClient PRIVATE
+            -fsanitize=address,undefined
+        )
+    else()
+        message(WARNING "QTCHATCLIENT_ENABLE_SANITIZERS is only configured for GCC and Clang")
+    endif()
+endif()
 
 install(TARGETS QtChatClient
     BUNDLE  DESTINATION .

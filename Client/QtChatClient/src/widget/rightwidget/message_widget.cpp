@@ -17,8 +17,6 @@ namespace
         "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background-color: #191919; }";
 }  // namespace
 
-MessageWidget *MessageWidget::s_instance = nullptr;  // 初始化单例实例指针
-
 MessageWidget::MessageWidget(QWidget *parent) : QScrollArea(parent)
 {
     // 包含的内容
@@ -27,17 +25,7 @@ MessageWidget::MessageWidget(QWidget *parent) : QScrollArea(parent)
     this->_InitMessageWidget();
 }
 
-MessageWidget::~MessageWidget()
-{
-    if (this->m_container != nullptr) { delete this->m_container; }
-    this->m_container = nullptr;
-}
-
-MessageWidget *MessageWidget::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new MessageWidget(parent); }
-    return s_instance;
-}
+MessageWidget::~MessageWidget() = default;
 
 void MessageWidget::_InitMessageWidget()
 {
@@ -82,9 +70,9 @@ void MessageWidget::_InitMessageWidget()
     this->setWidget(this->m_container);
 }
 
-void MessageWidget::AddMessage(bool isLeft, Model::Message &message, QFont *textFont)
+void MessageWidget::AddMessage(bool isLeft, const Model::Message &message, const QFont &textFont)
 {
-    MessageItem *item = MessageItem::CreateMessageItem(this->m_container, &message, isLeft);
+    auto item = MessageItem::CreateMessageItem(this->m_container, message, isLeft, textFont);
     QLayout *layout = this->m_container->layout();
     if (layout->count() > 0)
     {
@@ -94,14 +82,14 @@ void MessageWidget::AddMessage(bool isLeft, Model::Message &message, QFont *text
             item->m_timestamp->hide();
         }
     }
-    layout->addWidget(item);
+    layout->addWidget(item.release());  // 所有权交给m_container的Qt对象树
 }
 
-void MessageWidget::AddFrontMessage(bool isLeft, Model::Message &message, QFont *textFont)
+void MessageWidget::AddFrontMessage(bool isLeft, const Model::Message &message, const QFont &textFont)
 {
-    MessageItem *item = MessageItem::CreateMessageItem(this->m_container, &message, isLeft);
+    auto item = MessageItem::CreateMessageItem(this->m_container, message, isLeft, textFont);
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(this->m_container->layout());
-    if (layout != nullptr) { layout->insertWidget(0, item); }
+    if (layout != nullptr) { layout->insertWidget(0, item.release()); }
 }
 
 void MessageWidget::ClearMessages()
@@ -109,11 +97,9 @@ void MessageWidget::ClearMessages()
     QLayout *layout = this->m_container->layout();
     if (layout != nullptr)
     {
-        QLayoutItem *item;
-        while ((item = layout->takeAt(0)) != nullptr)
+        while (auto item = std::unique_ptr<QLayoutItem>(layout->takeAt(0)))
         {
-            if (item->widget() != nullptr) { delete item->widget(); }
-            delete item;
+            std::unique_ptr<QWidget> widget(item->widget());
         }
     }
 }

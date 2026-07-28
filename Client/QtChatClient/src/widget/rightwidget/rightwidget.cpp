@@ -7,20 +7,12 @@ namespace
     constexpr auto kRightWidgetStyle = "QWidget#rightWidget { background-color: #191919; }";
 }  // namespace
 
-RightWidget *RightWidget::s_instance = nullptr;  // 初始化单例实例指针
-
-RightWidget *RightWidget::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new RightWidget(parent); }
-    return s_instance;
-}
-
 RightWidget::RightWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
-    this->m_titleBar = RightWidgetTitle::GetInstance(this);    // 获取标题栏单例实例
-    this->m_messageWidget = MessageWidget::GetInstance(this);  // 获取聊天窗口单例实例
-    this->m_messageEdit = MessageEdit::GetInstance(this);      // 获取消息输入框单例实例
+    this->m_titleBar = new RightWidgetTitle(this);
+    this->m_messageWidget = new MessageWidget(this);
+    this->m_messageEdit = new MessageEdit(this);
 
     // 初始化UI界面
     this->_InitRightWidget();

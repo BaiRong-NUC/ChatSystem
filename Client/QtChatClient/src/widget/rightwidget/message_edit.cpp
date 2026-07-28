@@ -35,14 +35,6 @@ namespace
     }
 }  // namespace
 
-MessageEdit *MessageEdit::s_instance = nullptr;  // 初始化单例实例指针
-
-MessageEdit *MessageEdit::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new MessageEdit(parent); }
-    return s_instance;
-}
-
 MessageEdit::MessageEdit(QWidget *parent) : QWidget(parent)
 {
     // 初始化资源
@@ -105,18 +97,4 @@ void MessageEdit::_InitMessageEdit()
     mainLayout->addLayout(sendLayout);
 }
 
-MessageEdit::~MessageEdit()
-{
-    if (this->m_textEdit != nullptr) { delete this->m_textEdit; }
-    if (this->m_sendButton != nullptr) { delete this->m_sendButton; }
-    if (this->m_sendImageButton != nullptr) { delete this->m_sendImageButton; }
-    if (this->m_sendFileButton != nullptr) { delete this->m_sendFileButton; }
-    if (this->m_sendSpeechButton != nullptr) { delete this->m_sendSpeechButton; }
-    if (this->m_historyButton != nullptr) { delete this->m_historyButton; }
-    this->m_textEdit = nullptr;
-    this->m_sendButton = nullptr;
-    this->m_sendImageButton = nullptr;
-    this->m_sendFileButton = nullptr;
-    this->m_sendSpeechButton = nullptr;
-    this->m_historyButton = nullptr;
-}
+MessageEdit::~MessageEdit() = default;

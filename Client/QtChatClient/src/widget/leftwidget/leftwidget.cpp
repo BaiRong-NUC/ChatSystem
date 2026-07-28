@@ -3,14 +3,6 @@
 using namespace ChatWidget;
 using namespace Log;
 
-LeftWidget *LeftWidget::s_instance = nullptr;  // 初始化单例实例指针
-
-LeftWidget *LeftWidget::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new LeftWidget(parent); }
-    return s_instance;
-}
-
 LeftWidget::LeftWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化窗口资源
@@ -35,17 +27,7 @@ LeftWidget::LeftWidget(QWidget *parent) : QWidget(parent)
     this->_InitSignalSlots();
 }
 
-LeftWidget::~LeftWidget()
-{
-    if (this->m_avatarButton != nullptr) { delete this->m_avatarButton; }
-    if (this->m_sessionTabButton != nullptr) { delete this->m_sessionTabButton; }
-    if (this->m_friendTabButton != nullptr) { delete this->m_friendTabButton; }
-    if (this->m_friendRequestTabButton != nullptr) { delete this->m_friendRequestTabButton; }
-    this->m_avatarButton = nullptr;
-    this->m_sessionTabButton = nullptr;
-    this->m_friendTabButton = nullptr;
-    this->m_friendRequestTabButton = nullptr;
-}
+LeftWidget::~LeftWidget() = default;
 
 void LeftWidget::_InitLeftWidget(const ActiveTab &activeTab)
 {

@@ -8,18 +8,10 @@ namespace
         "QWidget#midWidget { background-color: #232323; border-right: 1px solid #303030; }";
 }  // namespace
 
-MidWidget *MidWidget::s_instance = nullptr;  // 初始化单例实例指针
-
-MidWidget *MidWidget::GetInstance(QWidget *parent)
-{
-    if (s_instance == nullptr) { s_instance = new MidWidget(parent); }
-    return s_instance;
-}
-
 MidWidget::MidWidget(QWidget *parent) : QWidget(parent)
 {
     // 初始化窗口资源
-    this->m_titleBar = MidWidgetTitle::GetInstance(this);  // 获取标题栏单例实例
+    this->m_titleBar = new MidWidgetTitle(this);            // 创建标题栏
     this->m_sessionArea = new MidSessionAreaWidget(this);  // 创建会话
 
     // 初始化UI界面
@@ -29,11 +21,7 @@ MidWidget::MidWidget(QWidget *parent) : QWidget(parent)
     this->_InitSignalSlots();
 }
 
-MidWidget::~MidWidget()
-{
-    if (this->m_sessionArea != nullptr) { delete this->m_sessionArea; }
-    this->m_sessionArea = nullptr;
-}
+MidWidget::~MidWidget() = default;
 
 void MidWidget::_InitMidWidget()
 {

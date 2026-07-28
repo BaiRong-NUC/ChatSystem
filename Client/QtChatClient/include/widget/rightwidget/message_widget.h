@@ -9,20 +9,18 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        explicit MessageWidget(QWidget *parent = nullptr);
-        void _InitMessageWidget();         // 初始化消息信息区
-        static MessageWidget *s_instance;  // 单例实例指针
+        void _InitMessageWidget();  // 初始化消息信息区
        public:
+        explicit MessageWidget(QWidget *parent = nullptr);
         ~MessageWidget() override;
-        static MessageWidget *GetInstance(QWidget *parent = nullptr);  // 获取单例实例
 
-        QWidget *m_container;
+        QPointer<QWidget> m_container;
 
         // 插入聊天消息
-        void AddMessage(bool isLeft, Model::Message &message,
-                        QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16));  // 尾插
-        void AddFrontMessage(bool isLeft, Model::Message &message,
-                             QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16));  // 头插
-        void ClearMessages();                                                      // 清空所有消息
+        void AddMessage(bool isLeft, const Model::Message &message,
+                        const QFont &textFont = QFont(DEFAULT_CHAT_FONT, 16));  // 尾插
+        void AddFrontMessage(bool isLeft, const Model::Message &message,
+                             const QFont &textFont = QFont(DEFAULT_CHAT_FONT, 16));  // 头插
+        void ClearMessages();  // 清空所有消息
     };
 }  // namespace ChatWidget
