@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <utils/log.h>
+#include <widget/rightwidget/message_item.h>
 
 namespace ChatWidget
 {
@@ -16,5 +17,12 @@ namespace ChatWidget
         static MessageWidget *GetInstance(QWidget *parent = nullptr);  // 获取单例实例
 
         QWidget *m_container;
+
+        // 插入聊天消息
+        void AddMessage(bool isLeft, Model::Message &message,
+                        QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16));  // 尾插
+        void AddFrontMessage(bool isLeft, Model::Message &message,
+                             QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16));  // 头插
+        void ClearMessages();                                                      // 清空所有消息
     };
 }  // namespace ChatWidget

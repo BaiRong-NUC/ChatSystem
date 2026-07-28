@@ -32,7 +32,7 @@ namespace ChatWidget
         Q_OBJECT
 
        public:
-        explicit TextChatMessage(QString &text, bool isLeft, QFont *textFont = new QFont("微软雅黑", 16),
+        explicit TextChatMessage(const QString &text, bool isLeft, QFont *textFont = new QFont(DEFAULT_CHAT_FONT, 16),
                                  QWidget *parent = nullptr);
         ~TextChatMessage() override;
         QFont *m_textFont = nullptr;    // 文本消息字体

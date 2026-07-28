@@ -133,7 +133,7 @@ void TextChatMessage::paintEvent(QPaintEvent *event)
     parentWidget->setFixedHeight(height + 50);  // 设置父控件高度,加10px间距,确保文字可以完全显示
 }
 
-TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont, QWidget *parent)
+TextChatMessage::TextChatMessage(const QString &text, bool isLeft, QFont *textFont, QWidget *parent)
     : QWidget(parent), m_isLeft(isLeft), m_textFont(textFont)
 {
     // 资源初始化
@@ -153,7 +153,11 @@ TextChatMessage::~TextChatMessage()
     this->m_textLabel = nullptr;
 }
 
-void ChatMessage::_MakeTextMessage() {}
+void ChatMessage::_MakeTextMessage()
+{
+    TextChatMessage *textMessage = new TextChatMessage(QString::fromUtf8(this->m_message->m_content), true,
+                                                       new QFont(DEFAULT_CHAT_FONT, 16), this);
+}
 
 void ChatMessage::_MakeImageMessage() {}
 

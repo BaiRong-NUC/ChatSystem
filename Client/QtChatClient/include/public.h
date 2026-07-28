@@ -36,3 +36,6 @@
 
 // ChatMessage/TextChatMessage
 #define CHAT_MESSAGE_WIDTH 0.6  // 聊天消息内容控件宽度占父元素的比例,0.6表示占父元素宽度的60%
+
+// 默认聊天字体
+#define DEFAULT_CHAT_FONT "微软雅黑"
