@@ -1,5 +1,11 @@
 #include <widget/mainwidget.h>
 
+namespace
+{
+    constexpr auto kMainWidgetStyleSheet =
+        "QWidget#mainWidget { background-color: #191919; border: 1px solid #303030; }";
+}  // namespace
+
 MainWidget *MainWidget::s_instance = nullptr;  // 初始化单例实例指针
 
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
@@ -7,6 +13,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     // 设置主窗口标题和图标
     this->setWindowTitle("Qt Chat Client");
     this->setWindowIcon(QIcon(":/images/logo.png"));
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     // 初始化主窗口
     this->_InitMainWidget();
@@ -27,6 +34,10 @@ MainWidget *MainWidget::GetInstance()
 
 void MainWidget::_InitMainWidget()
 {
+    this->setObjectName("mainWidget");
+    this->setAttribute(Qt::WA_StyledBackground, true);
+    this->setStyleSheet(kMainWidgetStyleSheet);
+
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     this->setLayout(mainLayout);
 
@@ -43,7 +54,7 @@ void MainWidget::_InitMainWidget()
         LogInfo(LogLevel::ERROR, "主窗口初始化失败:子窗口指针为nullptr");
         exit(-1);
     }
-    mainLayout->setContentsMargins(0, 0, 0, 0);  // 设置布局边距为0,让子窗口占满整个主窗口
+    mainLayout->setContentsMargins(1, 1, 1, 1);  // 为无边框窗口保留一像素外边框
     mainLayout->setSpacing(0);                   // 设置布局间距为0,让子窗口紧密排列在一起
 
     mainLayout->addWidget(this->m_leftWidget);
