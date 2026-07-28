@@ -1,5 +1,8 @@
 #include <widget/main_widget/mainwidget.h>
 
+using namespace ChatWidget;
+using namespace Log;
+
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
     // 设置主窗口标题和图标
