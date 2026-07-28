@@ -3,6 +3,7 @@
 #include <public.h>
 #include <utils/log.h>
 #include <model/data.h>
+#include <QTimer>
 
 namespace ChatWidget
 {
@@ -22,7 +23,21 @@ namespace ChatWidget
         void _BeginEdit(EditableRow &editableRow);
         void _FinishEdit(EditableRow &editableRow);
         void _UpdateSignatureDisplay();
+        void _InitHoverCard();
+        void _ScheduleHoverCard(QObject *source);
+        void _ScheduleHideHoverCard();
+        void _ShowHoverCard();
+        bool _SupportsHoverCard(QObject *source) const;
         bool eventFilter(QObject *watched, QEvent *event) override;
+
+        QString m_userId;
+        QPointer<QWidget> m_hoverCard;
+        QPointer<QLabel> m_hoverCardTitleLabel;
+        QPointer<QLabel> m_hoverCardContentLabel;
+        QPointer<QTimer> m_hoverShowTimer;
+        QPointer<QTimer> m_hoverHideTimer;
+        QPointer<QObject> m_pendingHoverSource;
+        QPointer<QObject> m_activeHoverSource;
 
        public:
         explicit SelfWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);

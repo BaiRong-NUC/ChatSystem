@@ -3,6 +3,7 @@
 #include <public.h>
 #include <QFrame>
 #include <QMouseEvent>
+#include <QScreen>
 #include <QStyle>
 
 using namespace ChatWidget;
@@ -13,22 +14,27 @@ namespace
 {
     constexpr auto kAvatarDefaultIconPath = ":/images/defaultAvatar.png";  // 默认头像图标路径
     constexpr qsizetype kUserIdCharactersPerLine = 24;
+    constexpr qsizetype kDefaultCharactersPerLine = 28;
+    constexpr int kHoverCardShowDelayMs = 500;
+    constexpr int kHoverCardHideDelayMs = 260;
 
-    QString BuildUserIdToolTip(const QString &userId)
+    QString WrapHoverCardText(const QString &text, qsizetype charactersPerLine)
     {
-        const QString displayUserId = userId.trimmed().isEmpty() ? "未分配" : userId;
-        QStringList escapedLines;
-        for (qsizetype index = 0; index < displayUserId.size(); index += kUserIdCharactersPerLine)
+        QStringList wrappedLines;
+        const QStringList sourceLines = text.split('\n');
+        for (const QString &sourceLine : sourceLines)
         {
-            escapedLines.append(displayUserId.mid(index, kUserIdCharactersPerLine).toHtmlEscaped());
+            if (sourceLine.isEmpty())
+            {
+                wrappedLines.append("");
+                continue;
+            }
+            for (qsizetype index = 0; index < sourceLine.size(); index += charactersPerLine)
+            {
+                wrappedLines.append(sourceLine.mid(index, charactersPerLine));
+            }
         }
-
-        return QString(
-                   "<div style=\"white-space: nowrap;\">"
-                   "<span style=\"color: #9ca3aa; font-size: 11px;\">用户 ID</span><br>"
-                   "<span style=\"color: #f1f3f5; font-family: monospace;\">%1</span>"
-                   "</div>")
-            .arg(escapedLines.join("<br>"));
+        return wrappedLines.join('\n');
     }
 }  // namespace
 
@@ -42,6 +48,11 @@ SelfWidget::SelfWidget(const UserInfo &userInfo, QWidget *parent) : QDialog(pare
     this->m_phoneVerificationCodeEdit = new QLineEdit(this);
     this->m_submitVerificationCodeButton = new QPushButton(this);
     this->m_feedbackLabel = new QLabel(this);
+    this->m_hoverCard = new QWidget(this, Qt::ToolTip | Qt::FramelessWindowHint);
+    this->m_hoverCardTitleLabel = new QLabel(this->m_hoverCard);
+    this->m_hoverCardContentLabel = new QLabel(this->m_hoverCard);
+    this->m_hoverShowTimer = new QTimer(this);
+    this->m_hoverHideTimer = new QTimer(this);
 
     auto createEditableRow = [this](EditableRow &editableRow)
     {
@@ -54,6 +65,7 @@ SelfWidget::SelfWidget(const UserInfo &userInfo, QWidget *parent) : QDialog(pare
     createEditableRow(this->m_signatureRow);
     createEditableRow(this->m_phoneRow);
 
+    this->m_userId = userInfo.m_userId.trimmed().isEmpty() ? "未分配" : userInfo.m_userId;
     this->_InitSelfWidget(userInfo);
 }
 
@@ -67,7 +79,10 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     if (this->m_avatarButton == nullptr || this->m_phoneDisplayWidget == nullptr ||
         this->m_phoneVerificationStatusLabel == nullptr || this->m_phoneVerificationCodeTitleLabel == nullptr ||
         this->m_phoneVerificationCodeEdit == nullptr || this->m_submitVerificationCodeButton == nullptr ||
-        this->m_feedbackLabel == nullptr || editableRowIsNull(this->m_userNameRow) ||
+        this->m_feedbackLabel == nullptr || this->m_hoverCard == nullptr ||
+        this->m_hoverCardTitleLabel == nullptr || this->m_hoverCardContentLabel == nullptr ||
+        this->m_hoverShowTimer == nullptr || this->m_hoverHideTimer == nullptr ||
+        editableRowIsNull(this->m_userNameRow) ||
         editableRowIsNull(this->m_userTagRow) || editableRowIsNull(this->m_signatureRow) ||
         editableRowIsNull(this->m_phoneRow))
     {
@@ -102,9 +117,8 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_avatarButton->setIcon(userInfo.m_avatar.isNull() ? QIcon(kAvatarDefaultIconPath) : userInfo.m_avatar);
     this->m_avatarButton->setObjectName("selfAvatarButton");
     this->m_avatarButton->setCursor(Qt::PointingHandCursor);
-    this->m_avatarButton->setToolTip(BuildUserIdToolTip(userInfo.m_userId));
-    this->m_avatarButton->setToolTipDuration(12000);
     this->m_avatarButton->setAccessibleDescription("用户 ID：" + displayText(userInfo.m_userId, "未分配"));
+    this->m_avatarButton->installEventFilter(this);
     mainLayout->addWidget(this->m_avatarButton, 0, 0, 3, 1, Qt::AlignTop | Qt::AlignHCenter);
 
     // 3. 点击文字进入编辑状态，按回车确认。
@@ -119,7 +133,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
         editableRow.valueLabel->setObjectName("selfInfoValueLabel");
         editableRow.valueLabel->setProperty("editable", true);
         editableRow.valueLabel->setCursor(Qt::PointingHandCursor);
-        editableRow.valueLabel->setToolTip(title.isEmpty() ? "点击修改名字" : "点击修改" + title);
+        editableRow.valueLabel->setAccessibleDescription(title.isEmpty() ? "点击修改名字" : "点击修改" + title);
         editableRow.valueLabel->installEventFilter(this);
 
         editableRow.editor->setText(value);
@@ -161,8 +175,9 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_phoneVerificationStatusLabel->setText(userInfo.m_phoneVerified ? "已验证" : "待验证");
     this->m_phoneVerificationStatusLabel->setObjectName("selfPhoneStatusLabel");
     this->m_phoneVerificationStatusLabel->setProperty("verified", userInfo.m_phoneVerified);
-    this->m_phoneVerificationStatusLabel->setToolTip(userInfo.m_phoneVerified ? "该手机号已完成验证"
-                                                                             : "该手机号尚未验证");
+    this->m_phoneVerificationStatusLabel->setAccessibleDescription(userInfo.m_phoneVerified ? "该手机号已完成验证"
+                                                                                            : "该手机号尚未验证");
+    this->m_phoneVerificationStatusLabel->installEventFilter(this);
 
     this->m_phoneDisplayWidget->setObjectName("selfPhoneDisplayWidget");
     auto *phoneDisplayLayout = new QHBoxLayout(this->m_phoneDisplayWidget);
@@ -195,6 +210,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_feedbackLabel->hide();
     mainLayout->addWidget(this->m_feedbackLabel, 6, 0, 1, 4);
 
+    this->_InitHoverCard();
     this->_UpdateSignatureDisplay();
 }
 
@@ -241,7 +257,7 @@ void SelfWidget::_FinishEdit(EditableRow &editableRow)
         {
             this->m_phoneVerificationStatusLabel->setText("待验证");
             this->m_phoneVerificationStatusLabel->setProperty("verified", false);
-            this->m_phoneVerificationStatusLabel->setToolTip("手机号已修改，请重新验证");
+            this->m_phoneVerificationStatusLabel->setAccessibleDescription("手机号已修改，请重新验证");
             this->m_phoneVerificationStatusLabel->style()->unpolish(this->m_phoneVerificationStatusLabel);
             this->m_phoneVerificationStatusLabel->style()->polish(this->m_phoneVerificationStatusLabel);
         }
@@ -259,8 +275,129 @@ void SelfWidget::_UpdateSignatureDisplay()
     const QString elidedSignature =
         this->m_signatureRow.valueLabel->fontMetrics().elidedText(displaySignature, Qt::ElideRight, availableWidth);
     this->m_signatureRow.valueLabel->setText(elidedSignature);
-    this->m_signatureRow.valueLabel->setToolTip(elidedSignature == displaySignature ? "点击修改签名"
-                                                                                   : displaySignature);
+    this->m_signatureRow.valueLabel->setProperty("elided", elidedSignature != displaySignature);
+    this->m_signatureRow.valueLabel->setAccessibleDescription(
+        elidedSignature == displaySignature ? "点击修改签名" : displaySignature);
+}
+
+void SelfWidget::_InitHoverCard()
+{
+    this->m_hoverCard->setObjectName("selfHoverCard");
+    this->m_hoverCard->setAttribute(Qt::WA_StyledBackground, true);
+    this->m_hoverCard->setAttribute(Qt::WA_ShowWithoutActivating);
+    this->m_hoverCard->installEventFilter(this);
+
+    this->m_hoverCardTitleLabel->setObjectName("selfHoverCardTitleLabel");
+    this->m_hoverCardContentLabel->setObjectName("selfHoverCardContentLabel");
+    this->m_hoverCardContentLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    this->m_hoverCardContentLabel->setWordWrap(true);
+
+    auto *hoverCardLayout = new QVBoxLayout(this->m_hoverCard);
+    hoverCardLayout->setContentsMargins(14, 11, 14, 12);
+    hoverCardLayout->setSpacing(5);
+    hoverCardLayout->addWidget(this->m_hoverCardTitleLabel);
+    hoverCardLayout->addWidget(this->m_hoverCardContentLabel);
+
+    this->m_hoverShowTimer->setSingleShot(true);
+    this->m_hoverHideTimer->setSingleShot(true);
+    connect(this->m_hoverShowTimer, &QTimer::timeout, this, &SelfWidget::_ShowHoverCard);
+    connect(this->m_hoverHideTimer, &QTimer::timeout, this,
+            [this]()
+            {
+                this->m_hoverCard->hide();
+                this->m_activeHoverSource.clear();
+            });
+    this->m_hoverCard->hide();
+}
+
+bool SelfWidget::_SupportsHoverCard(QObject *source) const
+{
+    if (source == this->m_avatarButton || source == this->m_phoneVerificationStatusLabel) { return true; }
+    return source == this->m_signatureRow.valueLabel &&
+           this->m_signatureRow.valueLabel->property("elided").toBool();
+}
+
+void SelfWidget::_ScheduleHoverCard(QObject *source)
+{
+    if (!this->_SupportsHoverCard(source)) { return; }
+
+    this->m_hoverHideTimer->stop();
+    if (this->m_hoverCard->isVisible() && this->m_activeHoverSource == source) { return; }
+
+    this->m_hoverCard->hide();
+    this->m_activeHoverSource.clear();
+    this->m_pendingHoverSource = source;
+    this->m_hoverShowTimer->stop();
+    this->m_hoverShowTimer->start(kHoverCardShowDelayMs);
+}
+
+void SelfWidget::_ScheduleHideHoverCard()
+{
+    this->m_hoverShowTimer->stop();
+    this->m_hoverHideTimer->stop();
+    this->m_hoverHideTimer->start(kHoverCardHideDelayMs);
+}
+
+void SelfWidget::_ShowHoverCard()
+{
+    QObject *source = this->m_pendingHoverSource;
+    if (!this->_SupportsHoverCard(source)) { return; }
+
+    QString title;
+    QString content;
+    qsizetype charactersPerLine = kDefaultCharactersPerLine;
+    if (source == this->m_avatarButton)
+    {
+        title = "用户 ID";
+        content = this->m_userId;
+        charactersPerLine = kUserIdCharactersPerLine;
+        this->m_hoverCardContentLabel->setProperty("kind", "id");
+    }
+    else if (source == this->m_signatureRow.valueLabel)
+    {
+        title = "完整签名";
+        content = this->m_signatureRow.editor->text();
+        this->m_hoverCardContentLabel->setProperty("kind", "text");
+    }
+    else
+    {
+        title = "手机号状态";
+        content = this->m_phoneVerificationStatusLabel->accessibleDescription();
+        this->m_hoverCardContentLabel->setProperty("kind", "text");
+    }
+
+    this->m_hoverCardContentLabel->style()->unpolish(this->m_hoverCardContentLabel);
+    this->m_hoverCardContentLabel->style()->polish(this->m_hoverCardContentLabel);
+    this->m_hoverCardTitleLabel->setText(title);
+    this->m_hoverCardContentLabel->setText(WrapHoverCardText(content, charactersPerLine));
+
+    const QStringList lines = this->m_hoverCardContentLabel->text().split('\n');
+    int widestLine = 0;
+    for (const QString &line : lines)
+    {
+        widestLine = qMax(widestLine, this->m_hoverCardContentLabel->fontMetrics().horizontalAdvance(line));
+    }
+    const int cardWidth = qBound(150, widestLine + 30, 270);
+    this->m_hoverCard->setFixedWidth(cardWidth);
+    this->m_hoverCardContentLabel->setFixedWidth(cardWidth - 28);
+    this->m_hoverCard->adjustSize();
+
+    auto *sourceWidget = qobject_cast<QWidget *>(source);
+    QPoint cardPosition = sourceWidget->mapToGlobal(QPoint(0, sourceWidget->height() + 8));
+    const QRect availableGeometry = sourceWidget->screen()->availableGeometry();
+    if (cardPosition.x() + this->m_hoverCard->width() > availableGeometry.right())
+    {
+        cardPosition.setX(availableGeometry.right() - this->m_hoverCard->width());
+    }
+    if (cardPosition.y() + this->m_hoverCard->height() > availableGeometry.bottom())
+    {
+        cardPosition.setY(sourceWidget->mapToGlobal(QPoint(0, -this->m_hoverCard->height() - 8)).y());
+    }
+
+    this->m_activeHoverSource = source;
+    this->m_hoverCard->move(cardPosition);
+    this->m_hoverCard->show();
+    this->m_hoverCard->raise();
 }
 
 bool SelfWidget::eventFilter(QObject *watched, QEvent *event)
@@ -268,6 +405,24 @@ bool SelfWidget::eventFilter(QObject *watched, QEvent *event)
     if (watched == this->m_signatureRow.valueLabel && event->type() == QEvent::Resize)
     {
         this->_UpdateSignatureDisplay();
+    }
+
+    if (event->type() == QEvent::Enter)
+    {
+        if (watched == this->m_hoverCard)
+        {
+            this->m_hoverHideTimer->stop();
+        }
+        else
+        {
+            this->_ScheduleHoverCard(watched);
+        }
+    }
+    else if (event->type() == QEvent::Leave &&
+             (watched == this->m_hoverCard || watched == this->m_activeHoverSource ||
+              watched == this->m_pendingHoverSource))
+    {
+        this->_ScheduleHideHoverCard();
     }
 
     if (event->type() == QEvent::MouseButtonRelease &&

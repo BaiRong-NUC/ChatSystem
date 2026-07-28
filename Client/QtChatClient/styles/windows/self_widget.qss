@@ -3,14 +3,6 @@ QDialog#selfWidget {
     border: 1px solid #484848;
 }
 
-QToolTip {
-    color: #f1f3f5;
-    background-color: #22262b;
-    border: 1px solid #4b5158;
-    border-radius: 6px;
-    padding: 8px 10px;
-}
-
 QDialog#selfWidget QPushButton#selfAvatarButton {
     background-color: #353535;
     border: none;
@@ -109,6 +101,32 @@ QDialog#selfWidget QLabel#selfPhoneStatusLabel[verified="true"] {
 
 QDialog#selfWidget QWidget#selfPhoneDisplayWidget {
     background: transparent;
+}
+
+QWidget#selfHoverCard {
+    background-color: #303236;
+    border: 1px solid #50555c;
+    border-radius: 9px;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardTitleLabel {
+    color: #8fbba0;
+    background: transparent;
+    border: none;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardContentLabel {
+    color: #eceff1;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardContentLabel[kind="id"] {
+    color: #f3f5f6;
+    font-family: "JetBrains Mono", "Consolas", monospace;
 }
 
 QDialog#selfWidget QLabel#selfFeedbackLabel {
