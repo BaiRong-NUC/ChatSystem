@@ -57,29 +57,37 @@ QDialog#selfWidget QLineEdit#selfInfoEditor:focus {
 
 QDialog#selfWidget QPushButton#selfEditButton,
 QDialog#selfWidget QPushButton#selfSubmitButton {
-    min-width: 46px;
-    min-height: 26px;
-    border: none;
-    border-radius: 5px;
+    min-width: 42px;
+    max-width: 42px;
+    min-height: 24px;
+    max-height: 24px;
+    border-radius: 12px;
     font-size: 12px;
+    padding: 0;
 }
 
 QDialog#selfWidget QPushButton#selfEditButton {
-    color: #dadada;
-    background-color: #353535;
+    color: #aeb4bb;
+    background-color: transparent;
+    border: 1px solid #4b4f54;
 }
 
 QDialog#selfWidget QPushButton#selfEditButton:hover {
-    background-color: #414141;
+    color: #f1f3f5;
+    background-color: #3a3f45;
+    border-color: #666d75;
 }
 
 QDialog#selfWidget QPushButton#selfEditButton:pressed {
-    background-color: #2d2d2d;
+    color: #dfe3e6;
+    background-color: #30343a;
+    border-color: #565c63;
 }
 
 QDialog#selfWidget QPushButton#selfSubmitButton {
     color: #ffffff;
     background-color: #2f8f58;
+    border: 1px solid #2f8f58;
 }
 
 QDialog#selfWidget QPushButton#selfSubmitButton:hover {
@@ -91,10 +99,23 @@ QDialog#selfWidget QPushButton#selfSubmitButton:pressed {
 }
 
 QDialog#selfWidget QLabel#selfPhoneStatusLabel {
-    color: #9b9b9b;
+    color: #d5a15d;
+    background-color: #413422;
+    border: 1px solid #655038;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+}
+
+QDialog#selfWidget QLabel#selfPhoneStatusLabel[verified="true"] {
+    color: #72ce94;
+    background-color: #243d2e;
+    border-color: #365d43;
+}
+
+QDialog#selfWidget QWidget#selfPhoneDisplayWidget {
     background: transparent;
-    font-size: 12px;
-    padding-left: 4px;
 }
 
 QDialog#selfWidget QLabel#selfFeedbackLabel {

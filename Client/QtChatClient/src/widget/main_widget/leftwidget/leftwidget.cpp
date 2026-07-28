@@ -2,6 +2,7 @@
 
 using namespace ChatWidget;
 using namespace Log;
+using namespace Model;
 
 LeftWidget::LeftWidget(QWidget *parent) : QWidget(parent)
 {
@@ -135,7 +136,15 @@ void LeftWidget::_InitSignalSlots()
                 if (this->m_selfWidget == nullptr)
                 {
                     // SelfWidget 设置了 Qt::WA_DeleteOnClose，窗口关闭时会自动删除自己
-                    this->m_selfWidget = new SelfWidget(this);
+                    UserInfo userInfo;
+                    userInfo.m_userId = "123";
+                    userInfo.m_userName = "Test User";
+                    userInfo.m_phone = "12345678905";
+                    userInfo.m_userTag = "小名";
+                    userInfo.m_description = "这是一个测试用户的签名信息。";
+                    userInfo.m_avatar = QIcon(":/images/defaultAvatar.png");
+                    userInfo.m_phoneVerified = true;
+                    this->m_selfWidget = new SelfWidget(userInfo, this);
                 }
                 // 将个人信息窗口的左上角放在头像右侧，并留出少量间距
                 const QPoint popupPosition =

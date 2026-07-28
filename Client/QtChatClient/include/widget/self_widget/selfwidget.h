@@ -1,6 +1,8 @@
 #pragma once
 
 #include <public.h>
+#include <utils/log.h>
+#include <model/data.h>
 
 namespace ChatWidget
 {
@@ -8,7 +10,7 @@ namespace ChatWidget
     {
         Q_OBJECT
 
-       public:
+       private:
         struct EditableRow
         {
             QPointer<QLabel> titleLabel;
@@ -18,7 +20,10 @@ namespace ChatWidget
             QPointer<QPushButton> submitButton;
         };
 
-        explicit SelfWidget(QWidget *parent = nullptr);
+        void _InitSelfWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
+
+       public:
+        explicit SelfWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
         ~SelfWidget() override = default;
 
         QPointer<QPushButton> m_avatarButton;
@@ -34,10 +39,5 @@ namespace ChatWidget
         QPointer<QLineEdit> m_phoneVerificationCodeEdit;
         QPointer<QPushButton> m_submitVerificationCodeButton;
         QPointer<QLabel> m_feedbackLabel;
-
-       private:
-        void _InitSelfWidget();  // 初始化UI界面
-        void _InitEditableRow(EditableRow &editableRow, const QString &title, const QString &placeholder,
-                              QGridLayout *mainLayout, int row);
     };
 }  // namespace ChatWidget
