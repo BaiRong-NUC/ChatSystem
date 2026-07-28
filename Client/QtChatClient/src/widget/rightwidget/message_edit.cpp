@@ -14,16 +14,14 @@ namespace
         " border-radius: 5px; font-size: 13px; padding: 0 18px; }"
         "QPushButton#sendButton:hover { color: #d8d8d8; background-color: #333333; }";
 
-    constexpr auto kMessageTextEditStyleSheet =
-        "QTextEdit { color: #eeeeee; background-color: #191919; border: none; font-size: 14px;"
+    constexpr auto kPlainMessageTextEditStyleSheet =
+        "QPlainTextEdit { color: #eeeeee; background-color: #191919; border: none; font-size: 14px;"
         " selection-background-color: #3b7f5b; padding: 0px; }";
 
-    constexpr const char *kToolButtonIconPaths[] = {
-        ":/images/image.png",
-        ":/images/file.png",
-        ":/images/sound.png",
-        ":/images/history.png",
-    };
+    constexpr auto kSendImageButtonIconPath = ":/images/image.png";
+    constexpr auto kSendFileButtonIconPath = ":/images/file.png";
+    constexpr auto kSendSpeechButtonIconPath = ":/images/sound.png";
+    constexpr auto kHistoryButtonIconPath = ":/images/history.png";
 
     QIcon MakeTintedIcon(const QString &path, const QColor &color, const QSize &size)
     {
@@ -47,6 +45,15 @@ MessageEdit *MessageEdit::GetInstance(QWidget *parent)
 
 MessageEdit::MessageEdit(QWidget *parent) : QWidget(parent)
 {
+    // 初始化资源
+    this->m_textEdit = new QPlainTextEdit(this);
+    this->m_sendButton = new QPushButton("发送(S)", this);
+    this->m_sendImageButton = new QPushButton(this);
+    this->m_sendFileButton = new QPushButton(this);
+    this->m_sendSpeechButton = new QPushButton(this);
+    this->m_historyButton = new QPushButton(this);
+
+    // 初始化UI
     this->_InitMessageEdit();
 }
 
@@ -65,29 +72,32 @@ void MessageEdit::_InitMessageEdit()
     QHBoxLayout *toolLayout = new QHBoxLayout();
     toolLayout->setContentsMargins(0, 0, 0, 0);
     toolLayout->setSpacing(6);
-    for (const char *iconPath : kToolButtonIconPaths)
+
+    auto initToolButton = [toolLayout](QPushButton *button, const char *iconPath)
     {
-        QPushButton *toolButton = new QPushButton(this);
-        toolButton->setObjectName("toolButton");
-        toolButton->setFixedSize(34, 30);
-        toolButton->setIcon(MakeTintedIcon(iconPath, QColor("#c8c8c8"), QSize(20, 20)));
-        toolButton->setIconSize(QSize(20, 20));
-        toolButton->setCursor(Qt::PointingHandCursor);
-        toolLayout->addWidget(toolButton);
-    }
+        button->setObjectName("toolButton");
+        button->setFixedSize(34, 30);
+        button->setIcon(MakeTintedIcon(iconPath, QColor("#c8c8c8"), QSize(20, 20)));
+        button->setIconSize(QSize(20, 20));
+        button->setCursor(Qt::PointingHandCursor);
+        toolLayout->addWidget(button);
+    };
+
+    initToolButton(this->m_sendImageButton, kSendImageButtonIconPath);
+    initToolButton(this->m_sendFileButton, kSendFileButtonIconPath);
+    initToolButton(this->m_sendSpeechButton, kSendSpeechButtonIconPath);
+    initToolButton(this->m_historyButton, kHistoryButtonIconPath);
+
     toolLayout->addStretch();
     mainLayout->addLayout(toolLayout);
 
-    this->m_textEdit = new QTextEdit(this);
     this->m_textEdit->setPlaceholderText("请输入消息内容...");
-    this->m_textEdit->setAcceptRichText(false);
-    this->m_textEdit->setStyleSheet(kMessageTextEditStyleSheet);
+    this->m_textEdit->setStyleSheet(kPlainMessageTextEditStyleSheet);
     mainLayout->addWidget(this->m_textEdit);
 
     QHBoxLayout *sendLayout = new QHBoxLayout();
     sendLayout->setContentsMargins(0, 0, 0, 0);
     sendLayout->addStretch();
-    this->m_sendButton = new QPushButton("发送(S)", this);
     this->m_sendButton->setObjectName("sendButton");
     this->m_sendButton->setFixedSize(92, 34);
     this->m_sendButton->setCursor(Qt::PointingHandCursor);
@@ -95,4 +105,18 @@ void MessageEdit::_InitMessageEdit()
     mainLayout->addLayout(sendLayout);
 }
 
-MessageEdit::~MessageEdit() = default;
+MessageEdit::~MessageEdit()
+{
+    if (this->m_textEdit != nullptr) { delete this->m_textEdit; }
+    if (this->m_sendButton != nullptr) { delete this->m_sendButton; }
+    if (this->m_sendImageButton != nullptr) { delete this->m_sendImageButton; }
+    if (this->m_sendFileButton != nullptr) { delete this->m_sendFileButton; }
+    if (this->m_sendSpeechButton != nullptr) { delete this->m_sendSpeechButton; }
+    if (this->m_historyButton != nullptr) { delete this->m_historyButton; }
+    this->m_textEdit = nullptr;
+    this->m_sendButton = nullptr;
+    this->m_sendImageButton = nullptr;
+    this->m_sendFileButton = nullptr;
+    this->m_sendSpeechButton = nullptr;
+    this->m_historyButton = nullptr;
+}

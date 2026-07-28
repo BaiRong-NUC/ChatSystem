@@ -15,7 +15,12 @@ namespace ChatWidget
         ~MessageEdit() override;
         static MessageEdit *GetInstance(QWidget *parent = nullptr);  // 获取单例实例的静态方法
 
-        QTextEdit *m_textEdit = nullptr;
+        QPlainTextEdit *m_textEdit = nullptr;
         QPushButton *m_sendButton = nullptr;
+
+        QPushButton *m_sendImageButton = nullptr;
+        QPushButton *m_sendFileButton = nullptr;
+        QPushButton *m_sendSpeechButton = nullptr;
+        QPushButton *m_historyButton = nullptr;
     };
 }  // namespace ChatWidget
