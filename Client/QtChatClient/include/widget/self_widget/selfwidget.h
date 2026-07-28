@@ -1,11 +1,8 @@
 #pragma once
 
 #include <public.h>
-
-namespace Model
-{
-    class UserInfo;
-}
+#include <utils/log.h>
+#include <model/data.h>
 
 namespace ChatWidget
 {
@@ -13,28 +10,46 @@ namespace ChatWidget
     {
         Q_OBJECT
 
-        void _InitSelfWidget();  // 初始化UI界面
-
-       public:
-        explicit SelfWidget(QWidget *parent = nullptr);
-        ~SelfWidget() override = default;
-
+       private:
         struct EditableRow
         {
             QPointer<QLabel> titleLabel;
             QPointer<QLabel> valueLabel;
             QPointer<QLineEdit> editor;
-            QPointer<QPushButton> editButton;
-            QPointer<QPushButton> submitButton;
         };
+
+        void _InitSelfWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
+        void _BeginEdit(EditableRow &editableRow);
+        void _FinishEdit(EditableRow &editableRow);
+        void _UpdateSignatureDisplay();
+        void _InitHoverCard();
+        void _ScheduleHoverCard(QObject *source);
+        void _ScheduleHideHoverCard();
+        void _ShowHoverCard();
+        bool _SupportsHoverCard(QObject *source) const;
+        bool eventFilter(QObject *watched, QEvent *event) override;
+
+        QString m_userId;
+        QPointer<QWidget> m_hoverCard;
+        QPointer<QLabel> m_hoverCardTitleLabel;
+        QPointer<QLabel> m_hoverCardContentLabel;
+        QPointer<QTimer> m_hoverShowTimer;
+        QPointer<QTimer> m_hoverHideTimer;
+        QPointer<QObject> m_pendingHoverSource;
+        QPointer<QObject> m_activeHoverSource;
+
+       public:
+        explicit SelfWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
+        ~SelfWidget() override = default;
+
         QPointer<QPushButton> m_avatarButton;
-        QPointer<QLabel> m_userIdValueLabel;
 
         EditableRow m_userNameRow;
         EditableRow m_userTagRow;
         EditableRow m_signatureRow;
         EditableRow m_phoneRow;
 
+        QPointer<QWidget> m_phoneDisplayWidget;
         QPointer<QLabel> m_phoneVerificationStatusLabel;
         QPointer<QLabel> m_phoneVerificationCodeTitleLabel;
         QPointer<QLineEdit> m_phoneVerificationCodeEdit;

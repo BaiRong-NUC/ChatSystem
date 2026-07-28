@@ -1,0 +1,147 @@
+QDialog#selfWidget {
+    background-color: #2b2b2b;
+    border: 1px solid #484848;
+}
+
+QDialog#selfWidget QPushButton#selfAvatarButton {
+    background-color: #353535;
+    border: none;
+    border-radius: 8px;
+    padding: 2px;
+}
+
+QDialog#selfWidget QPushButton#selfAvatarButton:hover {
+    background-color: #383838;
+    border-color: #6a6a6a;
+}
+
+QDialog#selfWidget QLabel#selfInfoTitleLabel {
+    color: #a6a6a6;
+    background: transparent;
+    font-size: 13px;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel {
+    color: #dddddd;
+    background: transparent;
+    font-size: 14px;
+    padding: 0 4px;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel[editable="true"] {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 2px 4px;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel[editable="true"]:hover {
+    color: #f4f4f4;
+    background-color: #34383d;
+    border-color: #444a50;
+}
+
+QDialog#selfWidget QLabel#selfInfoValueLabel[role="primary"] {
+    color: #f4f4f4;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+QDialog#selfWidget QLineEdit#selfInfoEditor {
+    color: #f2f2f2;
+    background-color: #303030;
+    border: 1px solid #505050;
+    border-radius: 6px;
+    padding: 6px 9px;
+    selection-background-color: #3b7f5b;
+}
+
+QDialog#selfWidget QLineEdit#selfInfoEditor:focus {
+    border-color: #43a36c;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton {
+    min-width: 42px;
+    max-width: 42px;
+    min-height: 24px;
+    max-height: 24px;
+    border-radius: 12px;
+    font-size: 12px;
+    padding: 0;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton {
+    color: #ffffff;
+    background-color: #2f8f58;
+    border: 1px solid #2f8f58;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton:hover {
+    background-color: #38a868;
+}
+
+QDialog#selfWidget QPushButton#selfSubmitButton:pressed {
+    background-color: #28784b;
+}
+
+QDialog#selfWidget QLabel#selfPhoneStatusLabel {
+    color: #d5a15d;
+    background-color: #413422;
+    border: 1px solid #655038;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+}
+
+QDialog#selfWidget QLabel#selfPhoneStatusLabel[verified="true"] {
+    color: #72ce94;
+    background-color: #243d2e;
+    border-color: #365d43;
+}
+
+QDialog#selfWidget QWidget#selfPhoneDisplayWidget {
+    background: transparent;
+}
+
+QWidget#selfHoverCard {
+    background-color: #303236;
+    border: 1px solid #50555c;
+    border-radius: 9px;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardTitleLabel {
+    color: #8fbba0;
+    background: transparent;
+    border: none;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardContentLabel {
+    color: #eceff1;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+}
+
+QWidget#selfHoverCard QLabel#selfHoverCardContentLabel[kind="id"] {
+    color: #f3f5f6;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+}
+
+QDialog#selfWidget QLabel#selfFeedbackLabel {
+    color: #8fcaa5;
+    background: transparent;
+    font-size: 12px;
+}
+
+QDialog#selfWidget QLabel#selfFeedbackLabel[status="error"] {
+    color: #e47777;
+}
+
+QDialog#selfWidget QFrame#selfSectionDivider {
+    color: #3b3b3b;
+    background-color: #3b3b3b;
+    border: none;
+    max-height: 1px;
+}
