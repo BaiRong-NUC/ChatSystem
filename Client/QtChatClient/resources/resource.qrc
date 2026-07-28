@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
+        <file>icons/tabler/copy.svg</file>
+        <file>icons/tabler/dots.svg</file>
+        <file>icons/tabler/minus.svg</file>
+        <file>icons/tabler/pin.svg</file>
+        <file>icons/tabler/square.svg</file>
+        <file>icons/tabler/x.svg</file>
         <file>images/apply_active.png</file>
         <file>images/apply_inactive.png</file>
         <file>images/checked.png</file>
