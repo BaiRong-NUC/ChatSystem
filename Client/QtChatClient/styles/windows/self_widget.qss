@@ -3,6 +3,14 @@ QDialog#selfWidget {
     border: 1px solid #484848;
 }
 
+QToolTip {
+    color: #f1f3f5;
+    background-color: #22262b;
+    border: 1px solid #4b5158;
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
 QDialog#selfWidget QPushButton#selfAvatarButton {
     background-color: #353535;
     border: none;
@@ -44,14 +52,6 @@ QDialog#selfWidget QLabel#selfInfoValueLabel[role="primary"] {
     color: #f4f4f4;
     font-size: 22px;
     font-weight: 500;
-}
-
-QDialog#selfWidget QLabel#selfInfoValueLabel[role="meta"],
-QDialog#selfWidget QLabel#selfMetaTitleLabel {
-    color: #9b9b9b;
-    background: transparent;
-    font-size: 13px;
-    padding: 0;
 }
 
 QDialog#selfWidget QLineEdit#selfInfoEditor {
@@ -108,10 +108,6 @@ QDialog#selfWidget QLabel#selfPhoneStatusLabel[verified="true"] {
 }
 
 QDialog#selfWidget QWidget#selfPhoneDisplayWidget {
-    background: transparent;
-}
-
-QDialog#selfWidget QWidget#selfIdentityWidget {
     background: transparent;
 }
 

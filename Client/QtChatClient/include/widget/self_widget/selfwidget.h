@@ -29,7 +29,6 @@ namespace ChatWidget
         ~SelfWidget() override = default;
 
         QPointer<QPushButton> m_avatarButton;
-        QPointer<QLabel> m_userIdValueLabel;
 
         EditableRow m_userNameRow;
         EditableRow m_userTagRow;

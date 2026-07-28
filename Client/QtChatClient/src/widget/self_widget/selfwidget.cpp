@@ -12,13 +12,30 @@ using namespace Model;
 namespace
 {
     constexpr auto kAvatarDefaultIconPath = ":/images/defaultAvatar.png";  // 默认头像图标路径
+    constexpr qsizetype kUserIdCharactersPerLine = 24;
+
+    QString BuildUserIdToolTip(const QString &userId)
+    {
+        const QString displayUserId = userId.trimmed().isEmpty() ? "未分配" : userId;
+        QStringList escapedLines;
+        for (qsizetype index = 0; index < displayUserId.size(); index += kUserIdCharactersPerLine)
+        {
+            escapedLines.append(displayUserId.mid(index, kUserIdCharactersPerLine).toHtmlEscaped());
+        }
+
+        return QString(
+                   "<div style=\"white-space: nowrap;\">"
+                   "<span style=\"color: #9ca3aa; font-size: 11px;\">用户 ID</span><br>"
+                   "<span style=\"color: #f1f3f5; font-family: monospace;\">%1</span>"
+                   "</div>")
+            .arg(escapedLines.join("<br>"));
+    }
 }  // namespace
 
 SelfWidget::SelfWidget(const UserInfo &userInfo, QWidget *parent) : QDialog(parent)
 {
     // 初始化原有业务控件资源
     this->m_avatarButton = new QPushButton(this);
-    this->m_userIdValueLabel = new QLabel(this);
     this->m_phoneDisplayWidget = new QWidget(this);
     this->m_phoneVerificationStatusLabel = new QLabel(this);
     this->m_phoneVerificationCodeTitleLabel = new QLabel(this);
@@ -47,8 +64,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
         return editableRow.titleLabel == nullptr || editableRow.valueLabel == nullptr ||
                editableRow.editor == nullptr;
     };
-    if (this->m_avatarButton == nullptr || this->m_userIdValueLabel == nullptr ||
-        this->m_phoneDisplayWidget == nullptr ||
+    if (this->m_avatarButton == nullptr || this->m_phoneDisplayWidget == nullptr ||
         this->m_phoneVerificationStatusLabel == nullptr || this->m_phoneVerificationCodeTitleLabel == nullptr ||
         this->m_phoneVerificationCodeEdit == nullptr || this->m_submitVerificationCodeButton == nullptr ||
         this->m_feedbackLabel == nullptr || editableRowIsNull(this->m_userNameRow) ||
@@ -80,35 +96,16 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     mainLayout->setColumnMinimumWidth(1, 44);
     mainLayout->setColumnStretch(2, 1);
 
-    // 2. 头像和系统分配的用户ID
+    // 2. 头像。用户ID通过悬停信息卡展示，避免长ID破坏主布局。
     this->m_avatarButton->setFixedSize(82, 82);
     this->m_avatarButton->setIconSize(QSize(78, 78));
     this->m_avatarButton->setIcon(userInfo.m_avatar.isNull() ? QIcon(kAvatarDefaultIconPath) : userInfo.m_avatar);
     this->m_avatarButton->setObjectName("selfAvatarButton");
     this->m_avatarButton->setCursor(Qt::PointingHandCursor);
-
-    auto *identityWidget = new QWidget(this);
-    identityWidget->setObjectName("selfIdentityWidget");
-    auto *identityLayout = new QVBoxLayout(identityWidget);
-    identityLayout->setContentsMargins(0, 0, 0, 0);
-    identityLayout->setSpacing(8);
-    identityLayout->addWidget(this->m_avatarButton, 0, Qt::AlignHCenter);
-
-    auto *userIdLayout = new QHBoxLayout();
-    userIdLayout->setContentsMargins(0, 0, 0, 0);
-    userIdLayout->setSpacing(4);
-    auto *userIdTitleLabel = new QLabel("ID：", this);
-    userIdTitleLabel->setObjectName("selfMetaTitleLabel");
-    this->m_userIdValueLabel->setText(displayText(userInfo.m_userId, "未分配"));
-    this->m_userIdValueLabel->setObjectName("selfInfoValueLabel");
-    this->m_userIdValueLabel->setProperty("role", "meta");
-    userIdLayout->addStretch();
-    userIdLayout->addWidget(userIdTitleLabel);
-    userIdLayout->addWidget(this->m_userIdValueLabel);
-    userIdLayout->addStretch();
-    identityLayout->addLayout(userIdLayout);
-    identityLayout->addStretch();
-    mainLayout->addWidget(identityWidget, 0, 0, 3, 1, Qt::AlignTop);
+    this->m_avatarButton->setToolTip(BuildUserIdToolTip(userInfo.m_userId));
+    this->m_avatarButton->setToolTipDuration(12000);
+    this->m_avatarButton->setAccessibleDescription("用户 ID：" + displayText(userInfo.m_userId, "未分配"));
+    mainLayout->addWidget(this->m_avatarButton, 0, 0, 3, 1, Qt::AlignTop | Qt::AlignHCenter);
 
     // 3. 点击文字进入编辑状态，按回车确认。
     auto initEditableRow = [this, mainLayout, &displayText](EditableRow &editableRow, const QString &title,
