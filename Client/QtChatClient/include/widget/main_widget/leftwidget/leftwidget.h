@@ -50,5 +50,8 @@ namespace ChatWidget
         QPointer<QPushButton> m_friendRequestTabButton;
         // - 当前激活的标签,默认是无标签,这会影响中间会话区
         ActiveTab m_activeTab = None;
+
+        // - 个人信息窗口；窗口关闭并销毁后会自动变为 nullptr
+        QPointer<SelfWidget> m_selfWidget;
     };
 }  // namespace ChatWidget

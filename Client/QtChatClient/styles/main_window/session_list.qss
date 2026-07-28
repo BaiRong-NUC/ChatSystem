@@ -109,4 +109,3 @@ QPushButton#friendApplyRejectButton:hover {
 QPushButton#friendApplyRejectButton:pressed {
     background-color: #292929;
 }
-

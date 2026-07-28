@@ -1,5 +1,7 @@
 #include <widget/main_widget/mainwidget.h>
 #include <QApplication>
+#include <QDir>
+#include <QDirIterator>
 #include <QTimer>
 #include <model/data.h>
 #include <utils/log.h>
@@ -10,13 +12,10 @@ namespace
 {
     void LoadApplicationStyle(QApplication &application)
     {
-        const QStringList styleFiles = {
-            ":/styles/common.qss",
-            ":/styles/navigation.qss",
-            ":/styles/session_list.qss",
-            ":/styles/chat_view.qss",
-            ":/styles/message_edit.qss",
-        };
+        QStringList styleFiles;
+        QDirIterator styleIterator(":/styles", QStringList{"*.qss"}, QDir::Files, QDirIterator::Subdirectories);
+        while (styleIterator.hasNext()) { styleFiles.append(styleIterator.next()); }
+        styleFiles.sort(Qt::CaseSensitive);
 
         QString applicationStyle;
         for (const QString &stylePath : styleFiles)

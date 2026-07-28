@@ -19,6 +19,8 @@ namespace ChatWidget
     {
         Q_OBJECT
 
+        void _InitSelfWidget();  // 初始化UI界面
+
        public:
         explicit SelfWidget(QWidget *parent = nullptr);
         ~SelfWidget() override = default;

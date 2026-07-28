@@ -132,7 +132,17 @@ void LeftWidget::_InitSignalSlots()
     connect(this->m_avatarButton, &QPushButton::clicked, this,
             [this]()
             {
-                SelfWidget selfWidget(this);
-                selfWidget.show();  // 非模态对话框
+                if (this->m_selfWidget == nullptr)
+                {
+                    // SelfWidget 设置了 Qt::WA_DeleteOnClose，窗口关闭时会自动删除自己
+                    this->m_selfWidget = new SelfWidget(this);
+                }
+                // 将个人信息窗口的左上角放在头像右侧，并留出少量间距
+                const QPoint popupPosition =
+                    this->m_avatarButton->mapToGlobal(QPoint(this->m_avatarButton->width() + 12, 0));
+                this->m_selfWidget->move(popupPosition);
+                this->m_selfWidget->show();  // 非模态对话框
+                this->m_selfWidget->raise();
+                this->m_selfWidget->activateWindow();
             });
 }

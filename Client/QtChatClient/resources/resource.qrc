@@ -27,10 +27,11 @@
         <file>images/sound_active.png</file>
         <file>images/submit.png</file>
         <file>images/unchecked.png</file>
-        <file alias="styles/chat_view.qss">../styles/chat_view.qss</file>
-        <file alias="styles/common.qss">../styles/common.qss</file>
-        <file alias="styles/message_edit.qss">../styles/message_edit.qss</file>
-        <file alias="styles/navigation.qss">../styles/navigation.qss</file>
-        <file alias="styles/session_list.qss">../styles/session_list.qss</file>
+        <file alias="styles/base/common.qss">../styles/base/common.qss</file>
+        <file alias="styles/main_window/chat_view.qss">../styles/main_window/chat_view.qss</file>
+        <file alias="styles/main_window/message_edit.qss">../styles/main_window/message_edit.qss</file>
+        <file alias="styles/main_window/navigation.qss">../styles/main_window/navigation.qss</file>
+        <file alias="styles/main_window/session_list.qss">../styles/main_window/session_list.qss</file>
+        <file alias="styles/windows/self_widget.qss">../styles/windows/self_widget.qss</file>
     </qresource>
 </RCC>
