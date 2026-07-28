@@ -16,7 +16,15 @@ namespace
 
     constexpr auto kPlainMessageTextEditStyleSheet =
         "QPlainTextEdit { color: #eeeeee; background-color: #191919; border: none; font-size: 14px;"
-        " selection-background-color: #3b7f5b; padding: 0px; }";
+        " selection-background-color: #3b7f5b; padding: 0px; }"
+        "QPlainTextEdit QScrollBar:vertical { background: transparent; width: 8px; margin: 0px; }"
+        "QPlainTextEdit QScrollBar::handle:vertical { background-color: #4a4a4a; border-radius: 4px;"
+        " min-height: 24px; }"
+        "QPlainTextEdit QScrollBar::handle:vertical:hover { background-color: #5a5a5a; }"
+        "QPlainTextEdit QScrollBar::add-line:vertical,"
+        "QPlainTextEdit QScrollBar::sub-line:vertical { width: 0px; height: 0px; }"
+        "QPlainTextEdit QScrollBar::add-page:vertical,"
+        "QPlainTextEdit QScrollBar::sub-page:vertical { background: transparent; }";
 
     constexpr auto kSendImageButtonIconPath = ":/images/image.png";
     constexpr auto kSendFileButtonIconPath = ":/images/file.png";

@@ -55,16 +55,19 @@ void MessageWidget::_InitMessageWidget()
     testUser.m_userId = "testUserId";
     testUser.m_userName = "Test User";
     testUser.m_avatar = QIcon(":/images/defaultAvatar.png");
-    Model::Message testMessage =
-        Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser, "你好，这是一条测试消息", "");
-    this->AddMessage(true, testMessage);
+    Model::Message testMessage = Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser,
+                                                               "你好，这是一条测试消息", "");
+    for (int i = 0; i < 10; i++) { this->AddMessage(true, testMessage); }
 
     UserInfo currentUser = testUser;
     currentUser.m_userName = "我";
-    Model::Message replyMessage = Model::Message::CreateMessage(
-        Model::MessageType::Text, "chatSessionId", currentUser,
-        QString("整体界面已经切换为深色聊天风格，消息气泡也会根据内容自动换行。").toUtf8(), "");
-    this->AddMessage(false, replyMessage);
+    Model::Message replyMessage =
+        Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", currentUser,
+                                      QString("测试数据，测试数据，测试数据，测试数据，测试数据，测试数据，测试数据，测"
+                                              "试数据，消息气泡也会根据内容自动换行。")
+                                          .toUtf8(),
+                                      "");
+    for (int i = 0; i < 10; i++) { this->AddMessage(false, replyMessage); }
 #endif
 
     this->setWidget(this->m_container);
