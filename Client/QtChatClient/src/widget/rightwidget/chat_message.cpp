@@ -53,7 +53,7 @@ void ChatMessage::_InitChatMessage()
 /**
  *
  *
- *              一. 初始化文本类型消息
+ *                          一. 初始化文本类型消息
  *
  *
  */
@@ -102,16 +102,35 @@ void TextChatMessage::paintEvent(QPaintEvent *event)
         path.moveTo(10, 15);
         path.lineTo(0, 20);
         path.lineTo(10, 25);
-
+        path.closeSubpath();
         painter.drawPath(path);
+
+        this->m_textLabel->setGeometry(20, 10, width, height);
     }
     else
     {
         // 右侧消息,圆角矩形背景颜色为绿色
         painter.setBrush(QColor(0, 255, 0));
         painter.setPen(QColor(0, 255, 0));
-        painter.drawRoundedRect(0, 0, width, height, 10, 10);
+
+        // 左侧边坐标
+        int leftPos = this->width() - width - 10;
+        // 右侧边坐标
+        int rightPos = this->width() - 10;
+        painter.drawRoundedRect(leftPos, 0, width, height, 10, 10);
+
+        // 画三角形
+        path.moveTo(rightPos - 10, 15);
+        path.lineTo(rightPos, 20);
+        path.lineTo(rightPos - 10, 25);
+        path.closeSubpath();
+        painter.drawPath(path);
+
+        this->m_textLabel->setGeometry(leftPos + 10, 10, width - 20, height - 20);
     }
+
+    // 4. 设置控件大小
+    parentWidget->setFixedHeight(height + 50);  // 设置父控件高度,加10px间距,确保文字可以完全显示
 }
 
 TextChatMessage::TextChatMessage(QString &text, bool isLeft, QFont *textFont, QWidget *parent)
