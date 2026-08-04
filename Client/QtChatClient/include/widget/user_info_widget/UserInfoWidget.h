@@ -6,7 +6,8 @@
 
 namespace ChatWidget
 {
-    class UserInfoWidget : public QWidget
+    // 聊天消息中点击他人头像后展示的只读资料窗口。
+    class UserInfoWidget final : public QDialog
     {
         Q_OBJECT
 
@@ -14,10 +15,8 @@ namespace ChatWidget
         void _InitUserInfoWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
 
        public:
-        explicit UserInfoWidget(QWidget *parent = nullptr);
+        explicit UserInfoWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
         ~UserInfoWidget() override = default;
-
-        Message m_message;  // 消息对象,用于显示消息
 
         QPointer<QPushButton> m_avatarButton;  // 聊天对象的头像
         QPointer<QLabel> m_userNameTag;        // 名字
