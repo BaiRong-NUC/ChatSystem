@@ -5,13 +5,6 @@ using namespace Log;
 
 namespace
 {
-    QString DisplaySenderName(const Model::UserInfo &sender)
-    {
-        if (!sender.m_userTag.trimmed().isEmpty()) { return sender.m_userTag; }
-        if (!sender.m_userName.trimmed().isEmpty()) { return sender.m_userName; }
-        return "未命名用户";
-    }
-
     QString DisplayMessageTime(const QString &value)
     {
         QDateTime timestamp = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
@@ -63,7 +56,7 @@ void MessageItem::_InitMessageItem()
     QGridLayout *layout = new QGridLayout(this);
     layout->setContentsMargins(24, 10, 24, 10);
     layout->setHorizontalSpacing(12);
-    layout->setVerticalSpacing(6);
+    layout->setVerticalSpacing(8);
 
     // 设置头像按钮样式
     QIcon avatar = this->m_chatMessage->m_message->m_sender.m_avatar;
@@ -77,40 +70,30 @@ void MessageItem::_InitMessageItem()
     this->m_avatarButton->setAccessibleDescription("查看发送者资料");
     connect(this->m_avatarButton, &QPushButton::clicked, this, &MessageItem::_ShowUserInfoWidget);
 
-    // 设置用户名标签样式
-    this->m_username->setText(DisplaySenderName(this->m_chatMessage->m_message->m_sender));
-    this->m_username->setAlignment(this->m_isLeft ? Qt::AlignLeft | Qt::AlignVCenter
-                                                   : Qt::AlignRight | Qt::AlignVCenter);
+    // 单聊界面不重复显示发送人昵称。
+    this->m_username->setText(this->m_chatMessage->m_message->m_sender.m_userName);
     this->m_username->setObjectName("usernameLabel");
-    this->m_username->setProperty("side", this->m_isLeft ? "left" : "right");
+    this->m_username->hide();
     // 设置时间标签样式
     this->m_timestamp->setText(DisplayMessageTime(this->m_chatMessage->m_message->m_timestamp));
     this->m_timestamp->setAlignment(Qt::AlignCenter);
     this->m_timestamp->setObjectName("timestampLabel");
 
-    auto *messageLayout = new QVBoxLayout();
-    messageLayout->setContentsMargins(0, 0, 0, 0);
-    messageLayout->setSpacing(5);
-
     // 根据消息位置(左侧或右侧)设置布局
     if (this->m_isLeft)
     {
-        // 对方消息：昵称位于气泡上方，头像在左侧。
-        messageLayout->addWidget(this->m_username, 0, Qt::AlignLeft);
-        messageLayout->addWidget(this->m_chatMessage, 0, Qt::AlignLeft);
+        // 对方消息：头像在左，气泡紧随头像。
         layout->addWidget(this->m_timestamp, 0, 0, 1, 3, Qt::AlignCenter);
         layout->addWidget(this->m_avatarButton, 1, 0, Qt::AlignTop | Qt::AlignLeft);
-        layout->addLayout(messageLayout, 1, 1, Qt::AlignTop | Qt::AlignLeft);
+        layout->addWidget(this->m_chatMessage, 1, 1, Qt::AlignTop | Qt::AlignLeft);
         layout->setColumnStretch(2, 1);
     }
     else
     {
-        // 自己消息：昵称与气泡右对齐，头像在右侧。
-        messageLayout->addWidget(this->m_username, 0, Qt::AlignRight);
-        messageLayout->addWidget(this->m_chatMessage, 0, Qt::AlignRight);
+        // 自己消息：气泡靠右，头像在最右侧。
         layout->addWidget(this->m_timestamp, 0, 0, 1, 3, Qt::AlignCenter);
         layout->setColumnStretch(0, 1);
-        layout->addLayout(messageLayout, 1, 1, Qt::AlignTop | Qt::AlignRight);
+        layout->addWidget(this->m_chatMessage, 1, 1, Qt::AlignTop | Qt::AlignRight);
         layout->addWidget(this->m_avatarButton, 1, 2, Qt::AlignTop | Qt::AlignRight);
     }
 

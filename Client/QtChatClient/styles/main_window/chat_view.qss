@@ -88,18 +88,9 @@ QPushButton#messageAvatarButton:pressed {
 }
 
 QLabel#usernameLabel {
-    color: #a9acb0;
-    background: transparent;
-    font-size: 12px;
-    font-weight: 400;
-}
-
-QLabel#usernameLabel[side="left"] {
-    padding-left: 10px;
-}
-
-QLabel#usernameLabel[side="right"] {
-    padding-right: 10px;
+    color: #e4e5e6;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 QLabel#timestampLabel {
