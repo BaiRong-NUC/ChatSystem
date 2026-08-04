@@ -50,6 +50,9 @@ void MessageItem::_InitMessageItem()
     this->m_avatarButton->setFixedSize(44, 44);
     this->m_avatarButton->setObjectName("messageAvatarButton");
     this->m_avatarButton->setProperty("variant", "icon");
+    this->m_avatarButton->setCursor(Qt::PointingHandCursor);
+    this->m_avatarButton->setAccessibleDescription("查看发送者资料");
+    connect(this->m_avatarButton, &QPushButton::clicked, this, &MessageItem::_ShowUserInfoWidget);
 
     // 设置用户名标签样式
     this->m_username->setText(this->m_chatMessage->m_message->m_sender.m_userName);
@@ -84,4 +87,26 @@ void MessageItem::_InitMessageItem()
 
     // 设置消息内容,根据消息类型分类
     this->setLayout(layout);
+}
+
+void MessageItem::_ShowUserInfoWidget()
+{
+    if (this->m_chatMessage == nullptr || this->m_chatMessage->m_message == nullptr ||
+        this->m_avatarButton == nullptr)
+    {
+        return;
+    }
+
+    if (this->m_userInfoWidget == nullptr)
+    {
+        // 交给 MessageItem 的 Qt 对象树管理，QPointer 只保存观察引用。
+        this->m_userInfoWidget = new UserInfoWidget(this->m_chatMessage->m_message->m_sender, this);
+    }
+
+    const int horizontalOffset = this->m_isLeft ? this->m_avatarButton->width() + 12
+                                                : -this->m_userInfoWidget->width() - 12;
+    const QPoint popupPosition = this->m_avatarButton->mapToGlobal(QPoint(horizontalOffset, 0));
+    this->m_userInfoWidget->move(popupPosition);
+    this->m_userInfoWidget->show();
+    this->m_userInfoWidget->raise();
 }
