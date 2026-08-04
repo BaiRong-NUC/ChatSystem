@@ -42,6 +42,8 @@ void MessageWidget::_InitMessageWidget()
     testUser.m_avatar = QIcon(":/images/defaultAvatar.png");
     Model::Message testMessage = Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser,
                                                                "你好，这是一条测试消息", "");
+    // 调试数据分成两个相邻分钟组，用于验证每组只显示一次时间。
+    testMessage.m_timestamp = QDateTime::currentDateTime().addSecs(-60).toString("yyyy-MM-dd HH:mm:ss");
     for (int i = 0; i < 10; i++) { this->AddMessage(true, testMessage); }
 
     UserInfo currentUser = testUser;
