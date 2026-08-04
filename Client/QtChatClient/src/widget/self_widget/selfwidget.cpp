@@ -11,6 +11,8 @@ namespace
     constexpr qsizetype kDefaultCharactersPerLine = 28;
     constexpr int kHoverCardShowDelayMs = 500;
     constexpr int kHoverCardHideDelayMs = 260;
+    constexpr int kCompactDialogHeight = 250;
+    constexpr int kVerificationDialogHeight = 300;
 
     QString WrapHoverCardText(const QString &text, qsizetype charactersPerLine)
     {
@@ -88,7 +90,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->setWindowIcon(QIcon(":/images/logo.png"));
     this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     this->setModal(false);
-    this->setFixedSize(460, 250);
+    this->setFixedSize(460, kCompactDialogHeight);
     this->setObjectName("selfWidget");
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->setAttribute(Qt::WA_DeleteOnClose);
@@ -166,11 +168,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
 
     initEditableRow(this->m_phoneRow, "电话", userInfo.m_phone, "请输入电话号码", 4);
 
-    this->m_phoneVerificationStatusLabel->setText(userInfo.m_phoneVerified ? "已验证" : "待验证");
     this->m_phoneVerificationStatusLabel->setObjectName("selfPhoneStatusLabel");
-    this->m_phoneVerificationStatusLabel->setProperty("verified", userInfo.m_phoneVerified);
-    this->m_phoneVerificationStatusLabel->setAccessibleDescription(userInfo.m_phoneVerified ? "该手机号已完成验证"
-                                                                                            : "该手机号尚未验证");
     this->m_phoneVerificationStatusLabel->installEventFilter(this);
 
     this->m_phoneDisplayWidget->setObjectName("selfPhoneDisplayWidget");
@@ -183,7 +181,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     phoneDisplayLayout->addStretch();
     mainLayout->addWidget(this->m_phoneDisplayWidget, 4, 2, Qt::AlignVCenter);
 
-    // 6. 验证码和反馈控件仅预留，后续实现槽函数时再显示。
+    // 6. 验证码紧跟在手机号下方，仅在手机号未验证时显示。
     this->m_phoneVerificationCodeTitleLabel->setText("验证码");
     this->m_phoneVerificationCodeTitleLabel->setObjectName("selfInfoTitleLabel");
     this->m_phoneVerificationCodeEdit->setPlaceholderText("请输入验证码");
@@ -192,13 +190,14 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
     this->m_submitVerificationCodeButton->setText("验证");
     this->m_submitVerificationCodeButton->setObjectName("selfSubmitButton");
 
+    connect(this->m_submitVerificationCodeButton, &QPushButton::clicked, this,
+            &SelfWidget::_SubmitPhoneVerificationCode);
+    connect(this->m_phoneVerificationCodeEdit, &QLineEdit::returnPressed, this,
+            &SelfWidget::_SubmitPhoneVerificationCode);
+
     mainLayout->addWidget(this->m_phoneVerificationCodeTitleLabel, 5, 1);
     mainLayout->addWidget(this->m_phoneVerificationCodeEdit, 5, 2);
     mainLayout->addWidget(this->m_submitVerificationCodeButton, 5, 3);
-    this->m_phoneVerificationCodeTitleLabel->hide();
-    this->m_phoneVerificationCodeEdit->hide();
-    this->m_submitVerificationCodeButton->hide();
-
     this->m_feedbackLabel->setObjectName("selfFeedbackLabel");
     this->m_feedbackLabel->setAlignment(Qt::AlignCenter);
     this->m_feedbackLabel->hide();
@@ -206,6 +205,7 @@ void SelfWidget::_InitSelfWidget(const UserInfo &userInfo)
 
     this->_InitHoverCard();
     this->_UpdateSignatureDisplay();
+    this->_UpdatePhoneVerificationUi(userInfo.m_phoneVerified);
 }
 
 void SelfWidget::_BeginEdit(EditableRow &editableRow)
@@ -249,14 +249,59 @@ void SelfWidget::_FinishEdit(EditableRow &editableRow)
     {
         if (phoneChanged)
         {
-            this->m_phoneVerificationStatusLabel->setText("待验证");
-            this->m_phoneVerificationStatusLabel->setProperty("verified", false);
-            this->m_phoneVerificationStatusLabel->setAccessibleDescription("手机号已修改，请重新验证");
-            this->m_phoneVerificationStatusLabel->style()->unpolish(this->m_phoneVerificationStatusLabel);
-            this->m_phoneVerificationStatusLabel->style()->polish(this->m_phoneVerificationStatusLabel);
+            this->m_phoneVerificationCodeEdit->clear();
+            this->_UpdatePhoneVerificationUi(false, "手机号已修改，请重新验证");
         }
         this->m_phoneDisplayWidget->show();
     }
+}
+
+void SelfWidget::_UpdatePhoneVerificationUi(bool verified, const QString &description)
+{
+    const bool hasPhone = !this->m_phoneRow.editor->text().trimmed().isEmpty();
+    const bool verificationRequired = hasPhone && !verified;
+
+    this->m_phoneVerificationStatusLabel->setText(!hasPhone ? "未绑定" : verified ? "已验证" : "待验证");
+    this->m_phoneVerificationStatusLabel->setProperty("verified", hasPhone && verified);
+    this->m_phoneVerificationStatusLabel->setAccessibleDescription(
+        !description.isEmpty() ? description
+                               : !hasPhone ? "尚未绑定手机号"
+                                           : verified ? "该手机号已完成验证" : "该手机号尚未验证");
+    this->m_phoneVerificationStatusLabel->style()->unpolish(this->m_phoneVerificationStatusLabel);
+    this->m_phoneVerificationStatusLabel->style()->polish(this->m_phoneVerificationStatusLabel);
+
+    this->m_phoneVerificationCodeTitleLabel->setVisible(verificationRequired);
+    this->m_phoneVerificationCodeEdit->setVisible(verificationRequired);
+    this->m_submitVerificationCodeButton->setVisible(verificationRequired);
+    if (!verificationRequired)
+    {
+        this->m_phoneVerificationCodeEdit->clear();
+        this->m_feedbackLabel->hide();
+    }
+    this->setFixedHeight(verificationRequired ? kVerificationDialogHeight : kCompactDialogHeight);
+}
+
+void SelfWidget::_SubmitPhoneVerificationCode()
+{
+    const QString verificationCode = this->m_phoneVerificationCodeEdit->text().trimmed();
+    if (verificationCode.isEmpty())
+    {
+        this->m_feedbackLabel->setText("请输入验证码");
+        this->m_feedbackLabel->setProperty("status", "error");
+        this->m_feedbackLabel->style()->unpolish(this->m_feedbackLabel);
+        this->m_feedbackLabel->style()->polish(this->m_feedbackLabel);
+        this->m_feedbackLabel->show();
+        this->m_phoneVerificationCodeEdit->setFocus(Qt::OtherFocusReason);
+        return;
+    }
+
+    this->m_feedbackLabel->hide();
+    emit this->phoneVerificationRequested(this->m_phoneRow.editor->text().trimmed(), verificationCode);
+}
+
+void SelfWidget::setPhoneVerified(bool verified)
+{
+    this->_UpdatePhoneVerificationUi(verified);
 }
 
 void SelfWidget::_UpdateSignatureDisplay()
