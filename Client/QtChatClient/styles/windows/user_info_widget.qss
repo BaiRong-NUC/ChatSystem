@@ -1,0 +1,96 @@
+QDialog#userInfoWidget {
+    background-color: #2b2b2b;
+    border: 1px solid #484848;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoAvatar {
+    background-color: #353535;
+    border: none;
+    border-radius: 8px;
+    padding: 2px;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoAvatar:hover,
+QDialog#userInfoWidget QPushButton#userInfoAvatar:pressed {
+    background-color: #353535;
+    border: none;
+}
+
+QDialog#userInfoWidget QLabel#userInfoName {
+    color: #f4f4f4;
+    background: transparent;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+QDialog#userInfoWidget QLabel#userInfoTitle {
+    color: #a6a6a6;
+    background: transparent;
+    font-size: 13px;
+}
+
+QDialog#userInfoWidget QLabel#userInfoValue {
+    color: #dddddd;
+    background: transparent;
+    font-size: 14px;
+    padding: 0 4px;
+}
+
+QDialog#userInfoWidget QFrame#userInfoDivider {
+    color: #3b3b3b;
+    background-color: #3b3b3b;
+    border: none;
+    max-height: 1px;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton {
+    color: #d9dde1;
+    background-color: #34383d;
+    border: 1px solid #474c52;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 16px;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton:hover {
+    color: #f3f5f6;
+    background-color: #3b4046;
+    border-color: #565d65;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton:pressed {
+    background-color: #2e3237;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="primary"] {
+    color: #ffffff;
+    background-color: #2f8f58;
+    border-color: #2f8f58;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="primary"]:hover {
+    background-color: #38a868;
+    border-color: #38a868;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="primary"]:pressed {
+    background-color: #28784b;
+    border-color: #28784b;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="danger"] {
+    color: #d98282;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="danger"]:hover {
+    color: #ee9696;
+    background-color: #412c2e;
+    border-color: #5b393d;
+}
+
+QDialog#userInfoWidget QPushButton#userInfoActionButton[role="danger"]:pressed {
+    background-color: #352426;
+}

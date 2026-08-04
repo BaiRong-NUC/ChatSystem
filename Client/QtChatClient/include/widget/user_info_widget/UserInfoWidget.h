@@ -13,13 +13,35 @@ namespace ChatWidget
 
        private:
         void _InitUserInfoWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
+        void _UpdateSignatureDisplay();
+        void _InitHoverCard();
+        void _ScheduleHoverCard(QObject *source);
+        void _ScheduleHideHoverCard();
+        void _ShowHoverCard();
+        bool _SupportsHoverCard(QObject *source) const;
+        bool eventFilter(QObject *watched, QEvent *event) override;
+
+        QString m_userId;
+        QString m_signature;
+        QPointer<QWidget> m_hoverCard;
+        QPointer<QLabel> m_hoverCardTitleLabel;
+        QPointer<QLabel> m_hoverCardContentLabel;
+        QPointer<QTimer> m_hoverShowTimer;
+        QPointer<QTimer> m_hoverHideTimer;
+        QPointer<QObject> m_pendingHoverSource;
+        QPointer<QObject> m_activeHoverSource;
 
        public:
         explicit UserInfoWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
         ~UserInfoWidget() override = default;
 
+       signals:
+        void applyFriendRequested(const QString &userId);
+        void sendMessageRequested(const QString &userId);
+        void deleteFriendRequested(const QString &userId);
+
+       public:
         QPointer<QPushButton> m_avatarButton;  // 聊天对象的头像
-        QPointer<QLabel> m_userNameTag;        // 名字
         QPointer<QLabel> m_userName;           // 用户名字
         QPointer<QLabel> m_userTag;            // 昵称
         QPointer<QLabel> m_userTagName;        // 用户昵称
