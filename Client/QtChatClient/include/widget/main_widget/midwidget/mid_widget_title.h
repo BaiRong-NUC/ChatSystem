@@ -14,6 +14,10 @@ namespace ChatWidget
         explicit MidWidgetTitle(QWidget *parent = nullptr);
         ~MidWidgetTitle() override;
 
+       signals:
+        void addFriendRequested();
+
+       public:
         // 按钮
         QPointer<QPushButton> m_addFriendButton;
         // 搜索框

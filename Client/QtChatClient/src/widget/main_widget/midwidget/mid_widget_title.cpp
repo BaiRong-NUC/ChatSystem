@@ -77,6 +77,9 @@ void MidWidgetTitle::_InitMidWidgetTitle()
     this->m_addFriendButton->setFixedSize(38, 38);
     this->m_addFriendButton->setIcon(MakePlusIcon());
     this->m_addFriendButton->setIconSize(QSize(20, 20));
+    this->m_addFriendButton->setAccessibleName(QStringLiteral("添加朋友"));
+    this->m_addFriendButton->setCursor(Qt::PointingHandCursor);
+    connect(this->m_addFriendButton, &QPushButton::clicked, this, &MidWidgetTitle::addFriendRequested);
     // 布局
     QGridLayout *midWidgetLayout = new QGridLayout(this);
     midWidgetLayout->setContentsMargins(14, 18, 14, 18);

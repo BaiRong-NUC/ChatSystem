@@ -80,3 +80,12 @@
 2. 字段命名或类型发生变化。
 3. 响应结构或错误码发生变化。
 4. 消息收发流程发生变化。
+
+## 7. 添加朋友窗口的客户端契约
+
+`AddFriendWidget` 已提供手机号或用户 ID 的统一搜索入口，但当前仓库尚未接入服务端查询实现。
+
+1. 用户提交非空关键字后，窗口发出 `searchUserRequested(keyword)`；业务层应同时按手机号和用户 ID 精确查询。
+2. 查询开始后，窗口进入“搜索中”状态。业务层必须调用 `showSearchResult`、`showNoSearchResult` 或 `showSearchError` 结束该状态。
+3. 搜索结果中的“添加”按钮发出 `addFriendRequested(userId)`，业务层处理完成后调用 `showFriendRequestResult` 回填结果。
+4. `MainWidget` 会转发两个业务信号，并提供对应的搜索结果和申请结果回填方法，便于后续 Controller 或 Service 接入。

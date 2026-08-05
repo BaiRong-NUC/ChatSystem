@@ -43,6 +43,10 @@ int main(int argc, char *argv[])
     // 为AddressSanitizer/CI提供可正常析构并退出的无交互冒烟模式。
     if (QCoreApplication::arguments().contains("--smoke-test"))
     {
+        if (auto *addFriendButton = w->findChild<QPushButton *>("addFriendButton"))
+        {
+            addFriendButton->click();
+        }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);
     }
 
