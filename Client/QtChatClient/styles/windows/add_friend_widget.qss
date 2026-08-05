@@ -11,7 +11,7 @@ QDialog#addFriendWidget QWidget#addFriendSearchRow {
 QDialog#addFriendWidget QLabel#addFriendTitle {
     color: #f1f1f1;
     background: transparent;
-    font-size: 27px;
+    font-size: 22px;
     font-weight: 500;
 }
 
@@ -36,8 +36,8 @@ QDialog#addFriendWidget QLineEdit#addFriendSearchEdit {
     background-color: #303030;
     border: 1px solid #303030;
     border-radius: 8px 0 0 8px;
-    padding: 0 18px 0 55px;
-    font-size: 19px;
+    padding: 0 12px 0 43px;
+    font-size: 16px;
     selection-background-color: #2f8f58;
 }
 
@@ -56,7 +56,7 @@ QDialog#addFriendWidget QPushButton#addFriendSearchButton {
     background-color: #07c160;
     border: none;
     border-radius: 0 8px 8px 0;
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 500;
 }
 
@@ -76,8 +76,8 @@ QDialog#addFriendWidget QPushButton#addFriendSearchButton:disabled {
 QDialog#addFriendWidget QLabel#addFriendFeedbackLabel {
     color: #b6b6b6;
     background: transparent;
-    font-size: 14px;
-    padding: 18px 8px 8px 8px;
+    font-size: 13px;
+    padding: 13px 6px 6px 6px;
 }
 
 QDialog#addFriendWidget QLabel#addFriendFeedbackLabel[status="loading"] {
@@ -108,14 +108,14 @@ QDialog#addFriendWidget QPushButton#addFriendResultAvatar {
 QDialog#addFriendWidget QLabel#addFriendResultName {
     color: #f2f2f2;
     background: transparent;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
 }
 
 QDialog#addFriendWidget QLabel#addFriendResultSecondary {
     color: #aaaaaa;
     background: transparent;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 QDialog#addFriendWidget QPushButton#addFriendApplyButton {
@@ -123,7 +123,7 @@ QDialog#addFriendWidget QPushButton#addFriendApplyButton {
     background-color: #2f8f58;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
 }
 

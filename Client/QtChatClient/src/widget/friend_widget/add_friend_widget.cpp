@@ -6,9 +6,9 @@ using namespace ChatWidget;
 
 namespace
 {
-    constexpr int kWindowWidth = 650;
-    constexpr int kWindowHeight = 780;
-    constexpr int kHeaderHeight = 92;
+    constexpr int kWindowWidth = 360;
+    constexpr int kWindowHeight = 510;
+    constexpr int kHeaderHeight = 72;
     constexpr auto kDefaultAvatarPath = ":/images/defaultAvatar.png";
 
     QString DisplayText(const QString &value, const QString &fallback)
@@ -21,7 +21,7 @@ namespace
        public:
         explicit SearchIconWidget(QWidget *parent) : QWidget(parent)
         {
-            this->setFixedSize(25, 25);
+            this->setFixedSize(21, 21);
             this->setAttribute(Qt::WA_TransparentForMouseEvents);
         }
 
@@ -33,8 +33,8 @@ namespace
             painter.setRenderHint(QPainter::Antialiasing, true);
             painter.setPen(QPen(QColor("#a9aaad"), 2.2, Qt::SolidLine, Qt::RoundCap));
             painter.setBrush(Qt::NoBrush);
-            painter.drawEllipse(QRectF(2.5, 2.5, 14, 14));
-            painter.drawLine(QPointF(15.5, 15.5), QPointF(22.5, 22.5));
+            painter.drawEllipse(QRectF(2.5, 2.5, 12, 12));
+            painter.drawLine(QPointF(13.5, 13.5), QPointF(19, 19));
         }
     };
 
@@ -99,7 +99,7 @@ void AddFriendWidget::_InitAddFriendWidget()
     this->setFixedSize(kWindowWidth, kWindowHeight);
 
     auto *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(30, 0, 30, 30);
+    mainLayout->setContentsMargins(24, 0, 24, 24);
     mainLayout->setSpacing(0);
 
     auto *header = new QWidget(this);
@@ -119,7 +119,7 @@ void AddFriendWidget::_InitAddFriendWidget()
     this->m_closeButton->setAccessibleName(QStringLiteral("关闭添加朋友窗口"));
     this->m_closeButton->setCursor(Qt::PointingHandCursor);
     this->m_closeButton->setFocusPolicy(Qt::NoFocus);
-    this->m_closeButton->setFixedSize(44, 44);
+    this->m_closeButton->setFixedSize(38, 38);
     headerLayout->addWidget(this->m_closeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     // 让标题相对整个窗口保持视觉居中，抵消右侧关闭按钮宽度。
     headerLayout->insertSpacing(0, this->m_closeButton->width());
@@ -132,12 +132,12 @@ void AddFriendWidget::_InitAddFriendWidget()
     searchLayout->setSpacing(2);
 
     this->m_searchEdit->setObjectName("addFriendSearchEdit");
-    this->m_searchEdit->setPlaceholderText(QStringLiteral("搜索手机号或者用户 ID"));
+    this->m_searchEdit->setPlaceholderText(QStringLiteral("手机号或用户 ID"));
     this->m_searchEdit->setAccessibleName(QStringLiteral("手机号或用户 ID"));
     this->m_searchEdit->setClearButtonEnabled(true);
-    this->m_searchEdit->setFixedHeight(64);
+    this->m_searchEdit->setFixedHeight(52);
     auto *searchIcon = new SearchIconWidget(this->m_searchEdit);
-    searchIcon->move(18, 19);
+    searchIcon->move(14, 15);
     searchIcon->show();
     searchLayout->addWidget(this->m_searchEdit, 1);
 
@@ -145,28 +145,28 @@ void AddFriendWidget::_InitAddFriendWidget()
     this->m_searchButton->setText(QStringLiteral("搜索"));
     this->m_searchButton->setAccessibleName(QStringLiteral("搜索用户"));
     this->m_searchButton->setCursor(Qt::PointingHandCursor);
-    this->m_searchButton->setFixedSize(120, 64);
+    this->m_searchButton->setFixedSize(88, 52);
     searchLayout->addWidget(this->m_searchButton);
     mainLayout->addWidget(searchRow);
 
     this->m_feedbackLabel->setObjectName("addFriendFeedbackLabel");
     this->m_feedbackLabel->setAlignment(Qt::AlignCenter);
     this->m_feedbackLabel->setWordWrap(true);
-    this->m_feedbackLabel->setMinimumHeight(72);
+    this->m_feedbackLabel->setMinimumHeight(58);
     this->m_feedbackLabel->hide();
     mainLayout->addWidget(this->m_feedbackLabel);
 
     this->m_resultCard->setObjectName("addFriendResultCard");
     this->m_resultCard->setAttribute(Qt::WA_StyledBackground, true);
-    this->m_resultCard->setFixedHeight(116);
+    this->m_resultCard->setFixedHeight(96);
     auto *resultLayout = new QHBoxLayout(this->m_resultCard);
-    resultLayout->setContentsMargins(18, 16, 18, 16);
-    resultLayout->setSpacing(16);
+    resultLayout->setContentsMargins(14, 12, 14, 12);
+    resultLayout->setSpacing(12);
 
     this->m_resultAvatar->setObjectName("addFriendResultAvatar");
     this->m_resultAvatar->setFocusPolicy(Qt::NoFocus);
-    this->m_resultAvatar->setFixedSize(72, 72);
-    this->m_resultAvatar->setIconSize(QSize(66, 66));
+    this->m_resultAvatar->setFixedSize(58, 58);
+    this->m_resultAvatar->setIconSize(QSize(54, 54));
     resultLayout->addWidget(this->m_resultAvatar, 0, Qt::AlignVCenter);
 
     auto *informationLayout = new QVBoxLayout();
@@ -183,7 +183,7 @@ void AddFriendWidget::_InitAddFriendWidget()
     this->m_addButton->setObjectName("addFriendApplyButton");
     this->m_addButton->setText(QStringLiteral("添加"));
     this->m_addButton->setCursor(Qt::PointingHandCursor);
-    this->m_addButton->setFixedSize(82, 38);
+    this->m_addButton->setFixedSize(64, 32);
     resultLayout->addWidget(this->m_addButton, 0, Qt::AlignVCenter);
 
     this->m_resultCard->hide();
