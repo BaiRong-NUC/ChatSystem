@@ -6,11 +6,11 @@ using namespace Model;
 
 namespace
 {
-    constexpr int kAvatarNameHeight = 130;
-    constexpr int kAvatarSize = 72;
-    constexpr int kAvatarRadius = 9;
-    constexpr int kNameWidth = 88;
-    constexpr int kNameHeight = 28;
+    constexpr int kAvatarNameHeight = 100;
+    constexpr int kAvatarSize = 56;
+    constexpr int kAvatarRadius = 7;
+    constexpr int kNameWidth = 76;
+    constexpr int kNameHeight = 24;
 
     QIcon CreateRoundedAvatar(const QIcon &avatarIcon)
     {
@@ -49,8 +49,8 @@ void AvatarName::_InitAvatarName()
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(12, 10, 12, 9);
-    layout->setSpacing(9);
+    layout->setContentsMargins(8, 7, 8, 7);
+    layout->setSpacing(6);
     layout->addWidget(this->m_avatarButton, 0, Qt::AlignHCenter);
     layout->addWidget(this->m_nameLabel, 0, Qt::AlignHCenter);
 
@@ -65,7 +65,7 @@ void AvatarName::_InitAvatarName()
     // 设置名字
     this->m_nameLabel->setObjectName("nameLabel");
     this->m_nameLabel->setAlignment(Qt::AlignCenter);
-    this->m_nameLabel->setFont(QFont(DEFAULT_CHAT_FONT, 12));
+    this->m_nameLabel->setFont(QFont(DEFAULT_CHAT_FONT, 10));
     this->m_nameLabel->setFixedSize(kNameWidth, kNameHeight);
 
     // 名称超过可视宽度时使用省略号，同时保留完整名称供悬停查看。

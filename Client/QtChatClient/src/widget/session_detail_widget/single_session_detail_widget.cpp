@@ -8,12 +8,13 @@ using namespace Model;
 
 namespace
 {
-    constexpr int kPanelWidth = 460;
-    constexpr int kPanelHeight = 660;
-    constexpr int kMemberAreaHeight = 140;
-    constexpr int kSettingRowHeight = 72;
-    constexpr int kSwitchWidth = 54;
-    constexpr int kSwitchHeight = 30;
+    constexpr int kInitialPanelHeight = 660;
+    constexpr int kMinimumPanelWidth = 320;
+    constexpr int kMinimumPanelHeight = 420;
+    constexpr int kMemberAreaHeight = 110;
+    constexpr int kSettingRowHeight = 58;
+    constexpr int kSwitchWidth = 44;
+    constexpr int kSwitchHeight = 24;
     constexpr int kSwitchMargin = 3;
     constexpr int kChevronHalfHeight = 6;
 
@@ -120,14 +121,16 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
     this->setObjectName("singleSessionDetailWidget");
     this->setWindowTitle("会话详情");
     this->setWindowIcon(QIcon(":/images/logo.png"));
-    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    // Qt::Popup 在截图工具抢占焦点时会自动关闭，Tool 窗口可以在失焦后继续显示。
+    this->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_StyledBackground, true);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->setFixedSize(kPanelWidth, kPanelHeight);
-    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    this->setMinimumSize(kMinimumPanelWidth, kMinimumPanelHeight);
+    this->resize(PREFERRED_WIDTH, kInitialPanelHeight);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(24, 18, 24, 24);
+    mainLayout->setContentsMargins(20, 14, 20, 20);
     mainLayout->setSpacing(0);
 
     // 顶部成员区：当前好友与“添加群聊”入口。
@@ -135,7 +138,7 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
     memberArea->setObjectName("sessionDetailMemberArea");
     memberArea->setFixedHeight(kMemberAreaHeight);
     QHBoxLayout *memberLayout = new QHBoxLayout(memberArea);
-    memberLayout->setContentsMargins(0, 0, 0, 10);
+    memberLayout->setContentsMargins(0, 0, 0, 8);
     memberLayout->setSpacing(0);
     memberLayout->addWidget(this->m_avatarName);
     memberLayout->addWidget(this->m_addGroup);

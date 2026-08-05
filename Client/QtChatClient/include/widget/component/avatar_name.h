@@ -10,7 +10,7 @@
 
 namespace ChatWidget
 {
-#define AVATAR_NAME_WIDTH 112  // 头像+姓名组合控件的宽度
+#define AVATAR_NAME_WIDTH 92  // 头像+姓名组合控件的宽度
 
     class AvatarName final : public QWidget
     {

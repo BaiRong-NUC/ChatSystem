@@ -113,6 +113,13 @@ void RightWidgetTitle::_InitSignalSlots()
                 // 打开会话详情窗口
                 if (this->m_titleLabel == nullptr || this->m_titleButton == nullptr) { return; }
 
+                // Tool 窗口不会因失去焦点自动关闭，再次点击标题按钮时主动收起。
+                if (this->m_sessionDetailWidget != nullptr && this->m_sessionDetailWidget->isVisible())
+                {
+                    this->m_sessionDetailWidget->hide();
+                    return;
+                }
+
                 if (this->m_sessionDetailWidget == nullptr)
                 {
                     // 标题栏当前只持有会话名称，先使用现有展示数据搭建详情窗口。
@@ -126,7 +133,15 @@ void RightWidgetTitle::_InitSignalSlots()
                     this->m_sessionDetailWidget = new SingleSessionDetailWidget(userInfo, this);
                 }
 
-                // 详情面板右边缘与聊天区标题栏对齐，并从标题栏下方弹出。
+                // 详情面板保持右侧窄栏宽度，高度填满标题栏以下的空间。
+                QWidget *rightArea = this->parentWidget();
+                if (rightArea != nullptr)
+                {
+                    const int detailWidth = qMin(SingleSessionDetailWidget::PREFERRED_WIDTH, rightArea->width());
+                    this->m_sessionDetailWidget->resize(
+                        detailWidth, qMax(0, rightArea->height() - this->height()));
+                }
+
                 QPoint popupPosition = this->mapToGlobal(
                     QPoint(this->width() - this->m_sessionDetailWidget->width(), this->height()));
 

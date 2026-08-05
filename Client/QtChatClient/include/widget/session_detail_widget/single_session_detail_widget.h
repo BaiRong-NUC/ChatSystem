@@ -20,6 +20,8 @@ namespace ChatWidget
         void _InitSingleSessionDetailWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
 
        public:
+        static constexpr int PREFERRED_WIDTH = 420;  // 右侧详情栏默认宽度
+
         explicit SingleSessionDetailWidget(const Model::UserInfo &userInfo, QWidget *parent = nullptr);
         ~SingleSessionDetailWidget() override = default;
 

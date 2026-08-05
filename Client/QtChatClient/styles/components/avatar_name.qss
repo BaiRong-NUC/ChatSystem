@@ -1,7 +1,7 @@
 QWidget#avatarName {
     background-color: transparent;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 QWidget#avatarName:hover {
@@ -11,7 +11,7 @@ QWidget#avatarName:hover {
 QWidget#avatarName QPushButton#avatarButton {
     background-color: #303030;
     border: 1px solid transparent;
-    border-radius: 9px;
+    border-radius: 7px;
     padding: 0;
 }
 
@@ -29,7 +29,7 @@ QWidget#avatarName QLabel#nameLabel {
     color: #b8b8b8;
     background-color: transparent;
     border: none;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 400;
 }
 

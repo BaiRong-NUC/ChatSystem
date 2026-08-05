@@ -20,18 +20,18 @@ QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton {
     color: #ededed;
     background-color: transparent;
     border: none;
-    border-radius: 7px;
-    padding: 0 14px 0 0;
+    border-radius: 6px;
+    padding: 0 12px 0 0;
     text-align: left;
     font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
 }
 
 QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton:hover {
     color: #f7f7f7;
     background-color: #313131;
-    padding-left: 12px;
+    padding-left: 10px;
 }
 
 QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton:pressed {
@@ -44,7 +44,7 @@ QWidget#singleSessionDetailWidget QLabel#sessionDetailSettingLabel {
     background-color: transparent;
     border: none;
     font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
 }
 
@@ -58,9 +58,9 @@ QWidget#singleSessionDetailWidget QPushButton#clearChatHistoryButton {
     color: #e65c5c;
     background-color: transparent;
     border: none;
-    border-radius: 7px;
+    border-radius: 6px;
     font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
 }
 

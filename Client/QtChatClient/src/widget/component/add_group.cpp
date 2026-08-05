@@ -6,12 +6,12 @@ using namespace ChatWidget;
 
 namespace
 {
-    constexpr int kAddGroupWidth = 112;
-    constexpr int kAddGroupHeight = 130;
-    constexpr int kAddButtonSize = 72;
-    constexpr int kNameWidth = 88;
-    constexpr int kNameHeight = 28;
-    constexpr int kPlusHalfLength = 16;
+    constexpr int kAddGroupWidth = 92;
+    constexpr int kAddGroupHeight = 100;
+    constexpr int kAddButtonSize = 56;
+    constexpr int kNameWidth = 76;
+    constexpr int kNameHeight = 24;
+    constexpr int kPlusHalfLength = 13;
 
     class AddGroupButton final : public QPushButton
     {
@@ -52,8 +52,8 @@ void AddGroup::_InitAddGroup()
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(12, 10, 12, 9);
-    layout->setSpacing(9);
+    layout->setContentsMargins(8, 7, 8, 7);
+    layout->setSpacing(6);
     layout->addWidget(this->m_addButton, 0, Qt::AlignHCenter);
     layout->addWidget(this->m_nameLabel, 0, Qt::AlignHCenter);
 
