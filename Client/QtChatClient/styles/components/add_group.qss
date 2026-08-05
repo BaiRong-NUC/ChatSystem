@@ -1,0 +1,42 @@
+QWidget#addGroup {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+}
+
+QWidget#addGroup:hover {
+    background-color: #2b2b2b;
+}
+
+QWidget#addGroup QPushButton#addGroupButton {
+    color: #707070;
+    background-color: transparent;
+    border: 2px dashed #696969;
+    border-radius: 10px;
+    padding: 0;
+}
+
+QWidget#addGroup QPushButton#addGroupButton:hover {
+    color: #a8a8a8;
+    background-color: #303030;
+    border-color: #929292;
+}
+
+QWidget#addGroup QPushButton#addGroupButton:pressed {
+    color: #c2c2c2;
+    background-color: #252525;
+    border-color: #777777;
+}
+
+QWidget#addGroup QLabel#addGroupNameLabel {
+    color: #9f9f9f;
+    background-color: transparent;
+    border: none;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+}
+
+QWidget#addGroup:hover QLabel#addGroupNameLabel {
+    color: #c8c8c8;
+}
