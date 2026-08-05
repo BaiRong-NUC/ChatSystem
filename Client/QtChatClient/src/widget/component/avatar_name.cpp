@@ -4,42 +4,78 @@ using namespace ChatWidget;
 using namespace Log;
 using namespace Model;
 
+namespace
+{
+    constexpr int kAvatarNameHeight = 130;
+    constexpr int kAvatarSize = 72;
+    constexpr int kAvatarRadius = 9;
+    constexpr int kNameWidth = 88;
+    constexpr int kNameHeight = 28;
+
+    QIcon CreateRoundedAvatar(const QIcon &avatarIcon)
+    {
+        const QIcon sourceIcon = avatarIcon.isNull() ? QIcon(":/images/defaultAvatar.png") : avatarIcon;
+        const QPixmap sourcePixmap = sourceIcon.pixmap(kAvatarSize, kAvatarSize);
+
+        QPixmap roundedPixmap(kAvatarSize, kAvatarSize);
+        roundedPixmap.fill(Qt::transparent);
+
+        QPainter painter(&roundedPixmap);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+        QPainterPath clipPath;
+        clipPath.addRoundedRect(roundedPixmap.rect(), kAvatarRadius, kAvatarRadius);
+        painter.setClipPath(clipPath);
+        painter.drawPixmap(roundedPixmap.rect(), sourcePixmap);
+
+        return QIcon(roundedPixmap);
+    }
+}  // namespace
+
 AvatarName::AvatarName(const QIcon &avatarIcon, const QString &name, QWidget *parent) : QWidget(parent)
 {
     this->m_avatarButton = new QPushButton(this);
-    this->m_avatarButton->setIcon(avatarIcon);
+    this->m_avatarButton->setIcon(CreateRoundedAvatar(avatarIcon));
     this->m_nameLabel = new QLabel(name, this);
     this->_InitAvatarName();
 }
-
-AvatarName::~AvatarName() = default;
 
 void AvatarName::_InitAvatarName()
 {
     this->setObjectName("avatarName");
     this->setAttribute(Qt::WA_StyledBackground, true);
+    this->setFixedSize(AVATAR_NAME_WIDTH, kAvatarNameHeight);
+    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(5);
-    layout->addWidget(this->m_avatarButton);
-    layout->addWidget(this->m_nameLabel);
+    layout->setContentsMargins(12, 10, 12, 9);
+    layout->setSpacing(9);
+    layout->addWidget(this->m_avatarButton, 0, Qt::AlignHCenter);
+    layout->addWidget(this->m_nameLabel, 0, Qt::AlignHCenter);
 
     // 设置头像
     this->m_avatarButton->setObjectName("avatarButton");
-    this->m_avatarButton->setFixedSize(45, 45);
-    this->m_avatarButton->setIconSize(QSize(45, 45));
+    this->m_avatarButton->setFixedSize(kAvatarSize, kAvatarSize);
+    this->m_avatarButton->setIconSize(QSize(kAvatarSize, kAvatarSize));
+    this->m_avatarButton->setCursor(Qt::PointingHandCursor);
+    this->m_avatarButton->setFocusPolicy(Qt::NoFocus);
+    this->m_avatarButton->setAccessibleName(this->m_nameLabel->text());
 
     // 设置名字
     this->m_nameLabel->setObjectName("nameLabel");
     this->m_nameLabel->setAlignment(Qt::AlignCenter);
     this->m_nameLabel->setFont(QFont(DEFAULT_CHAT_FONT, 12));
+    this->m_nameLabel->setFixedSize(kNameWidth, kNameHeight);
 
-    // 如果名字太长做截断
-    QFontMetrics fontMetrics(this->m_nameLabel->font());
-    int totalWidth = fontMetrics.horizontalAdvance(this->m_nameLabel->text());
-    if (totalWidth > AVATAR_NAME_WIDTH)
+    // 名称超过可视宽度时使用省略号，同时保留完整名称供悬停查看。
+    const QString fullName = this->m_nameLabel->text();
+    const QFontMetrics fontMetrics(this->m_nameLabel->font());
+    const QString displayName = fontMetrics.elidedText(fullName, Qt::ElideRight, kNameWidth);
+    this->m_nameLabel->setText(displayName);
+    if (displayName != fullName)
     {
-        //多余的部分用省略号代替
+        this->m_nameLabel->setToolTip(fullName);
+        this->m_nameLabel->setAccessibleName(fullName);
     }
 }
