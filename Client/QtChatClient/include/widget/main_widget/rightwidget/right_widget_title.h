@@ -1,6 +1,7 @@
 #pragma once
 #include <public.h>
 #include <utils/log.h>
+#include <widget/session_detail_widget/single_session_detail_widget.h>
 
 namespace ChatWidget
 {
@@ -8,11 +9,11 @@ namespace ChatWidget
     {
         Q_OBJECT
        private:
-        void _InitRightWidgetTitle();         // 初始化右侧信息区标题栏
-        void _InitSignalSlots();              // 初始化窗口控制按钮信号槽
-        void _ToggleMaximized();              // 切换最大化/还原状态
+        void _InitRightWidgetTitle();           // 初始化右侧信息区标题栏
+        void _InitSignalSlots();                // 初始化窗口控制按钮信号槽
+        void _ToggleMaximized();                // 切换最大化/还原状态
         void _ToggleAlwaysOnTop(bool checked);  // 切换窗口置顶状态
-        void _UpdateMaximizeButtonIcon();     // 更新最大化/还原按钮图标
+        void _UpdateMaximizeButtonIcon();       // 更新最大化/还原按钮图标
        protected:
         void mousePressEvent(QMouseEvent *event) override;
         void mouseDoubleClickEvent(QMouseEvent *event) override;
@@ -21,11 +22,14 @@ namespace ChatWidget
         explicit RightWidgetTitle(QWidget *parent = nullptr);
         ~RightWidgetTitle() override;
 
-        QPointer<QLabel> m_titleLabel;              // 标题标签
-        QPointer<QPushButton> m_titleButton;        // 更多按钮
-        QPointer<QPushButton> m_pinButton;          // 窗口置顶按钮
-        QPointer<QPushButton> m_minimizeButton;     // 最小化按钮
-        QPointer<QPushButton> m_maximizeButton;     // 最大化/还原按钮
-        QPointer<QPushButton> m_closeButton;        // 关闭按钮
+        QPointer<QLabel> m_titleLabel;           // 标题标签
+        QPointer<QPushButton> m_titleButton;     // 更多按钮
+        QPointer<QPushButton> m_pinButton;       // 窗口置顶按钮
+        QPointer<QPushButton> m_minimizeButton;  // 最小化按钮
+        QPointer<QPushButton> m_maximizeButton;  // 最大化/还原按钮
+        QPointer<QPushButton> m_closeButton;     // 关闭按钮
+
+        // 会话详情窗口由 Qt 父对象树管理，关闭销毁后会自动置空。
+        QPointer<SingleSessionDetailWidget> m_sessionDetailWidget;
     };
 }  // namespace ChatWidget
