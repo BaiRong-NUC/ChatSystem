@@ -35,6 +35,7 @@
         <file alias="styles/main_window/navigation.qss">../styles/main_window/navigation.qss</file>
         <file alias="styles/main_window/session_list.qss">../styles/main_window/session_list.qss</file>
         <file alias="styles/windows/self_widget.qss">../styles/windows/self_widget.qss</file>
+        <file alias="styles/windows/single_session_detail_widget.qss">../styles/windows/single_session_detail_widget.qss</file>
         <file alias="styles/windows/user_info_widget.qss">../styles/windows/user_info_widget.qss</file>
     </qresource>
 </RCC>
