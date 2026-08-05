@@ -47,6 +47,11 @@ int main(int argc, char *argv[])
         {
             addFriendButton->click();
         }
+        if (w->findChild<ChatWidget::AddFriendWidget *>() == nullptr)
+        {
+            LogInfo(LogLevel::ERROR, "添加朋友窗口冒烟测试失败:点击按钮后未创建窗口");
+            return 1;
+        }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);
     }
 

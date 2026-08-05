@@ -10,6 +10,8 @@ namespace ChatWidget
        private:
         void _InitMidWidgetTitle();  // 初始化标题栏
 
+        void _InitSignalSlots();  // 初始化信号槽
+
        public:
         explicit MidWidgetTitle(QWidget *parent = nullptr);
         ~MidWidgetTitle() override;
