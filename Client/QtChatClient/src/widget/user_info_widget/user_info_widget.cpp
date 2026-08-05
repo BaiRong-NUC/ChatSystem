@@ -1,4 +1,4 @@
-#include <widget/user_info_widget/UserInfoWidget.h>
+#include <widget/user_info_widget/user_info_widget.h>
 
 using namespace ChatWidget;
 using namespace Log;
