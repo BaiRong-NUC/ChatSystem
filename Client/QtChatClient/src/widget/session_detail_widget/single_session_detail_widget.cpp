@@ -34,12 +34,12 @@ namespace
 
             QPainter painter(this);
             painter.setRenderHint(QPainter::Antialiasing, true);
-            painter.setPen(QPen(option.palette.color(QPalette::ButtonText), 2, Qt::SolidLine, Qt::RoundCap,
-                                Qt::RoundJoin));
+            painter.setPen(
+                QPen(option.palette.color(QPalette::ButtonText), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
             const QPoint chevronCenter(this->width() - 18, this->height() / 2);
-            painter.drawLine(chevronCenter.x() - 4, chevronCenter.y() - kChevronHalfHeight,
-                             chevronCenter.x() + 2, chevronCenter.y());
+            painter.drawLine(chevronCenter.x() - 4, chevronCenter.y() - kChevronHalfHeight, chevronCenter.x() + 2,
+                             chevronCenter.y());
             painter.drawLine(chevronCenter.x() + 2, chevronCenter.y(), chevronCenter.x() - 4,
                              chevronCenter.y() + kChevronHalfHeight);
         }
@@ -63,13 +63,13 @@ namespace
             QColor trackColor;
             if (this->isChecked())
             {
-                trackColor = this->isDown() ? QColor("#28784b")
-                                            : (this->underMouse() ? QColor("#38a868") : QColor("#2f8f58"));
+                trackColor =
+                    this->isDown() ? QColor("#28784b") : (this->underMouse() ? QColor("#38a868") : QColor("#2f8f58"));
             }
             else
             {
-                trackColor = this->isDown() ? QColor("#303236")
-                                            : (this->underMouse() ? QColor("#45484d") : QColor("#3a3c40"));
+                trackColor =
+                    this->isDown() ? QColor("#303236") : (this->underMouse() ? QColor("#45484d") : QColor("#3a3c40"));
             }
 
             QPainter painter(this);
@@ -161,8 +161,8 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
 
     mainLayout->addWidget(CreateDivider(this));
 
-    auto addSwitchRow = [this, mainLayout](const QString &title, QPushButton *detailSwitch,
-                                           const QString &accessibleName)
+    auto addSwitchRow =
+        [this, mainLayout](const QString &title, QPushButton *detailSwitch, const QString &accessibleName)
     {
         QWidget *row = new QWidget(this);
         row->setObjectName("sessionDetailSettingRow");
@@ -186,8 +186,7 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
     };
 
     // 开关当前只切换界面状态，不读写本地配置或服务端数据。
-    addSwitchRow(QStringLiteral("消息免打扰"), this->m_messageDoNotDisturbSwitch,
-                 QStringLiteral("消息免打扰"));
+    addSwitchRow(QStringLiteral("消息免打扰"), this->m_messageDoNotDisturbSwitch, QStringLiteral("消息免打扰"));
     addSwitchRow(QStringLiteral("置顶聊天"), this->m_pinChatSwitch, QStringLiteral("置顶聊天"));
 
     mainLayout->addWidget(CreateDivider(this));
@@ -241,6 +240,14 @@ void SingleSessionDetailWidget::_OpenChooseFriendWidget()
     this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("王可欣"));
     this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("张明远"));
     this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("周小北"));
+
+    // 测试滚动条样式
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("安然"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("陈小雨"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("林晓峰"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("王可欣"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("张明远"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("周小北"));
 #endif
 
     connect(this->m_chooseFriendWidget, &ChooseFriendWidget::ConfirmSelectedFriends, this,
@@ -253,8 +260,7 @@ void SingleSessionDetailWidget::_OpenChooseFriendWidget()
         anchorWindow = this->parentWidget()->window();
     }
     QPoint popupPosition = anchorWindow->mapToGlobal(anchorWindow->rect().center()) -
-                           QPoint(this->m_chooseFriendWidget->width() / 2,
-                                  this->m_chooseFriendWidget->height() / 2);
+                           QPoint(this->m_chooseFriendWidget->width() / 2, this->m_chooseFriendWidget->height() / 2);
 
     // 多屏环境下把完整弹窗限制在当前屏幕可用区域内。
     QScreen *screen = QGuiApplication::screenAt(popupPosition);
@@ -264,10 +270,10 @@ void SingleSessionDetailWidget::_OpenChooseFriendWidget()
         const QRect availableGeometry = screen->availableGeometry();
         // 当弹窗尺寸大于可用屏幕时，右/下边界可能小于左/上边界；先钳制最大值，
         // 避免 qBound 收到反向区间并在低分辨率环境触发断言。
-        const int maximumX = qMax(availableGeometry.left(),
-                                  availableGeometry.right() - this->m_chooseFriendWidget->width() + 1);
-        const int maximumY = qMax(availableGeometry.top(),
-                                  availableGeometry.bottom() - this->m_chooseFriendWidget->height() + 1);
+        const int maximumX =
+            qMax(availableGeometry.left(), availableGeometry.right() - this->m_chooseFriendWidget->width() + 1);
+        const int maximumY =
+            qMax(availableGeometry.top(), availableGeometry.bottom() - this->m_chooseFriendWidget->height() + 1);
         popupPosition.setX(qBound(availableGeometry.left(), popupPosition.x(), maximumX));
         popupPosition.setY(qBound(availableGeometry.top(), popupPosition.y(), maximumY));
     }
