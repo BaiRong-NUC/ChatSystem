@@ -30,7 +30,6 @@ namespace ChatWidget
 
         void SetPlaceholderText(const QString &placeholderText);  // 设置占位提示
         void SetKeyword(const QString &keyword);                  // 设置当前关键词
-        QString GetKeyword() const;                               // 获取去除首尾空格后的关键词
         void Clear();                                             // 清空关键词
         void SetSearchFocus();                                    // 将键盘焦点交给输入框
 
@@ -38,7 +37,7 @@ namespace ChatWidget
         void KeywordChanged(const QString &keyword);  // 输入内容变化时实时通知使用方
         void SearchRequested(const QString &keyword); // 用户按下回车时请求执行搜索
 
-       private:
+       public:
         // 子控件拥有明确的 QObject 父对象，由 Qt 对象树释放；成员仅作为安全观察指针。
         QPointer<QLineEdit> m_searchEdit;
     };

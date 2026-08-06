@@ -70,7 +70,13 @@ void SearchBox::_InitSearchBox()
     connect(this->m_searchEdit, &QLineEdit::textChanged, this,
             [this](const QString &keyword) { emit this->KeywordChanged(keyword.trimmed()); });
     connect(this->m_searchEdit, &QLineEdit::returnPressed, this,
-            [this]() { emit this->SearchRequested(this->GetKeyword()); });
+            [this]()
+            {
+                const QString keyword = this->m_searchEdit == nullptr
+                                            ? QString()
+                                            : this->m_searchEdit->text().trimmed();
+                emit this->SearchRequested(keyword);
+            });
 }
 
 void SearchBox::_RefreshFocusStyle(bool focused)
@@ -102,11 +108,6 @@ void SearchBox::SetPlaceholderText(const QString &placeholderText)
 void SearchBox::SetKeyword(const QString &keyword)
 {
     if (this->m_searchEdit != nullptr) { this->m_searchEdit->setText(keyword); }
-}
-
-QString SearchBox::GetKeyword() const
-{
-    return this->m_searchEdit == nullptr ? QString() : this->m_searchEdit->text().trimmed();
 }
 
 void SearchBox::Clear()

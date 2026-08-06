@@ -18,7 +18,7 @@ namespace ChatWidget
     {
         Q_OBJECT
 
-       private:
+       public:
         struct SelectedFriendRelation
         {
             // 左右条目都由窗口中的 Qt 对象树拥有，这里只保存自动置空的观察指针。
@@ -26,6 +26,7 @@ namespace ChatWidget
             QPointer<ChooseFriendItem> m_selectedItem;
         };
 
+       private:
         void _InitChooseFriendWidget();  // 初始化选择好友窗口界面
         void _InitSignalSlots();         // 初始化搜索、完成和取消信号
         void _FilterFriends(const QString &keyword);  // 按好友名称过滤左侧列表
@@ -45,13 +46,11 @@ namespace ChatWidget
         // 仅向右侧加入一个预选好友，适合业务层恢复草稿中的已有成员。
         void AddSelectedFriend(const QIcon &icon, const QString &name);
 
-        QStringList GetSelectedFriendNames() const;  // 获取当前已选好友名称，顺序与右侧列表一致
-
        signals:
         void SelectionChanged(const QStringList &friendNames);
         void ConfirmSelectedFriends(const QStringList &friendNames);
 
-       private:
+       public:
         QPointer<SearchBox> m_searchBox;                  // 公共搜索框组件
         QPointer<QWidget> m_totalFriendListWidget;        // 左侧全部好友列表内容区
         QPointer<QWidget> m_selectedFriendListWidget;     // 右侧已选择好友列表内容区
@@ -61,5 +60,6 @@ namespace ChatWidget
 
         QList<QPointer<ChooseFriendItem>> m_friendItems;   // 左侧条目的非拥有观察列表
         QList<SelectedFriendRelation> m_selectedRelations; // 左右条目的对应关系
+        QStringList m_selectedFriendNames;                 // 当前已选名称，顺序与右侧列表一致
     };
 }  // namespace ChatWidget

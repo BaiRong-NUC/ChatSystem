@@ -22,9 +22,6 @@ namespace ChatWidget
         void _InitSignalSlots();       // 初始化“添加”等界面信号
         void _OpenChooseFriendWidget();  // 打开选择好友窗口
 
-        // 使用值语义保存当前单聊好友，打开选择窗口时作为默认已选成员。
-        Model::UserInfo m_sessionUserInfo;
-
        public:
         static constexpr int PREFERRED_WIDTH = 420;  // 右侧详情栏默认宽度
 
@@ -36,6 +33,8 @@ namespace ChatWidget
         void CreateGroupRequested(const QStringList &friendNames);
 
        public:
+        // 使用值语义保存当前单聊好友，打开选择窗口时作为默认已选成员。
+        Model::UserInfo m_sessionUserInfo;
         QPointer<AvatarName> m_avatarName;                  // 用户头像+姓名组合控件
         QPointer<AddGroup> m_addGroup;                      // 创建群聊入口组合控件
         QPointer<QPushButton> m_searchMessageButton;        // 查找聊天内容入口

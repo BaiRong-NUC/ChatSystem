@@ -174,8 +174,7 @@ void ChooseFriendWidget::_InitSignalSlots()
     connect(this->m_confirmButton, &QPushButton::clicked, this,
             [this]()
             {
-                const QStringList selectedFriendNames = this->GetSelectedFriendNames();
-                emit this->ConfirmSelectedFriends(selectedFriendNames);
+                emit this->ConfirmSelectedFriends(this->m_selectedFriendNames);
                 this->accept();
             });
 }
@@ -187,7 +186,7 @@ void ChooseFriendWidget::_FilterFriends(const QString &keyword)
     {
         if (friendItem == nullptr) { continue; }
         const bool matched = normalizedKeyword.isEmpty() ||
-                             friendItem->GetFriendName().contains(normalizedKeyword, Qt::CaseInsensitive);
+                             friendItem->m_name.contains(normalizedKeyword, Qt::CaseInsensitive);
         friendItem->setVisible(matched);
     }
 }
@@ -270,15 +269,25 @@ void ChooseFriendWidget::_UpdateSelectedState()
         }
     }
 
-    const QStringList selectedFriendNames = this->GetSelectedFriendNames();
+    this->m_selectedFriendNames.clear();
+    for (const SelectedFriendRelation &relation : this->m_selectedRelations)
+    {
+        if (relation.m_selectedItem != nullptr)
+        {
+            this->m_selectedFriendNames.append(relation.m_selectedItem->m_name);
+        }
+    }
     if (this->m_selectedCountLabel != nullptr)
     {
         this->m_selectedCountLabel->setText(
-            QStringLiteral("已选择%1个联系人").arg(selectedFriendNames.size()));
+            QStringLiteral("已选择%1个联系人").arg(this->m_selectedFriendNames.size()));
     }
-    if (this->m_confirmButton != nullptr) { this->m_confirmButton->setEnabled(!selectedFriendNames.isEmpty()); }
+    if (this->m_confirmButton != nullptr)
+    {
+        this->m_confirmButton->setEnabled(!this->m_selectedFriendNames.isEmpty());
+    }
 
-    emit this->SelectionChanged(selectedFriendNames);
+    emit this->SelectionChanged(this->m_selectedFriendNames);
 }
 
 void ChooseFriendWidget::AddFriend(const QIcon &icon, const QString &name, bool isSelected)
@@ -300,8 +309,8 @@ void ChooseFriendWidget::AddFriend(const QIcon &icon, const QString &name, bool 
                 if (guardedFriendItem == nullptr) { return; }
                 if (selected)
                 {
-                    this->_AddSelectedFriendItem(guardedFriendItem->GetFriendIcon(),
-                                                 guardedFriendItem->GetFriendName(), guardedFriendItem);
+                    this->_AddSelectedFriendItem(guardedFriendItem->m_icon,
+                                                 guardedFriendItem->m_name, guardedFriendItem);
                 }
                 else
                 {
@@ -318,17 +327,4 @@ void ChooseFriendWidget::AddSelectedFriend(const QIcon &icon, const QString &nam
 {
     this->_AddSelectedFriendItem(icon, name);
     this->_UpdateSelectedState();
-}
-
-QStringList ChooseFriendWidget::GetSelectedFriendNames() const
-{
-    QStringList friendNames;
-    for (const SelectedFriendRelation &relation : this->m_selectedRelations)
-    {
-        if (relation.m_selectedItem != nullptr)
-        {
-            friendNames.append(relation.m_selectedItem->GetFriendName());
-        }
-    }
-    return friendNames;
 }

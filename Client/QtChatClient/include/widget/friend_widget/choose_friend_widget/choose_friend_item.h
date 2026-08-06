@@ -30,15 +30,12 @@ namespace ChatWidget
         // 填充好友信息；isSelected 用于恢复外部已有的选中状态。
         void AddFriend(const QIcon &icon, const QString &name, bool isSelected = false);
         void SetSelected(bool isSelected);  // 由外层窗口同步选择状态
-        bool IsSelected() const;
         void SetRemoveMode(bool removeMode);  // 切换为右侧“已选择好友”展示模式
-        const QIcon &GetFriendIcon() const;
-        const QString &GetFriendName() const;
 
        signals:
         void SelectionChanged(bool isSelected);
 
-       private:
+       public:
         QIcon m_icon;
         QString m_name;
         bool m_isSelected = false;

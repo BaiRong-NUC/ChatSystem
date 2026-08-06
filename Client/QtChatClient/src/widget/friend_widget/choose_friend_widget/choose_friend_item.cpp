@@ -137,8 +137,6 @@ void ChooseFriendItem::SetSelected(bool isSelected)
     emit this->SelectionChanged(this->m_isSelected);
 }
 
-bool ChooseFriendItem::IsSelected() const { return this->m_isSelected; }
-
 void ChooseFriendItem::SetRemoveMode(bool removeMode)
 {
     this->m_removeMode = removeMode;
@@ -168,7 +166,3 @@ void ChooseFriendItem::SetRemoveMode(bool removeMode)
     }
     this->_RefreshSelectedState();
 }
-
-const QIcon &ChooseFriendItem::GetFriendIcon() const { return this->m_icon; }
-
-const QString &ChooseFriendItem::GetFriendName() const { return this->m_name; }

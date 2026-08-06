@@ -214,20 +214,37 @@ void SingleSessionDetailWidget::_InitSignalSlots()
 
 void SingleSessionDetailWidget::_OpenChooseFriendWidget()
 {
-    if (this->m_chooseFriendWidget == nullptr)
+    // 每次点击都销毁旧窗口并重新创建，确保搜索词、勾选项和右侧成员列表完全复位。
+    if (this->m_chooseFriendWidget != nullptr)
     {
-        // 指定 this 为父对象，详情窗口销毁时选择窗口也会由 Qt 对象树安全释放。
-        this->m_chooseFriendWidget = new ChooseFriendWidget(this);
-
-        // 从单聊创建群聊时，当前会话好友应默认出现在已选成员列表中。
-        QString friendName = this->m_sessionUserInfo.m_userName.trimmed();
-        if (friendName.isEmpty()) { friendName = this->m_sessionUserInfo.m_userTag.trimmed(); }
-        if (friendName.isEmpty()) { friendName = QStringLiteral("未命名好友"); }
-        this->m_chooseFriendWidget->AddSelectedFriend(this->m_sessionUserInfo.m_avatar, friendName);
-
-        connect(this->m_chooseFriendWidget, &ChooseFriendWidget::ConfirmSelectedFriends, this,
-                &SingleSessionDetailWidget::CreateGroupRequested);
+        this->m_chooseFriendWidget->hide();
+        this->m_chooseFriendWidget->deleteLater();
+        this->m_chooseFriendWidget = nullptr;
     }
+
+    // 指定 this 为父对象，详情窗口销毁时选择窗口也会由 Qt 对象树安全释放。
+    this->m_chooseFriendWidget = new ChooseFriendWidget(this);
+
+    // 从单聊创建群聊时，当前会话好友应默认出现在已选成员列表中。
+    QString friendName = this->m_sessionUserInfo.m_userName.trimmed();
+    if (friendName.isEmpty()) { friendName = this->m_sessionUserInfo.m_userTag.trimmed(); }
+    if (friendName.isEmpty()) { friendName = QStringLiteral("未命名好友"); }
+    this->m_chooseFriendWidget->AddSelectedFriend(this->m_sessionUserInfo.m_avatar, friendName);
+
+#if DEBUG_CODE
+    // 调试联系人仅用于展示和验证搜索、滚动、勾选及取消选择效果。
+    // 发布前将 public.h 中的 DEBUG_CODE 关闭后，这些示例不会进入正式好友列表。
+    const QIcon exampleAvatar(":/images/defaultAvatar.png");
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("安然"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("陈小雨"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("林晓峰"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("王可欣"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("张明远"));
+    this->m_chooseFriendWidget->AddFriend(exampleAvatar, QStringLiteral("周小北"));
+#endif
+
+    connect(this->m_chooseFriendWidget, &ChooseFriendWidget::ConfirmSelectedFriends, this,
+            &SingleSessionDetailWidget::CreateGroupRequested);
 
     // 以主窗口为锚点居中，而不是以右侧窄详情栏居中，避免弹窗大面积超出屏幕。
     QWidget *anchorWindow = this;
