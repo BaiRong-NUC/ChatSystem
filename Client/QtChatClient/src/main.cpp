@@ -1,5 +1,7 @@
 #include <widget/main_widget/mainwidget.h>
 #include <widget/friend_widget/choose_friend_widget/choose_friend_widget.h>
+#include <widget/main_widget/rightwidget/right_widget_title.h>
+#include <widget/session_detail_widget/group_session_detai_widget.h>
 #include <widget/session_detail_widget/single_session_detail_widget.h>
 #include <QApplication>
 #include <QDir>
@@ -62,6 +64,16 @@ int main(int argc, char *argv[])
             LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:未找到会话更多按钮");
             return 1;
         }
+        auto *rightWidgetTitle = w->findChild<ChatWidget::RightWidgetTitle *>();
+        if (rightWidgetTitle == nullptr)
+        {
+            LogInfo(LogLevel::ERROR, "会话详情冒烟测试失败:未找到右侧标题栏");
+            return 1;
+        }
+
+        // 先验证单聊分支以及单聊中的添加群成员入口。
+        rightWidgetTitle->isSingleSession = true;
+        rightWidgetTitle->m_titleLabel->setText(QStringLiteral("好友1"));
         moreButton->click();
 
         auto *addGroupButton = w->findChild<QPushButton *>("addGroupButton");
@@ -105,6 +117,24 @@ int main(int argc, char *argv[])
             chooseFriendWidget->m_friendItems.first()->m_isSelected)
         {
             LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:再次打开后没有重置选择状态");
+            return 1;
+        }
+
+        // 再切换到群聊分支，验证群成员、群信息、设置项和四个暂不实现功能的占位控件。
+        chooseFriendWidget->reject();
+        rightWidgetTitle->isSingleSession = false;
+        rightWidgetTitle->m_titleLabel->setText(QStringLiteral("文博十三号宿舍楼群"));
+        moreButton->click();
+        auto *groupSessionDetailWidget = rightWidgetTitle->m_groupSessionDetailWidget.data();
+        if (groupSessionDetailWidget == nullptr || !groupSessionDetailWidget->isVisible() ||
+            groupSessionDetailWidget->m_memberSearchBox == nullptr ||
+            groupSessionDetailWidget->m_memberItems.isEmpty() ||
+            groupSessionDetailWidget->m_groupAnnouncementLabel == nullptr ||
+            groupSessionDetailWidget->m_foldChatSwitch == nullptr ||
+            groupSessionDetailWidget->m_followMembersButton == nullptr ||
+            groupSessionDetailWidget->m_saveToContactsSwitch == nullptr)
+        {
+            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:会话类型分流或界面控件不完整");
             return 1;
         }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);

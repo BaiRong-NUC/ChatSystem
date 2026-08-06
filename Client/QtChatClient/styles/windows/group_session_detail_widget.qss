@@ -1,0 +1,132 @@
+QWidget#groupSessionDetailWidget,
+QScrollArea#groupSessionDetailScrollArea,
+QWidget#groupSessionDetailContent {
+    background-color: #292929;
+    border: none;
+}
+
+QWidget#groupSessionDetailWidget {
+    border: 1px solid #3e3e3e;
+}
+
+QWidget#groupSessionMemberGrid,
+QWidget#groupSessionInformationRow,
+QWidget#groupSessionSettingRow {
+    background-color: transparent;
+    border: none;
+}
+
+QWidget#groupSessionDetailWidget QScrollBar:vertical {
+    background: transparent;
+    width: 9px;
+    margin: 4px 0;
+    border: none;
+}
+
+QWidget#groupSessionDetailWidget QScrollBar::handle:vertical {
+    background-color: #686868;
+    min-height: 36px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+QWidget#groupSessionDetailWidget QScrollBar::handle:vertical:hover {
+    background-color: #777777;
+}
+
+QWidget#groupSessionDetailWidget QScrollBar::add-line:vertical,
+QWidget#groupSessionDetailWidget QScrollBar::sub-line:vertical {
+    height: 0;
+    background: transparent;
+    border: none;
+}
+
+QWidget#groupSessionDetailWidget QScrollBar::add-page:vertical,
+QWidget#groupSessionDetailWidget QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionShowMoreButton {
+    color: #a9a9a9;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionShowMoreButton:hover {
+    color: #dedede;
+    background-color: #313131;
+}
+
+QWidget#groupSessionDetailWidget QFrame#groupSessionDetailDivider {
+    color: #3a3a3a;
+    background-color: #3a3a3a;
+    border: none;
+    max-height: 1px;
+}
+
+QWidget#groupSessionDetailWidget QLabel#groupSessionInformationTitle {
+    color: #ededed;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#groupSessionDetailWidget QLabel#groupSessionInformationValue {
+    color: #a8a8a8;
+    background: transparent;
+    font-size: 14px;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionNavigationButton {
+    color: #ededed;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0 10px 0 0;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionNavigationButton:hover {
+    color: #ffffff;
+    background-color: #313131;
+    padding-left: 8px;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionNavigationButton:pressed {
+    background-color: #242424;
+}
+
+QWidget#groupSessionDetailWidget QLabel#groupSessionSettingLabel {
+    color: #ededed;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionSwitch {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionDangerButton {
+    color: #f05d5d;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionDangerButton:hover {
+    color: #ff7373;
+    background-color: #3a2929;
+}
+
+QWidget#groupSessionDetailWidget QPushButton#groupSessionDangerButton:pressed {
+    color: #d34e4e;
+    background-color: #302323;
+}

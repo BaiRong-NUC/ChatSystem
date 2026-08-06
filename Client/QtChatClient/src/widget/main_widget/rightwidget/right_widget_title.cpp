@@ -86,7 +86,8 @@ void RightWidgetTitle::_InitRightWidgetTitle()
     this->m_titleLabel->setObjectName("chatTitleLabel");
 
 #if DEBUG_CODE
-    this->m_titleLabel->setText("好友1");
+    // 当前默认 isSingleSession=false，调试标题使用群聊示例名称。
+    this->m_titleLabel->setText(QStringLiteral("文博十三号宿舍楼群"));
 #endif
 
     contentLayout->addWidget(this->m_titleLabel);
@@ -110,40 +111,75 @@ void RightWidgetTitle::_InitSignalSlots()
     connect(this->m_titleButton, &QPushButton::clicked, this,
             [this]()
             {
-                // 打开会话详情窗口
                 if (this->m_titleLabel == nullptr || this->m_titleButton == nullptr) { return; }
 
-                // Tool 窗口不会因失去焦点自动关闭，再次点击标题按钮时主动收起。
-                if (this->m_sessionDetailWidget != nullptr && this->m_sessionDetailWidget->isVisible())
+                // isSingleSession 由会话切换逻辑设置：true 打开单聊详情，false 打开群聊详情。
+                // 当前调试默认值为 false，便于直接查看新搭建的群聊窗口。
+                QWidget *detailWidget = nullptr;  // 非拥有临时指针，实际所有权仍由 Qt 父对象树管理
+                int preferredWidth = 0;
+
+                if (this->isSingleSession)
                 {
-                    this->m_sessionDetailWidget->hide();
-                    return;
+                    if (this->m_groupSessionDetailWidget != nullptr)
+                    {
+                        this->m_groupSessionDetailWidget->hide();
+                    }
+                    // Tool 窗口不会因失焦自动关闭，再次点击同一入口时主动收起。
+                    if (this->m_sessionDetailWidget != nullptr && this->m_sessionDetailWidget->isVisible())
+                    {
+                        this->m_sessionDetailWidget->hide();
+                        return;
+                    }
+
+                    if (this->m_sessionDetailWidget == nullptr)
+                    {
+                        Model::UserInfo userInfo;
+                        userInfo.m_userName = this->m_titleLabel->text().trimmed();
+                        if (userInfo.m_userName.isEmpty())
+                        {
+                            userInfo.m_userName = QStringLiteral("未命名会话");
+                        }
+                        userInfo.m_avatar = QIcon(":/images/defaultAvatar.png");
+                        this->m_sessionDetailWidget = new SingleSessionDetailWidget(userInfo, this);
+                    }
+
+                    detailWidget = this->m_sessionDetailWidget;
+                    preferredWidth = SingleSessionDetailWidget::PREFERRED_WIDTH;
+                }
+                else
+                {
+                    if (this->m_sessionDetailWidget != nullptr) { this->m_sessionDetailWidget->hide(); }
+                    if (this->m_groupSessionDetailWidget != nullptr &&
+                        this->m_groupSessionDetailWidget->isVisible())
+                    {
+                        this->m_groupSessionDetailWidget->hide();
+                        return;
+                    }
+
+                    if (this->m_groupSessionDetailWidget == nullptr)
+                    {
+                        const QString groupName = this->m_titleLabel->text().trimmed().isEmpty()
+                                                      ? QStringLiteral("未命名群聊")
+                                                      : this->m_titleLabel->text().trimmed();
+                        this->m_groupSessionDetailWidget = new GroupSessionDetailWidget(groupName, this);
+                    }
+
+                    detailWidget = this->m_groupSessionDetailWidget;
+                    preferredWidth = GroupSessionDetailWidget::PREFERRED_WIDTH;
                 }
 
-                if (this->m_sessionDetailWidget == nullptr)
-                {
-                    // 标题栏当前只持有会话名称，先使用现有展示数据搭建详情窗口。
-                    // 待会话模型接入后，再由业务层传入完整 UserInfo。
-                    Model::UserInfo userInfo;
-                    userInfo.m_userName = this->m_titleLabel->text().trimmed();
-                    if (userInfo.m_userName.isEmpty()) { userInfo.m_userName = QStringLiteral("未命名会话"); }
-                    userInfo.m_avatar = QIcon(":/images/defaultAvatar.png");
-
-                    // SingleSessionDetailWidget 关闭时会自动销毁，QPointer 随后自动置空。
-                    this->m_sessionDetailWidget = new SingleSessionDetailWidget(userInfo, this);
-                }
+                if (detailWidget == nullptr) { return; }
 
                 // 详情面板保持右侧窄栏宽度，高度填满标题栏以下的空间。
                 QWidget *rightArea = this->parentWidget();
                 if (rightArea != nullptr)
                 {
-                    const int detailWidth = qMin(SingleSessionDetailWidget::PREFERRED_WIDTH, rightArea->width());
-                    this->m_sessionDetailWidget->resize(
-                        detailWidth, qMax(0, rightArea->height() - this->height()));
+                    const int detailWidth = qMin(preferredWidth, rightArea->width());
+                    detailWidget->resize(detailWidth, qMax(0, rightArea->height() - this->height()));
                 }
 
                 QPoint popupPosition = this->mapToGlobal(
-                    QPoint(this->width() - this->m_sessionDetailWidget->width(), this->height()));
+                    QPoint(this->width() - detailWidget->width(), this->height()));
 
                 // 窗口靠近屏幕边缘时限制在可用显示区域内。
                 QScreen *screen = QGuiApplication::screenAt(popupPosition);
@@ -151,16 +187,18 @@ void RightWidgetTitle::_InitSignalSlots()
                 if (screen != nullptr)
                 {
                     const QRect availableGeometry = screen->availableGeometry();
-                    popupPosition.setX(qBound(availableGeometry.left(), popupPosition.x(),
-                                              availableGeometry.right() - this->m_sessionDetailWidget->width() + 1));
-                    popupPosition.setY(qBound(availableGeometry.top(), popupPosition.y(),
-                                              availableGeometry.bottom() - this->m_sessionDetailWidget->height() + 1));
+                    const int maximumX = qMax(availableGeometry.left(),
+                                              availableGeometry.right() - detailWidget->width() + 1);
+                    const int maximumY = qMax(availableGeometry.top(),
+                                              availableGeometry.bottom() - detailWidget->height() + 1);
+                    popupPosition.setX(qBound(availableGeometry.left(), popupPosition.x(), maximumX));
+                    popupPosition.setY(qBound(availableGeometry.top(), popupPosition.y(), maximumY));
                 }
 
-                this->m_sessionDetailWidget->move(popupPosition);
-                this->m_sessionDetailWidget->show();
-                this->m_sessionDetailWidget->raise();
-                this->m_sessionDetailWidget->activateWindow();
+                detailWidget->move(popupPosition);
+                detailWidget->show();
+                detailWidget->raise();
+                detailWidget->activateWindow();
             });
 }
 

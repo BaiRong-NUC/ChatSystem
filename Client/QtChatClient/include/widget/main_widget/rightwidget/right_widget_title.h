@@ -2,6 +2,7 @@
 #include <public.h>
 #include <utils/log.h>
 #include <widget/session_detail_widget/single_session_detail_widget.h>
+#include <widget/session_detail_widget/group_session_detai_widget.h>
 
 namespace ChatWidget
 {
@@ -22,6 +23,8 @@ namespace ChatWidget
         explicit RightWidgetTitle(QWidget *parent = nullptr);
         ~RightWidgetTitle() override;
 
+        // 当前会话类型；false 打开群聊详情，true 打开单聊详情。
+        bool isSingleSession = false;
         QPointer<QLabel> m_titleLabel;           // 标题标签
         QPointer<QPushButton> m_titleButton;     // 更多按钮
         QPointer<QPushButton> m_pinButton;       // 窗口置顶按钮
@@ -31,5 +34,8 @@ namespace ChatWidget
 
         // 会话详情窗口由 Qt 父对象树管理，关闭销毁后会自动置空。
         QPointer<SingleSessionDetailWidget> m_sessionDetailWidget;
+
+        // 群聊详情窗口由 Qt 父对象树管理，关闭销毁后会自动置空。
+        QPointer<GroupSessionDetailWidget> m_groupSessionDetailWidget;
     };
 }  // namespace ChatWidget
