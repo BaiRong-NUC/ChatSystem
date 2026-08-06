@@ -1,6 +1,5 @@
 #include <widget/friend_widget/add_friend_widget.h>
 
-#include <QStyleOptionButton>
 
 using namespace ChatWidget;
 
