@@ -204,11 +204,33 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
 
 void SingleSessionDetailWidget::_InitSignalSlots()
 {
-    if (this->m_addGroup == nullptr || this->m_addGroup->m_addButton == nullptr) { return; }
+    if (this->m_addGroup == nullptr || this->m_addGroup->m_addButton == nullptr ||
+        this->m_searchMessageButton == nullptr)
+    {
+        return;
+    }
 
     // AddGroup 是可复用展示控件；具体打开哪个窗口由当前会话详情负责。
     connect(this->m_addGroup->m_addButton, &QPushButton::clicked, this,
             &SingleSessionDetailWidget::_OpenChooseFriendWidget);
+    connect(this->m_searchMessageButton, &QPushButton::clicked, this,
+            &SingleSessionDetailWidget::_OpenHistoryWidget);
+}
+
+void SingleSessionDetailWidget::_OpenHistoryWidget()
+{
+    if (this->m_historyWidget == nullptr)
+    {
+        QString sessionName = this->m_sessionUserInfo.m_userName.trimmed();
+        if (sessionName.isEmpty()) { sessionName = this->m_sessionUserInfo.m_userTag.trimmed(); }
+        if (sessionName.isEmpty()) { sessionName = QStringLiteral("未命名会话"); }
+
+        // 指定详情窗口为父对象；聊天记录窗口关闭时由WA_DeleteOnClose销毁并使QPointer置空。
+        this->m_historyWidget = new HistoryWidget(sessionName, this);
+    }
+
+    QWidget *anchorWindow = this->parentWidget() == nullptr ? this : this->parentWidget()->window();
+    this->m_historyWidget->ShowCentered(anchorWindow);
 }
 
 void SingleSessionDetailWidget::_OpenChooseFriendWidget()

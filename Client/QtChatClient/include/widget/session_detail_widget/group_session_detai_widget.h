@@ -3,6 +3,7 @@
 #include <model/data.h>
 #include <public.h>
 #include <utils/log.h>
+#include <widget/history_widget/history_widget.h>
 #include <widget/component/add_group.h>
 #include <widget/component/auto_hide_scroll_area.h>
 #include <widget/component/avatar_name.h>
@@ -26,6 +27,7 @@ namespace ChatWidget
         void _InitSignalSlots();               // 初始化已实现的纯界面交互
         void _AddExampleMember(const QIcon &avatar, const QString &name);  // 添加调试群成员
         void _FilterGroupMembers(const QString &keyword);  // 按昵称过滤成员网格
+        void _OpenHistoryWidget();      // 打开当前群聊的聊天记录窗口
 
        public:
         static constexpr int PREFERRED_WIDTH = 420;  // 右侧详情栏默认宽度
@@ -59,5 +61,6 @@ namespace ChatWidget
         QPointer<QPushButton> m_showMemberNicknameSwitch;  // 显示群成员昵称
         QPointer<QPushButton> m_clearHistoryButton;        // 清空聊天记录入口
         QPointer<QPushButton> m_exitGroupButton;           // 退出群聊入口
+        QPointer<HistoryWidget> m_historyWidget;           // 关闭后自动置空的聊天记录窗口
     };
 }  // namespace ChatWidget

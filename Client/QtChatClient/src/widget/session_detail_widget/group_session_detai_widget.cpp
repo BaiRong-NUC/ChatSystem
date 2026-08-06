@@ -402,7 +402,21 @@ void GroupSessionDetailWidget::_InitSignalSlots()
             &GroupSessionDetailWidget::_FilterGroupMembers);
     connect(this->m_memberSearchBox, &SearchBox::SearchRequested, this,
             &GroupSessionDetailWidget::_FilterGroupMembers);
+    connect(this->m_searchMessageButton, &QPushButton::clicked, this,
+            &GroupSessionDetailWidget::_OpenHistoryWidget);
 
+}
+
+void GroupSessionDetailWidget::_OpenHistoryWidget()
+{
+    if (this->m_historyWidget == nullptr)
+    {
+        // 当前先提供查询窗口和调试记录；业务层接入后通过查询信号加载当前群聊数据。
+        this->m_historyWidget = new HistoryWidget(this->m_groupName, this);
+    }
+
+    QWidget *anchorWindow = this->parentWidget() == nullptr ? this : this->parentWidget()->window();
+    this->m_historyWidget->ShowCentered(anchorWindow);
 }
 
 void GroupSessionDetailWidget::_AddExampleMember(const QIcon &avatar, const QString &name)

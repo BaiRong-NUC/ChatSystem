@@ -5,6 +5,7 @@
 #include <model/data.h>
 #include <widget/component/add_group.h>
 #include <widget/component/avatar_name.h>
+#include <widget/history_widget/history_widget.h>
 #include <widget/friend_widget/choose_friend_widget/choose_friend_widget.h>
 
 /**
@@ -21,6 +22,7 @@ namespace ChatWidget
         void _InitSingleSessionDetailWidget(const Model::UserInfo &userInfo);  // 初始化UI界面
         void _InitSignalSlots();       // 初始化“添加”等界面信号
         void _OpenChooseFriendWidget();  // 打开选择好友窗口
+        void _OpenHistoryWidget();       // 打开当前单聊的聊天记录窗口
 
        public:
         static constexpr int PREFERRED_WIDTH = 420;  // 右侧详情栏默认宽度
@@ -42,5 +44,6 @@ namespace ChatWidget
         QPointer<QPushButton> m_pinChatSwitch;              // 置顶聊天开关，当前仅展示 UI 状态
         QPointer<QPushButton> m_clearHistoryButton;         // 清空聊天记录入口
         QPointer<ChooseFriendWidget> m_chooseFriendWidget;  // 关闭详情时由 Qt 对象树一并释放
+        QPointer<HistoryWidget> m_historyWidget;            // 关闭后自动置空的聊天记录窗口
     };
 }  // namespace ChatWidget

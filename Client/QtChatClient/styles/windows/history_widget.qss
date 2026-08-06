@@ -1,0 +1,121 @@
+QWidget#chatHistoryWidget,
+QWidget#chatHistoryFilterArea,
+QScrollArea#chatHistoryResultScrollArea,
+QWidget#chatHistoryResultContainer {
+    background-color: #202020;
+    border: none;
+}
+
+QWidget#chatHistoryWidget {
+    border: 1px solid #3d3d3d;
+}
+
+QWidget#chatHistoryTitleBar {
+    background-color: #191919;
+    border-bottom: 1px solid #343434;
+}
+
+QLabel#chatHistoryTitleLabel {
+    color: #eeeeee;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+QPushButton#chatHistoryWindowButton,
+QPushButton#chatHistoryCloseButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+}
+
+QPushButton#chatHistoryWindowButton:hover {
+    background-color: #303030;
+}
+
+QPushButton#chatHistoryCloseButton:hover {
+    background-color: #c42b1c;
+}
+
+QDateEdit#chatHistoryDateEdit {
+    color: #e8e8e8;
+    background-color: #303030;
+    border: 1px solid #3b3b3b;
+    border-radius: 7px;
+    padding: 0 10px;
+    font-size: 14px;
+    selection-background-color: #2f8f58;
+}
+
+QDateEdit#chatHistoryDateEdit:focus {
+    border-color: #3b9b62;
+}
+
+QDateEdit#chatHistoryDateEdit::drop-down {
+    width: 28px;
+    border: none;
+    border-left: 1px solid #454545;
+}
+
+QCalendarWidget {
+    color: #eeeeee;
+    background-color: #292929;
+}
+
+QPushButton#chatHistoryAllDateButton {
+    color: #d8d8d8;
+    background-color: #333333;
+    border: 1px solid #444444;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+QPushButton#chatHistoryAllDateButton:hover {
+    color: #ffffff;
+    background-color: #3c3c3c;
+}
+
+QPushButton#chatHistoryAllDateButton:pressed {
+    background-color: #292929;
+}
+
+QWidget#chatHistoryItem {
+    background-color: #272727;
+    border: 1px solid #303030;
+    border-radius: 8px;
+}
+
+QWidget#chatHistoryItem:hover {
+    background-color: #2c2c2c;
+    border-color: #3a3a3a;
+}
+
+QLabel#chatHistoryAvatar {
+    background-color: #303030;
+    border: none;
+    border-radius: 6px;
+}
+
+QLabel#chatHistorySender {
+    color: #b4b4b4;
+    background: transparent;
+    font-size: 14px;
+}
+
+QLabel#chatHistoryTime {
+    color: #868686;
+    background: transparent;
+    font-size: 13px;
+}
+
+QLabel#chatHistoryContent {
+    color: #eeeeee;
+    background: transparent;
+    font-size: 15px;
+}
+
+QLabel#chatHistoryEmptyLabel {
+    color: #8f8f8f;
+    background: transparent;
+    font-size: 15px;
+}

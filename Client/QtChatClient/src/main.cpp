@@ -158,8 +158,41 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        // 再切换到群聊分支，验证群成员、群信息、设置项和四个暂不实现功能的占位控件。
+        // 验证聊天记录入口以及“关键字 + 日期”两个查询条件。
         chooseFriendWidget->reject();
+        sessionDetailWidget->m_searchMessageButton->click();
+        auto *historyWidget = sessionDetailWidget->m_historyWidget.data();
+        if (historyWidget == nullptr || !historyWidget->isVisible() ||
+            historyWidget->m_searchBox == nullptr || historyWidget->m_dateEdit == nullptr ||
+            historyWidget->m_resultScrollArea == nullptr ||
+            historyWidget->m_historyRecords.size() != 5)
+        {
+            LogInfo(LogLevel::ERROR, "聊天记录窗口冒烟测试失败:入口、筛选控件或调试记录不完整");
+            return 1;
+        }
+
+        historyWidget->m_searchBox->SetKeyword(QStringLiteral("关键字过滤"));
+        if (historyWidget->findChildren<QWidget *>("chatHistoryItem").size() != 1)
+        {
+            LogInfo(LogLevel::ERROR, "聊天记录窗口冒烟测试失败:关键字过滤结果不正确");
+            return 1;
+        }
+        historyWidget->m_searchBox->Clear();
+        historyWidget->m_dateEdit->setDate(QDate::currentDate().addDays(-1));
+        if (historyWidget->findChildren<QWidget *>("chatHistoryItem").size() != 1)
+        {
+            LogInfo(LogLevel::ERROR, "聊天记录窗口冒烟测试失败:日期过滤结果不正确");
+            return 1;
+        }
+        historyWidget->m_allDateButton->click();
+        if (historyWidget->findChildren<QWidget *>("chatHistoryItem").size() != 5)
+        {
+            LogInfo(LogLevel::ERROR, "聊天记录窗口冒烟测试失败:恢复全部日期后结果不正确");
+            return 1;
+        }
+        historyWidget->close();
+
+        // 再切换到群聊分支，验证群成员、群信息、设置项和四个暂不实现功能的占位控件。
         rightWidgetTitle->isSingleSession = false;
         rightWidgetTitle->m_titleLabel->setText(QStringLiteral("文博十三号宿舍楼群"));
         moreButton->click();
@@ -198,6 +231,17 @@ int main(int argc, char *argv[])
         if (!groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar->isHidden())
         {
             LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:鼠标离开后覆盖滚动条未隐藏");
+            return 1;
+        }
+
+        // 群聊详情使用同一个HistoryWidget公共窗口，并带入当前群聊名称。
+        groupSessionDetailWidget->m_searchMessageButton->click();
+        if (groupSessionDetailWidget->m_historyWidget == nullptr ||
+            !groupSessionDetailWidget->m_historyWidget->isVisible() ||
+            groupSessionDetailWidget->m_historyWidget->m_sessionName !=
+                QStringLiteral("文博十三号宿舍楼群"))
+        {
+            LogInfo(LogLevel::ERROR, "聊天记录窗口冒烟测试失败:群聊入口或会话名称不正确");
             return 1;
         }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);

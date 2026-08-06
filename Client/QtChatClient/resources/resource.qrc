@@ -39,6 +39,7 @@
         <file alias="styles/windows/self_widget.qss">../styles/windows/self_widget.qss</file>
         <file alias="styles/windows/add_friend_widget.qss">../styles/windows/add_friend_widget.qss</file>
         <file alias="styles/windows/choose_friend_widget.qss">../styles/windows/choose_friend_widget.qss</file>
+        <file alias="styles/windows/history_widget.qss">../styles/windows/history_widget.qss</file>
         <file alias="styles/windows/group_session_detail_widget.qss">../styles/windows/group_session_detail_widget.qss</file>
         <file alias="styles/windows/single_session_detail_widget.qss">../styles/windows/single_session_detail_widget.qss</file>
         <file alias="styles/windows/user_info_widget.qss">../styles/windows/user_info_widget.qss</file>
