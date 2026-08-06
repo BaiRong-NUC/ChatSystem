@@ -94,9 +94,9 @@ int main(int argc, char *argv[])
             return 1;
         }
         if (messageWidget->m_overlayScrollBar->geometry().right() !=
-            messageWidget->viewport()->rect().right())
+            messageWidget->rect().right())
         {
-            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:覆盖滚动条未贴齐视口右侧");
+            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:覆盖滚动条未贴齐组件右侧");
             return 1;
         }
         QEvent leaveMessageWidgetEvent(QEvent::Leave);
@@ -188,9 +188,9 @@ int main(int argc, char *argv[])
             return 1;
         }
         if (groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar->geometry().right() !=
-            groupSessionDetailWidget->m_scrollArea->viewport()->rect().right())
+            groupSessionDetailWidget->m_scrollArea->rect().right())
         {
-            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:覆盖滚动条未贴齐视口右侧");
+            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:覆盖滚动条未贴齐组件右侧");
             return 1;
         }
         QEvent leaveGroupDetailEvent(QEvent::Leave);

@@ -4,13 +4,14 @@ using namespace ChatWidget;
 
 namespace
 {
-    constexpr int kOverlayScrollBarWidth = 8;
+    constexpr int kOverlayScrollBarWidth = 10;
 }  // namespace
 
 AutoHideScrollArea::AutoHideScrollArea(QWidget *parent) : QScrollArea(parent)
 {
-    // 指定 viewport 为父对象，滚动区域销毁时覆盖滚动条会由 Qt 自动释放。
-    this->m_overlayScrollBar = new QScrollBar(Qt::Vertical, this->viewport());
+    // 直接叠放在整个滚动组件上，避免viewport边框或内部边距在右侧留下空隙。
+    // 指定this为父对象后，组件销毁时覆盖滚动条会由Qt对象树自动释放。
+    this->m_overlayScrollBar = new QScrollBar(Qt::Vertical, this);
     this->_InitAutoHideScrollArea();
 }
 
@@ -52,11 +53,12 @@ void AutoHideScrollArea::_SetScrollBarVisible(bool visible)
 
 void AutoHideScrollArea::_UpdateOverlayScrollBarGeometry()
 {
-    if (this->m_overlayScrollBar == nullptr || this->viewport() == nullptr) { return; }
+    if (this->m_overlayScrollBar == nullptr) { return; }
 
-    const int scrollBarX = qMax(0, this->viewport()->width() - kOverlayScrollBarWidth);
+    // 使用AutoHideScrollArea自身尺寸，让滚动条外沿与窗口右边缘严格重合。
+    const int scrollBarX = qMax(0, this->width() - kOverlayScrollBarWidth);
     this->m_overlayScrollBar->setGeometry(scrollBarX, 0, kOverlayScrollBarWidth,
-                                          this->viewport()->height());
+                                          this->height());
     this->m_overlayScrollBar->raise();
 }
 

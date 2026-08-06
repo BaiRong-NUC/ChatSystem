@@ -27,7 +27,7 @@ namespace ChatWidget
        private:
         void _InitAutoHideScrollArea();             // 初始化隐藏策略和信号连接
         void _SetScrollBarVisible(bool visible);    // 根据悬停状态切换覆盖滚动条
-        void _UpdateOverlayScrollBarGeometry();     // 将覆盖滚动条固定在viewport右侧
+        void _UpdateOverlayScrollBarGeometry();     // 将覆盖滚动条固定在整个组件右侧
         void _SyncOverlayScrollBarFromSource();     // 从隐藏的真实滚动条同步范围与位置
 
        protected:
@@ -43,7 +43,7 @@ namespace ChatWidget
         void RefreshScrollBar();
 
        public:
-        // 覆盖滚动条由viewport的Qt对象树拥有；成员仅作自动置空的观察指针。
+        // 覆盖滚动条由AutoHideScrollArea的Qt对象树拥有；成员仅作自动置空的观察指针。
         QPointer<QScrollBar> m_overlayScrollBar;
     };
 }  // namespace ChatWidget
