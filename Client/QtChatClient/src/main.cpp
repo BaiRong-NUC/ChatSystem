@@ -1,4 +1,5 @@
 #include <widget/main_widget/mainwidget.h>
+#include <widget/friend_widget/choose_friend_widget/choose_friend_widget.h>
 #include <QApplication>
 #include <QDir>
 #include <QDirIterator>
@@ -50,6 +51,19 @@ int main(int argc, char *argv[])
         if (w->findChild<ChatWidget::AddFriendWidget *>() == nullptr)
         {
             LogInfo(LogLevel::ERROR, "添加朋友窗口冒烟测试失败:点击按钮后未创建窗口");
+            return 1;
+        }
+
+        // 覆盖选择好友窗口的真实构造、条目选择和公共搜索框创建路径。
+        // 窗口带有 MainWidget 父对象，程序退出时由 Qt 对象树统一释放。
+        auto *chooseFriendWidget = new ChatWidget::ChooseFriendWidget(w.get());
+        chooseFriendWidget->AddFriend(QIcon(":/images/defaultAvatar.png"), QStringLiteral("测试好友一"));
+        chooseFriendWidget->AddFriend(QIcon(":/images/defaultAvatar.png"), QStringLiteral("测试好友二"), true);
+        chooseFriendWidget->show();
+        if (chooseFriendWidget->findChild<ChatWidget::SearchBox *>() == nullptr ||
+            chooseFriendWidget->GetSelectedFriendNames() != QStringList{QStringLiteral("测试好友二")})
+        {
+            LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:搜索框或预选好友状态不正确");
             return 1;
         }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);
