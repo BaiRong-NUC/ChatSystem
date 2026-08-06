@@ -116,7 +116,8 @@ QPushButton#groupSessionSwitch {
     padding: 0;
 }
 
-QPushButton#groupSessionDangerButton {
+QPushButton#groupSessionClearHistoryButton,
+QPushButton#groupSessionExitGroupButton {
     color: #f05d5d;
     background-color: transparent;
     border: none;
@@ -126,12 +127,14 @@ QPushButton#groupSessionDangerButton {
     font-weight: 500;
 }
 
-QPushButton#groupSessionDangerButton:hover {
+QPushButton#groupSessionClearHistoryButton:hover,
+QPushButton#groupSessionExitGroupButton:hover {
     color: #ff7373;
     background-color: #3a2929;
 }
 
-QPushButton#groupSessionDangerButton:pressed {
+QPushButton#groupSessionClearHistoryButton:pressed,
+QPushButton#groupSessionExitGroupButton:pressed {
     color: #d34e4e;
     background-color: #302323;
 }

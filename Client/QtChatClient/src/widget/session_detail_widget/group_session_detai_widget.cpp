@@ -99,6 +99,48 @@ namespace
         }
     };
 
+    /**
+     * 群聊详情中的危险操作按钮。
+     *
+     * “清空聊天记录”和“退出群聊”必须始终使用红色文字提示风险。这里主动绘制
+     * 按钮文字与悬停背景，避免操作系统原生按钮样式覆盖 QSS 的文字颜色。
+     * 字体仍然读取按钮当前 font，因此公共 QSS 中的字号和字体设置仍然有效。
+     */
+    class GroupDangerButton final : public QPushButton
+    {
+       public:
+        explicit GroupDangerButton(QWidget *parent = nullptr) : QPushButton(parent)
+        {
+            this->setFlat(true);
+            this->setFocusPolicy(Qt::NoFocus);
+            this->setCursor(Qt::PointingHandCursor);
+        }
+
+       protected:
+        void paintEvent(QPaintEvent *event) override
+        {
+            Q_UNUSED(event);
+
+            QPainter painter(this);
+            painter.setRenderHint(QPainter::Antialiasing, true);
+
+            // 只有交互时才绘制弱红色背景，默认状态保持和详情页背景一致。
+            if (this->underMouse())
+            {
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(this->isDown() ? QColor("#302323") : QColor("#3a2929"));
+                painter.drawRoundedRect(this->rect().adjusted(0, 3, 0, -3), 6, 6);
+            }
+
+            const QColor textColor = this->isDown() ? QColor("#d34e4e")
+                                                     : (this->underMouse() ? QColor("#ff7373")
+                                                                          : QColor("#f05d5d"));
+            painter.setPen(textColor);
+            painter.setFont(this->font());
+            painter.drawText(this->rect(), Qt::AlignCenter, this->text());
+        }
+    };
+
     class GroupDetailSwitch final : public QPushButton
     {
        public:
@@ -188,8 +230,8 @@ GroupSessionDetailWidget::GroupSessionDetailWidget(const QString &groupName, QWi
     this->m_pinChatSwitch = new GroupDetailSwitch(false, this->m_contentWidget);
     this->m_saveToContactsSwitch = new GroupDetailSwitch(false, this->m_contentWidget);
     this->m_showMemberNicknameSwitch = new GroupDetailSwitch(true, this->m_contentWidget);
-    this->m_clearHistoryButton = new QPushButton(this->m_contentWidget);
-    this->m_exitGroupButton = new QPushButton(this->m_contentWidget);
+    this->m_clearHistoryButton = new GroupDangerButton(this->m_contentWidget);
+    this->m_exitGroupButton = new GroupDangerButton(this->m_contentWidget);
 
     this->_InitGroupSessionDetailWidget();
     this->_InitSignalSlots();
@@ -336,18 +378,16 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
                  QStringLiteral("显示群成员昵称"));
     contentLayout->addWidget(CreateDivider(this->m_contentWidget));
 
-    this->m_clearHistoryButton->setObjectName("groupSessionDangerButton");
-    this->m_clearHistoryButton->setFlat(true);
-    this->m_clearHistoryButton->setFocusPolicy(Qt::NoFocus);
+    this->m_clearHistoryButton->setObjectName("groupSessionClearHistoryButton");
     this->m_clearHistoryButton->setText(QStringLiteral("清空聊天记录"));
+    this->m_clearHistoryButton->setAccessibleName(QStringLiteral("清空群聊聊天记录"));
     this->m_clearHistoryButton->setFixedHeight(kSettingRowHeight);
     contentLayout->addWidget(this->m_clearHistoryButton);
     contentLayout->addWidget(CreateDivider(this->m_contentWidget));
 
-    this->m_exitGroupButton->setObjectName("groupSessionDangerButton");
-    this->m_exitGroupButton->setFlat(true);
-    this->m_exitGroupButton->setFocusPolicy(Qt::NoFocus);
+    this->m_exitGroupButton->setObjectName("groupSessionExitGroupButton");
     this->m_exitGroupButton->setText(QStringLiteral("退出群聊"));
+    this->m_exitGroupButton->setAccessibleName(QStringLiteral("退出当前群聊"));
     this->m_exitGroupButton->setFixedHeight(kSettingRowHeight);
     contentLayout->addWidget(this->m_exitGroupButton);
     contentLayout->addStretch();
