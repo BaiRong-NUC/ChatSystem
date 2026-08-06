@@ -1,6 +1,7 @@
 #pragma once
 
 #include <public.h>
+#include <widget/component/auto_hide_scroll_area.h>
 #include <widget/component/search_box.h>
 #include <widget/friend_widget/choose_friend_widget/choose_friend_item.h>
 
@@ -52,6 +53,8 @@ namespace ChatWidget
 
        public:
         QPointer<SearchBox> m_searchBox;                  // 公共搜索框组件
+        QPointer<AutoHideScrollArea> m_totalFriendScrollArea;    // 左侧自动隐藏滚动区域
+        QPointer<AutoHideScrollArea> m_selectedFriendScrollArea; // 右侧自动隐藏滚动区域
         QPointer<QWidget> m_totalFriendListWidget;        // 左侧全部好友列表内容区
         QPointer<QWidget> m_selectedFriendListWidget;     // 右侧已选择好友列表内容区
         QPointer<QLabel> m_selectedCountLabel;            // 已选择数量说明

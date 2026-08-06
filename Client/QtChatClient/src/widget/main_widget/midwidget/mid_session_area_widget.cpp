@@ -3,30 +3,21 @@
 using namespace ChatWidget;
 using namespace Log;
 
-namespace
-{
-    constexpr int kOverlayScrollBarWidth = 8;
-}  // namespace
-
-MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : QScrollArea(parent)
+MidSessionAreaWidget::MidSessionAreaWidget(QWidget *parent) : AutoHideScrollArea(parent)
 {
     // 初始化资源
-    this->m_sessionListWidget = new QWidget(this);                              // 创建会话列表容器
-    this->m_overlayScrollBar = new QScrollBar(Qt::Vertical, this->viewport());  // 创建叠放滚动条
+    this->m_sessionListWidget = new QWidget(this);  // 创建会话列表容器
     // 初始化窗口
     this->_InitSessionArea();
-
-    // 初始化信号槽连接
-    this->_InitSignalSlots();
 }
 
 MidSessionAreaWidget::~MidSessionAreaWidget() = default;
 
 void MidSessionAreaWidget::_InitSessionArea()
 {
-    if (this->m_sessionListWidget == nullptr || this->m_overlayScrollBar == nullptr)
+    if (this->m_sessionListWidget == nullptr)
     {
-        LogInfo(LogLevel::ERROR, "sessionListWidget或overlayScrollBar资源初始化失败");
+        LogInfo(LogLevel::ERROR, "sessionListWidget资源初始化失败");
         exit(-1);
     }
     // 设置背景
@@ -35,19 +26,8 @@ void MidSessionAreaWidget::_InitSessionArea()
     this->m_sessionListWidget->setObjectName("sessionListWidget");
     this->m_sessionListWidget->setAttribute(Qt::WA_StyledBackground, true);
 
-    // 设置滚动区域属性,隐藏默认滚动条,使用自定义的叠放滚动条
+    // 自动隐藏滚动条行为由公共AutoHideScrollArea提供。
     this->setWidgetResizable(true);  // 设置滚动区域可调整大小
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    this->m_overlayScrollBar->setObjectName("midSessionAreaWidgetOverlayScrollBar");
-    this->m_overlayScrollBar->setFixedWidth(kOverlayScrollBarWidth);
-    this->m_overlayScrollBar->hide();
-    // 将这个滚动条提升到父控件的最前面，保证它在可见时覆盖在其它控件之上。
-    this->m_overlayScrollBar->raise();
-
-    this->_SetScrollBarVisible(false);  // 开始时隐藏滚动条,按悬停状态切换显示
-    this->installEventFilter(this);     // 安装事件过滤器,监听鼠标悬停事件以切换滚动条显示
 
     this->m_sessionListWidget->setFixedWidth(this->viewport()->width());  // 会话列表宽度跟随视口
     this->setWidget(this->m_sessionListWidget);  // 将会话列表容器设置为滚动区域的子组件
@@ -59,8 +39,7 @@ void MidSessionAreaWidget::_InitSessionArea()
     sessionListLayout->setAlignment(Qt::AlignTop);            // 设置布局对齐方式为顶部对齐
     this->m_sessionListWidget->setLayout(sessionListLayout);  // 将布局设置为会话列表容器的布局
 
-    this->_UpdateOverlayScrollBarGeometry();  // 初始时更新叠放滚动条的位置和大小,确保它正确覆盖在好友列表的右侧
-    this->_SyncOverlayScrollBarFromSource();
+    this->RefreshScrollBar();
 
 #if DEBUG_CODE
     for (int i = 0; i < 20; ++i)
@@ -77,58 +56,11 @@ void MidSessionAreaWidget::_InitSessionArea()
 #endif
 }
 
-void MidSessionAreaWidget::_SetScrollBarVisible(bool visible)
-{
-    if (this->m_overlayScrollBar == nullptr) { return; }
-
-    const bool hasScrollableContent = this->verticalScrollBar()->maximum() > this->verticalScrollBar()->minimum();
-    this->m_overlayScrollBar->setVisible(visible && hasScrollableContent);
-    if (visible && hasScrollableContent) { this->m_overlayScrollBar->raise(); }
-}
-
-void MidSessionAreaWidget::_UpdateOverlayScrollBarGeometry()
-{
-    if (this->m_overlayScrollBar == nullptr || this->viewport() == nullptr) { return; }
-
-    int scrollBarX = this->viewport()->width() - kOverlayScrollBarWidth;
-    if (scrollBarX < 0) { scrollBarX = 0; }
-    this->m_overlayScrollBar->setGeometry(scrollBarX, 0, kOverlayScrollBarWidth, this->viewport()->height());
-    this->m_overlayScrollBar->raise();
-}
-
-void MidSessionAreaWidget::_SyncOverlayScrollBarFromSource()
-{
-    if (this->m_overlayScrollBar == nullptr) { return; }
-
-    QScrollBar *sourceScrollBar = this->verticalScrollBar();
-    const bool previousSignalState = this->m_overlayScrollBar->blockSignals(true);
-    this->m_overlayScrollBar->setRange(sourceScrollBar->minimum(), sourceScrollBar->maximum());
-    this->m_overlayScrollBar->setPageStep(sourceScrollBar->pageStep());
-    this->m_overlayScrollBar->setSingleStep(sourceScrollBar->singleStep());
-    this->m_overlayScrollBar->setValue(sourceScrollBar->value());
-    this->m_overlayScrollBar->blockSignals(previousSignalState);
-
-    this->_SetScrollBarVisible(this->underMouse());
-}
-
-bool MidSessionAreaWidget::eventFilter(QObject *watched, QEvent *event)
-{
-    if (watched == this)
-    {
-        if (event->type() == QEvent::Enter) { this->_SetScrollBarVisible(true); }
-        else if (event->type() == QEvent::Leave) { this->_SetScrollBarVisible(false); }
-    }
-
-    return QScrollArea::eventFilter(watched, event);
-}
-
 void MidSessionAreaWidget::resizeEvent(QResizeEvent *event)
 {
-    QScrollArea::resizeEvent(event);
+    AutoHideScrollArea::resizeEvent(event);
 
     if (this->m_sessionListWidget != nullptr) { this->m_sessionListWidget->setFixedWidth(this->viewport()->width()); }
-    this->_UpdateOverlayScrollBarGeometry();
-    this->_SyncOverlayScrollBarFromSource();
 }
 
 bool MidSessionAreaWidget::ClearSessionList()
@@ -147,7 +79,7 @@ bool MidSessionAreaWidget::ClearSessionList()
         // 立即销毁而不是deleteLater，清空操作完成时内存也已经释放。
         std::unique_ptr<QWidget> widget(child->widget());
     }
-    this->_SyncOverlayScrollBarFromSource();
+    this->RefreshScrollBar();
     return true;
 }
 
@@ -187,17 +119,8 @@ bool MidSessionAreaWidget::AddItem(const ItemType &type, const QString &id, cons
         exit(-1);
     }
     sessionListLayout->addWidget(item.release());  // 所有权交给m_sessionListWidget的Qt对象树
-    this->_SyncOverlayScrollBarFromSource();
+    this->RefreshScrollBar();
     return true;
-}
-
-void MidSessionAreaWidget::_InitSignalSlots()
-{
-    // 实现了两个滚动条的双向同步
-    connect(this->verticalScrollBar(), &QScrollBar::rangeChanged, this,
-            [this](int, int) { this->_SyncOverlayScrollBarFromSource(); });
-    connect(this->verticalScrollBar(), &QScrollBar::valueChanged, this->m_overlayScrollBar, &QScrollBar::setValue);
-    connect(this->m_overlayScrollBar, &QScrollBar::valueChanged, this->verticalScrollBar(), &QScrollBar::setValue);
 }
 
 // 选中特定的会话项

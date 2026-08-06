@@ -1,5 +1,6 @@
 #include <widget/main_widget/mainwidget.h>
 #include <widget/friend_widget/choose_friend_widget/choose_friend_widget.h>
+#include <widget/main_widget/rightwidget/message_widget.h>
 #include <widget/main_widget/rightwidget/right_widget_title.h>
 #include <widget/session_detail_widget/group_session_detai_widget.h>
 #include <widget/session_detail_widget/single_session_detail_widget.h>
@@ -71,6 +72,41 @@ int main(int argc, char *argv[])
             return 1;
         }
 
+        // 验证聊天消息区域使用自动隐藏的覆盖滚动条，而不是带箭头的原生滚动条。
+        auto *messageWidget = w->findChild<ChatWidget::MessageWidget *>();
+        auto *sessionScrollArea =
+            w->findChild<ChatWidget::AutoHideScrollArea *>("midSessionAreaWidget");
+        if (messageWidget == nullptr || sessionScrollArea == nullptr ||
+            messageWidget->m_overlayScrollBar == nullptr ||
+            sessionScrollArea->m_overlayScrollBar == nullptr ||
+            !a.styleSheet().contains("autoHideScrollAreaOverlayScrollBar") ||
+            messageWidget->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff)
+        {
+            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:覆盖滚动条未正确初始化");
+            return 1;
+        }
+        QEvent enterMessageWidgetEvent(QEvent::Enter);
+        QApplication::sendEvent(messageWidget, &enterMessageWidgetEvent);
+        if (messageWidget->verticalScrollBar()->maximum() > 0 &&
+            messageWidget->m_overlayScrollBar->isHidden())
+        {
+            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:鼠标进入后覆盖滚动条未显示");
+            return 1;
+        }
+        if (messageWidget->m_overlayScrollBar->geometry().right() !=
+            messageWidget->viewport()->rect().right())
+        {
+            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:覆盖滚动条未贴齐视口右侧");
+            return 1;
+        }
+        QEvent leaveMessageWidgetEvent(QEvent::Leave);
+        QApplication::sendEvent(messageWidget, &leaveMessageWidgetEvent);
+        if (!messageWidget->m_overlayScrollBar->isHidden())
+        {
+            LogInfo(LogLevel::ERROR, "聊天消息区域冒烟测试失败:鼠标离开后覆盖滚动条未隐藏");
+            return 1;
+        }
+
         // 先验证单聊分支以及单聊中的添加群成员入口。
         rightWidgetTitle->isSingleSession = true;
         rightWidgetTitle->m_titleLabel->setText(QStringLiteral("好友1"));
@@ -89,6 +125,8 @@ int main(int argc, char *argv[])
         if (chooseFriendWidget == nullptr ||
             sessionDetailWidget == nullptr ||
             chooseFriendWidget->findChild<ChatWidget::SearchBox *>() == nullptr ||
+            chooseFriendWidget->m_totalFriendScrollArea == nullptr ||
+            chooseFriendWidget->m_selectedFriendScrollArea == nullptr ||
             chooseFriendWidget->m_selectedFriendNames != QStringList{QStringLiteral("好友1")})
         {
             LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:弹窗、搜索框或默认成员状态不正确");
@@ -132,9 +170,34 @@ int main(int argc, char *argv[])
             groupSessionDetailWidget->m_groupAnnouncementLabel == nullptr ||
             groupSessionDetailWidget->m_foldChatSwitch == nullptr ||
             groupSessionDetailWidget->m_followMembersButton == nullptr ||
-            groupSessionDetailWidget->m_saveToContactsSwitch == nullptr)
+            groupSessionDetailWidget->m_saveToContactsSwitch == nullptr ||
+            groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar == nullptr ||
+            groupSessionDetailWidget->m_scrollArea->verticalScrollBarPolicy() != Qt::ScrollBarAlwaysOff)
         {
             LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:会话类型分流或界面控件不完整");
+            return 1;
+        }
+
+        // 模拟指针进入和离开群详情窗口，验证覆盖滚动条会显示并再次隐藏。
+        QEvent enterGroupDetailEvent(QEvent::Enter);
+        QApplication::sendEvent(groupSessionDetailWidget->m_scrollArea, &enterGroupDetailEvent);
+        if (groupSessionDetailWidget->m_scrollArea->verticalScrollBar()->maximum() > 0 &&
+            groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar->isHidden())
+        {
+            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:鼠标进入后覆盖滚动条未显示");
+            return 1;
+        }
+        if (groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar->geometry().right() !=
+            groupSessionDetailWidget->m_scrollArea->viewport()->rect().right())
+        {
+            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:覆盖滚动条未贴齐视口右侧");
+            return 1;
+        }
+        QEvent leaveGroupDetailEvent(QEvent::Leave);
+        QApplication::sendEvent(groupSessionDetailWidget->m_scrollArea, &leaveGroupDetailEvent);
+        if (!groupSessionDetailWidget->m_scrollArea->m_overlayScrollBar->isHidden())
+        {
+            LogInfo(LogLevel::ERROR, "群聊详情窗口冒烟测试失败:鼠标离开后覆盖滚动条未隐藏");
             return 1;
         }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);

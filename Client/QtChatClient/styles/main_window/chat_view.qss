@@ -53,28 +53,6 @@ QScrollArea#messageWidget QScrollBar:horizontal {
     height: 0;
 }
 
-QScrollArea#messageWidget QScrollBar:vertical {
-    background-color: #191919;
-    width: 8px;
-    margin: 0;
-}
-
-QScrollArea#messageWidget QScrollBar::handle:vertical {
-    background-color: #4a4a4a;
-    border-radius: 4px;
-    min-height: 24px;
-}
-
-QScrollArea#messageWidget QScrollBar::add-line:vertical,
-QScrollArea#messageWidget QScrollBar::sub-line:vertical {
-    height: 0;
-}
-
-QScrollArea#messageWidget QScrollBar::add-page:vertical,
-QScrollArea#messageWidget QScrollBar::sub-page:vertical {
-    background-color: #191919;
-}
-
 QPushButton#messageAvatarButton {
     border-radius: 6px;
 }

@@ -216,7 +216,7 @@ GroupSessionDetailWidget::GroupSessionDetailWidget(const QString &groupName, QWi
     : QWidget(parent), m_groupName(groupName.trimmed().isEmpty() ? QStringLiteral("未命名群聊")
                                                                  : groupName.trimmed())
 {
-    this->m_scrollArea = new QScrollArea(this);
+    this->m_scrollArea = new AutoHideScrollArea(this);
     this->m_contentWidget = new QWidget(this->m_scrollArea);
     this->m_memberSearchBox = new SearchBox(this->m_contentWidget);
     this->m_memberGridWidget = new QWidget(this->m_contentWidget);
@@ -263,8 +263,6 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
     this->m_scrollArea->setObjectName("groupSessionDetailScrollArea");
     this->m_scrollArea->setWidgetResizable(true);
     this->m_scrollArea->setFrameShape(QFrame::NoFrame);
-    this->m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->m_scrollArea->verticalScrollBar()->setObjectName("groupSessionDetailScrollBar");
     this->m_contentWidget->setObjectName("groupSessionDetailContent");
     this->m_contentWidget->setAttribute(Qt::WA_StyledBackground, true);
     this->m_scrollArea->setWidget(this->m_contentWidget);
@@ -391,6 +389,8 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
     this->m_exitGroupButton->setFixedHeight(kSettingRowHeight);
     contentLayout->addWidget(this->m_exitGroupButton);
     contentLayout->addStretch();
+
+    this->m_scrollArea->RefreshScrollBar();
 }
 
 void GroupSessionDetailWidget::_InitSignalSlots()
@@ -402,6 +402,7 @@ void GroupSessionDetailWidget::_InitSignalSlots()
             &GroupSessionDetailWidget::_FilterGroupMembers);
     connect(this->m_memberSearchBox, &SearchBox::SearchRequested, this,
             &GroupSessionDetailWidget::_FilterGroupMembers);
+
 }
 
 void GroupSessionDetailWidget::_AddExampleMember(const QIcon &avatar, const QString &name)

@@ -11,9 +11,10 @@ namespace
     constexpr int kActionButtonWidth = 150;
     constexpr int kActionButtonHeight = 44;
 
-    QScrollArea *CreateScrollArea(const QString &objectName, QWidget *parent, QWidget **contentWidget)
+    AutoHideScrollArea *CreateScrollArea(const QString &objectName, QWidget *parent,
+                                         QWidget **contentWidget)
     {
-        QScrollArea *scrollArea = new QScrollArea(parent);
+        AutoHideScrollArea *scrollArea = new AutoHideScrollArea(parent);
         scrollArea->setObjectName(objectName);
         scrollArea->setWidgetResizable(true);
         scrollArea->setFrameShape(QFrame::NoFrame);
@@ -86,10 +87,10 @@ void ChooseFriendWidget::_InitChooseFriendWidget()
     leftLayout->addSpacing(8);
 
     QWidget *totalFriendContent = nullptr;
-    QScrollArea *totalFriendScrollArea =
+    this->m_totalFriendScrollArea =
         CreateScrollArea("chooseFriendTotalScrollArea", leftPanel, &totalFriendContent);
     this->m_totalFriendListWidget = totalFriendContent;
-    leftLayout->addWidget(totalFriendScrollArea, 1);
+    leftLayout->addWidget(this->m_totalFriendScrollArea, 1);
 
     // 中间分隔线属于窗口装饰，由父对象自动释放。
     QFrame *divider = new QFrame(this);
@@ -123,10 +124,10 @@ void ChooseFriendWidget::_InitChooseFriendWidget()
     rightLayout->addSpacing(14);
 
     QWidget *selectedFriendContent = nullptr;
-    QScrollArea *selectedFriendScrollArea =
+    this->m_selectedFriendScrollArea =
         CreateScrollArea("chooseFriendSelectedScrollArea", rightPanel, &selectedFriendContent);
     this->m_selectedFriendListWidget = selectedFriendContent;
-    rightLayout->addWidget(selectedFriendScrollArea, 1);
+    rightLayout->addWidget(this->m_selectedFriendScrollArea, 1);
 
     QWidget *footer = new QWidget(rightPanel);
     footer->setObjectName("chooseFriendFooter");

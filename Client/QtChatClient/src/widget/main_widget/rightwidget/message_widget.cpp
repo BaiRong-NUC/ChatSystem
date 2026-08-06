@@ -4,7 +4,7 @@ using namespace ChatWidget;
 using namespace Log;
 using namespace Model;
 
-MessageWidget::MessageWidget(QWidget *parent) : QScrollArea(parent)
+MessageWidget::MessageWidget(QWidget *parent) : AutoHideScrollArea(parent)
 {
     // 包含的内容
     this->m_container = new QWidget(this);
@@ -16,10 +16,17 @@ MessageWidget::~MessageWidget() = default;
 
 void MessageWidget::_InitMessageWidget()
 {
+    if (this->m_container == nullptr)
+    {
+        LogInfo(LogLevel::ERROR, "聊天消息区域初始化失败:消息容器为空");
+        return;
+    }
+
     // 设置属性
     this->setObjectName("messageWidget");
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setWidgetResizable(true);
+
     // 滚动条区域
     this->m_container->setObjectName("messageContainer");
     this->m_container->setAttribute(Qt::WA_StyledBackground, true);
@@ -58,6 +65,7 @@ void MessageWidget::_InitMessageWidget()
 #endif
 
     this->setWidget(this->m_container);
+    this->RefreshScrollBar();
 }
 
 void MessageWidget::AddMessage(bool isLeft, const Model::Message &message, const QFont &textFont)
@@ -92,4 +100,5 @@ void MessageWidget::ClearMessages()
             std::unique_ptr<QWidget> widget(item->widget());
         }
     }
+    this->RefreshScrollBar();
 }

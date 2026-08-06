@@ -4,6 +4,7 @@
 #include <public.h>
 #include <utils/log.h>
 #include <widget/component/add_group.h>
+#include <widget/component/auto_hide_scroll_area.h>
 #include <widget/component/avatar_name.h>
 #include <widget/component/search_box.h>
 
@@ -37,7 +38,7 @@ namespace ChatWidget
         QStringList m_memberNames;                   // 群成员完整名称，与 m_memberItems 顺序一致
         QList<QPointer<AvatarName>> m_memberItems;   // Qt 对象树拥有，列表仅观察
 
-        QPointer<QScrollArea> m_scrollArea;          // 整个详情内容的滚动区域
+        QPointer<AutoHideScrollArea> m_scrollArea;   // 公共自动隐藏滚动条组件
         QPointer<QWidget> m_contentWidget;           // 滚动内容容器
         QPointer<SearchBox> m_memberSearchBox;       // 公共搜索框：搜索群成员
         QPointer<QWidget> m_memberGridWidget;        // 群成员网格容器

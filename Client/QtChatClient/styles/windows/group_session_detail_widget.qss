@@ -16,36 +16,6 @@ QWidget#groupSessionSettingRow {
     border: none;
 }
 
-QScrollBar#groupSessionDetailScrollBar:vertical {
-    background: transparent;
-    width: 9px;
-    margin: 4px 0;
-    border: none;
-}
-
-QScrollBar#groupSessionDetailScrollBar::handle:vertical {
-    background-color: #686868;
-    min-height: 36px;
-    border-radius: 4px;
-    margin: 0 2px;
-}
-
-QScrollBar#groupSessionDetailScrollBar::handle:vertical:hover {
-    background-color: #777777;
-}
-
-QScrollBar#groupSessionDetailScrollBar::add-line:vertical,
-QScrollBar#groupSessionDetailScrollBar::sub-line:vertical {
-    height: 0;
-    background: transparent;
-    border: none;
-}
-
-QScrollBar#groupSessionDetailScrollBar::add-page:vertical,
-QScrollBar#groupSessionDetailScrollBar::sub-page:vertical {
-    background: transparent;
-}
-
 QPushButton#groupSessionShowMoreButton {
     color: #a9a9a9;
     background-color: transparent;

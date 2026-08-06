@@ -53,36 +53,6 @@ QDialog#chooseFriendWidget QScrollArea#chooseFriendSelectedScrollArea > QWidget 
     border: none;
 }
 
-QDialog#chooseFriendWidget QScrollBar:vertical {
-    background: transparent;
-    width: 8px;
-    margin: 3px 0;
-    border: none;
-}
-
-QDialog#chooseFriendWidget QScrollBar::handle:vertical {
-    background: #5a5a5a;
-    min-height: 26px;
-    border-radius: 4px;
-    margin: 0 2px;
-}
-
-QDialog#chooseFriendWidget QScrollBar::handle:vertical:hover {
-    background: #6b6b6b;
-}
-
-QDialog#chooseFriendWidget QScrollBar::add-line:vertical,
-QDialog#chooseFriendWidget QScrollBar::sub-line:vertical {
-    height: 0;
-    background: transparent;
-    border: none;
-}
-
-QDialog#chooseFriendWidget QScrollBar::add-page:vertical,
-QDialog#chooseFriendWidget QScrollBar::sub-page:vertical {
-    background: transparent;
-}
-
 QDialog#chooseFriendWidget QWidget#chooseFriendItem {
     background-color: transparent;
     border: none;

@@ -29,6 +29,7 @@
         <file>images/unchecked.png</file>
         <file alias="styles/base/common.qss">../styles/base/common.qss</file>
         <file alias="styles/components/add_group.qss">../styles/components/add_group.qss</file>
+        <file alias="styles/components/auto_hide_scroll_area.qss">../styles/components/auto_hide_scroll_area.qss</file>
         <file alias="styles/components/avatar_name.qss">../styles/components/avatar_name.qss</file>
         <file alias="styles/components/search_box.qss">../styles/components/search_box.qss</file>
         <file alias="styles/main_window/chat_view.qss">../styles/main_window/chat_view.qss</file>
