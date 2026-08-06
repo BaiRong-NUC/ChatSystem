@@ -54,16 +54,29 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        // 覆盖选择好友窗口的真实构造、条目选择和公共搜索框创建路径。
-        // 窗口带有 MainWidget 父对象，程序退出时由 Qt 对象树统一释放。
-        auto *chooseFriendWidget = new ChatWidget::ChooseFriendWidget(w.get());
-        chooseFriendWidget->AddFriend(QIcon(":/images/defaultAvatar.png"), QStringLiteral("测试好友一"));
-        chooseFriendWidget->AddFriend(QIcon(":/images/defaultAvatar.png"), QStringLiteral("测试好友二"), true);
-        chooseFriendWidget->show();
-        if (chooseFriendWidget->findChild<ChatWidget::SearchBox *>() == nullptr ||
-            chooseFriendWidget->GetSelectedFriendNames() != QStringList{QStringLiteral("测试好友二")})
+        // 模拟用户依次点击“更多”和会话详情中的“添加”，覆盖真实弹窗入口。
+        auto *moreButton = w->findChild<QPushButton *>("moreButton");
+        if (moreButton == nullptr)
         {
-            LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:搜索框或预选好友状态不正确");
+            LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:未找到会话更多按钮");
+            return 1;
+        }
+        moreButton->click();
+
+        auto *addGroupButton = w->findChild<QPushButton *>("addGroupButton");
+        if (addGroupButton == nullptr)
+        {
+            LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:未找到添加群聊按钮");
+            return 1;
+        }
+        addGroupButton->click();
+
+        auto *chooseFriendWidget = w->findChild<ChatWidget::ChooseFriendWidget *>();
+        if (chooseFriendWidget == nullptr ||
+            chooseFriendWidget->findChild<ChatWidget::SearchBox *>() == nullptr ||
+            chooseFriendWidget->GetSelectedFriendNames() != QStringList{QStringLiteral("好友1")})
+        {
+            LogInfo(LogLevel::ERROR, "选择好友窗口冒烟测试失败:弹窗、搜索框或默认成员状态不正确");
             return 1;
         }
         QTimer::singleShot(100, &a, &QCoreApplication::quit);

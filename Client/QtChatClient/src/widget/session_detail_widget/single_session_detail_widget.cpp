@@ -1,5 +1,6 @@
 #include <widget/session_detail_widget/single_session_detail_widget.h>
 
+#include <QGuiApplication>
 #include <QStyleOptionButton>
 
 using namespace ChatWidget;
@@ -94,7 +95,8 @@ namespace
     }
 }  // namespace
 
-SingleSessionDetailWidget::SingleSessionDetailWidget(const Model::UserInfo &userInfo, QWidget *parent) : QWidget(parent)
+SingleSessionDetailWidget::SingleSessionDetailWidget(const Model::UserInfo &userInfo, QWidget *parent)
+    : QWidget(parent), m_sessionUserInfo(userInfo)
 {
     this->m_avatarName = new AvatarName(userInfo.m_avatar, userInfo.m_userName, this);
     this->m_addGroup = new AddGroup(this);
@@ -104,6 +106,7 @@ SingleSessionDetailWidget::SingleSessionDetailWidget(const Model::UserInfo &user
     this->m_clearHistoryButton = new QPushButton(this);
 
     this->_InitSingleSessionDetailWidget(userInfo);
+    this->_InitSignalSlots();
 }
 
 void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::UserInfo &userInfo)
@@ -198,4 +201,62 @@ void SingleSessionDetailWidget::_InitSingleSessionDetailWidget(const Model::User
     this->m_clearHistoryButton->setFocusPolicy(Qt::NoFocus);
     mainLayout->addWidget(this->m_clearHistoryButton);
     mainLayout->addStretch();
+}
+
+void SingleSessionDetailWidget::_InitSignalSlots()
+{
+    if (this->m_addGroup == nullptr || this->m_addGroup->m_addButton == nullptr) { return; }
+
+    // AddGroup 是可复用展示控件；具体打开哪个窗口由当前会话详情负责。
+    connect(this->m_addGroup->m_addButton, &QPushButton::clicked, this,
+            &SingleSessionDetailWidget::_OpenChooseFriendWidget);
+}
+
+void SingleSessionDetailWidget::_OpenChooseFriendWidget()
+{
+    if (this->m_chooseFriendWidget == nullptr)
+    {
+        // 指定 this 为父对象，详情窗口销毁时选择窗口也会由 Qt 对象树安全释放。
+        this->m_chooseFriendWidget = new ChooseFriendWidget(this);
+
+        // 从单聊创建群聊时，当前会话好友应默认出现在已选成员列表中。
+        QString friendName = this->m_sessionUserInfo.m_userName.trimmed();
+        if (friendName.isEmpty()) { friendName = this->m_sessionUserInfo.m_userTag.trimmed(); }
+        if (friendName.isEmpty()) { friendName = QStringLiteral("未命名好友"); }
+        this->m_chooseFriendWidget->AddSelectedFriend(this->m_sessionUserInfo.m_avatar, friendName);
+
+        connect(this->m_chooseFriendWidget, &ChooseFriendWidget::ConfirmSelectedFriends, this,
+                &SingleSessionDetailWidget::CreateGroupRequested);
+    }
+
+    // 以主窗口为锚点居中，而不是以右侧窄详情栏居中，避免弹窗大面积超出屏幕。
+    QWidget *anchorWindow = this;
+    if (this->parentWidget() != nullptr && this->parentWidget()->window() != nullptr)
+    {
+        anchorWindow = this->parentWidget()->window();
+    }
+    QPoint popupPosition = anchorWindow->mapToGlobal(anchorWindow->rect().center()) -
+                           QPoint(this->m_chooseFriendWidget->width() / 2,
+                                  this->m_chooseFriendWidget->height() / 2);
+
+    // 多屏环境下把完整弹窗限制在当前屏幕可用区域内。
+    QScreen *screen = QGuiApplication::screenAt(popupPosition);
+    if (screen == nullptr) { screen = QGuiApplication::primaryScreen(); }
+    if (screen != nullptr)
+    {
+        const QRect availableGeometry = screen->availableGeometry();
+        // 当弹窗尺寸大于可用屏幕时，右/下边界可能小于左/上边界；先钳制最大值，
+        // 避免 qBound 收到反向区间并在低分辨率环境触发断言。
+        const int maximumX = qMax(availableGeometry.left(),
+                                  availableGeometry.right() - this->m_chooseFriendWidget->width() + 1);
+        const int maximumY = qMax(availableGeometry.top(),
+                                  availableGeometry.bottom() - this->m_chooseFriendWidget->height() + 1);
+        popupPosition.setX(qBound(availableGeometry.left(), popupPosition.x(), maximumX));
+        popupPosition.setY(qBound(availableGeometry.top(), popupPosition.y(), maximumY));
+    }
+
+    this->m_chooseFriendWidget->move(popupPosition);
+    this->m_chooseFriendWidget->show();
+    this->m_chooseFriendWidget->raise();
+    this->m_chooseFriendWidget->activateWindow();
 }
