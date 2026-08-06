@@ -1,31 +1,65 @@
 #pragma once
+
 #include <public.h>
-#include <utils/utils.h>
-#include <utils/log.h>
-#include <model/data.h>
+#include <widget/component/search_box.h>
 #include <widget/friend_widget/choose_friend_widget/choose_friend_item.h>
+
+#include <QList>
 
 namespace ChatWidget
 {
-    class ChooseFriendWidget : public QWidget
+    /**
+     * 选择好友并发起群聊的窗口。
+     *
+     * 窗口负责好友过滤、选择状态同步和确认/取消交互，不直接创建群聊。业务层收到
+     * ConfirmSelectedFriends 信号后再调用服务端接口，从而保持界面层和业务层解耦。
+     */
+    class ChooseFriendWidget final : public QDialog
     {
         Q_OBJECT
+
+       public:
+        struct SelectedFriendRelation
+        {
+            // 左右条目都由窗口中的 Qt 对象树拥有，这里只保存自动置空的观察指针。
+            QPointer<ChooseFriendItem> m_sourceItem;
+            QPointer<ChooseFriendItem> m_selectedItem;
+        };
+
+       private:
+        void _InitChooseFriendWidget();  // 初始化选择好友窗口界面
+        void _InitSignalSlots();         // 初始化搜索、完成和取消信号
+        void _FilterFriends(const QString &keyword);  // 按好友名称过滤左侧列表
+        void _AddSelectedFriendItem(const QIcon &icon, const QString &name,
+                                    ChooseFriendItem *sourceItem = nullptr);
+        void _RemoveSelectedFriendItem(ChooseFriendItem *sourceItem,
+                                       ChooseFriendItem *selectedItem = nullptr);
+        void _UpdateSelectedState();  // 更新数量、完成按钮和 SelectionChanged 信号
+
        public:
         explicit ChooseFriendWidget(QWidget *parent = nullptr);
-        ~ChooseFriendWidget() override;
+        ~ChooseFriendWidget() override = default;
 
-        // 在所有好友列表中添加一个好友,并设置非选中
+        // 在全部好友列表中加入一个好友，并可指定初始选择状态。
         void AddFriend(const QIcon &icon, const QString &name, bool isSelected = false);
 
-        // 在已选择的好友列表中添加一个好友
+        // 仅向右侧加入一个预选好友，适合业务层恢复草稿中的已有成员。
         void AddSelectedFriend(const QIcon &icon, const QString &name);
 
-       private:
-        void _InitChooseFriendWidget();
-        void _InitSignalSlots();
+       signals:
+        void SelectionChanged(const QStringList &friendNames);
+        void ConfirmSelectedFriends(const QStringList &friendNames);
 
-       private:
-        QPointer<QWidget> m_totalFriendListWidget;     // 所有的好友
-        QPointer<QWidget> m_selectedFriendListWidget;  // 已选择的好友
+       public:
+        QPointer<SearchBox> m_searchBox;                  // 公共搜索框组件
+        QPointer<QWidget> m_totalFriendListWidget;        // 左侧全部好友列表内容区
+        QPointer<QWidget> m_selectedFriendListWidget;     // 右侧已选择好友列表内容区
+        QPointer<QLabel> m_selectedCountLabel;            // 已选择数量说明
+        QPointer<QPushButton> m_confirmButton;             // 完成按钮
+        QPointer<QPushButton> m_cancelButton;              // 取消按钮
+
+        QList<QPointer<ChooseFriendItem>> m_friendItems;   // 左侧条目的非拥有观察列表
+        QList<SelectedFriendRelation> m_selectedRelations; // 左右条目的对应关系
+        QStringList m_selectedFriendNames;                 // 当前已选名称，顺序与右侧列表一致
     };
 }  // namespace ChatWidget

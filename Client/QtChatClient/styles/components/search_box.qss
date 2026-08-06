@@ -1,0 +1,29 @@
+QWidget#searchBox {
+    background-color: #303030;
+    border: 1px solid #303030;
+    border-radius: 8px;
+}
+
+QWidget#searchBox[focused="true"] {
+    background-color: #333333;
+    border-color: #48564d;
+}
+
+QWidget#searchBox:disabled {
+    background-color: #2a2a2a;
+    border-color: #2a2a2a;
+}
+
+QWidget#searchBox QLineEdit#searchBoxEdit {
+    color: #eeeeee;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 16px;
+    selection-background-color: #2f8f58;
+}
+
+QWidget#searchBox QLineEdit#searchBoxEdit:disabled {
+    color: #8f8f8f;
+}

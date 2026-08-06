@@ -1,0 +1,172 @@
+QDialog#chooseFriendWidget {
+    background-color: #292929;
+    border: 1px solid #505050;
+    border-radius: 10px;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendLeftPanel {
+    background-color: #242424;
+    border: none;
+    border-radius: 9px 0 0 9px;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendRightPanel,
+QDialog#chooseFriendWidget QWidget#chooseFriendTitleRow,
+QDialog#chooseFriendWidget QWidget#chooseFriendFooter {
+    background-color: #292929;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QFrame#chooseFriendDivider {
+    color: #323232;
+    background-color: #323232;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QLabel#chooseFriendContactTitle {
+    color: #e8e8e8;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+QDialog#chooseFriendWidget QLabel#chooseFriendTitle {
+    color: #f1f1f1;
+    background: transparent;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+QDialog#chooseFriendWidget QLabel#chooseFriendSelectedCount {
+    color: #9d9d9d;
+    background: transparent;
+    font-size: 14px;
+}
+
+QDialog#chooseFriendWidget QScrollArea#chooseFriendTotalScrollArea,
+QDialog#chooseFriendWidget QScrollArea#chooseFriendSelectedScrollArea,
+QDialog#chooseFriendWidget QWidget#chooseFriendTotalScrollAreaContent,
+QDialog#chooseFriendWidget QWidget#chooseFriendSelectedScrollAreaContent,
+QDialog#chooseFriendWidget QScrollArea#chooseFriendTotalScrollArea > QWidget > QWidget,
+QDialog#chooseFriendWidget QScrollArea#chooseFriendSelectedScrollArea > QWidget > QWidget {
+    background-color: transparent;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 3px 0;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QScrollBar::handle:vertical {
+    background: #5a5a5a;
+    min-height: 26px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+QDialog#chooseFriendWidget QScrollBar::handle:vertical:hover {
+    background: #6b6b6b;
+}
+
+QDialog#chooseFriendWidget QScrollBar::add-line:vertical,
+QDialog#chooseFriendWidget QScrollBar::sub-line:vertical {
+    height: 0;
+    background: transparent;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QScrollBar::add-page:vertical,
+QDialog#chooseFriendWidget QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendItem {
+    background-color: transparent;
+    border: none;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendItem:hover {
+    background-color: #2d2d2d;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendItem[selected="true"][mode="friend"] {
+    background-color: #333333;
+}
+
+QDialog#chooseFriendWidget QWidget#chooseFriendItem[mode="selected"],
+QDialog#chooseFriendWidget QWidget#chooseFriendItem[mode="selected"]:hover {
+    background-color: transparent;
+    border-bottom: 1px solid #313131;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendSelectButton {
+    background-color: transparent;
+    border: none;
+    padding: 1px;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendSelectButton:hover {
+    background-color: #3a3a3a;
+    border-radius: 14px;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendSelectButton:pressed {
+    background-color: #454545;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendAvatarButton {
+    background-color: #343434;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+}
+
+QDialog#chooseFriendWidget QLabel#chooseFriendNameLabel {
+    color: #eeeeee;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendConfirmButton,
+QDialog#chooseFriendWidget QPushButton#chooseFriendCancelButton {
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendConfirmButton {
+    color: #ffffff;
+    background-color: #07c160;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendConfirmButton:hover {
+    background-color: #13d06c;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendConfirmButton:pressed {
+    background-color: #06a951;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendConfirmButton:disabled {
+    color: #8eaa98;
+    background-color: #315c43;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendCancelButton {
+    color: #d9d9d9;
+    background-color: #383838;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendCancelButton:hover {
+    color: #f1f1f1;
+    background-color: #434343;
+}
+
+QDialog#chooseFriendWidget QPushButton#chooseFriendCancelButton:pressed {
+    background-color: #303030;
+}
