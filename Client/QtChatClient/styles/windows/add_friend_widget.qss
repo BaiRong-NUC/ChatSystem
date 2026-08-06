@@ -1,0 +1,141 @@
+QDialog#addFriendWidget {
+    background-color: #242424;
+    border: 1px solid #444444;
+}
+
+QDialog#addFriendWidget QWidget#addFriendHeader,
+QDialog#addFriendWidget QWidget#addFriendSearchRow {
+    background: transparent;
+}
+
+QDialog#addFriendWidget QLabel#addFriendTitle {
+    color: #f1f1f1;
+    background: transparent;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendCloseButton {
+    color: #aeb0b3;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendCloseButton:hover {
+    color: #f0f0f0;
+    background-color: #343434;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendCloseButton:pressed {
+    background-color: #3d3d3d;
+}
+
+QDialog#addFriendWidget QLineEdit#addFriendSearchEdit {
+    color: #eeeeee;
+    background-color: #303030;
+    border: 1px solid #303030;
+    border-radius: 8px 0 0 8px;
+    padding: 0 12px 0 43px;
+    font-size: 16px;
+    selection-background-color: #2f8f58;
+}
+
+QDialog#addFriendWidget QLineEdit#addFriendSearchEdit:focus {
+    background-color: #333333;
+    border-color: #3d5145;
+}
+
+QDialog#addFriendWidget QLineEdit#addFriendSearchEdit:disabled {
+    color: #9b9b9b;
+    background-color: #2b2b2b;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendSearchButton {
+    color: #ffffff;
+    background-color: #07c160;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendSearchButton:hover {
+    background-color: #13d06c;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendSearchButton:pressed {
+    background-color: #06a951;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendSearchButton:disabled {
+    color: #b9d8c6;
+    background-color: #277a4d;
+}
+
+QDialog#addFriendWidget QLabel#addFriendFeedbackLabel {
+    color: #b6b6b6;
+    background: transparent;
+    font-size: 13px;
+    padding: 13px 6px 6px 6px;
+}
+
+QDialog#addFriendWidget QLabel#addFriendFeedbackLabel[status="loading"] {
+    color: #82bd99;
+}
+
+QDialog#addFriendWidget QLabel#addFriendFeedbackLabel[status="error"] {
+    color: #e47b7b;
+}
+
+QDialog#addFriendWidget QLabel#addFriendFeedbackLabel[status="success"] {
+    color: #72ce94;
+}
+
+QDialog#addFriendWidget QWidget#addFriendResultCard {
+    background-color: #2d2d2d;
+    border: 1px solid #3d3d3d;
+    border-radius: 9px;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendResultAvatar {
+    background-color: #363636;
+    border: none;
+    border-radius: 7px;
+    padding: 3px;
+}
+
+QDialog#addFriendWidget QLabel#addFriendResultName {
+    color: #f2f2f2;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+QDialog#addFriendWidget QLabel#addFriendResultSecondary {
+    color: #aaaaaa;
+    background: transparent;
+    font-size: 11px;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendApplyButton {
+    color: #ffffff;
+    background-color: #2f8f58;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendApplyButton:hover {
+    background-color: #38a868;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendApplyButton:pressed {
+    background-color: #28784b;
+}
+
+QDialog#addFriendWidget QPushButton#addFriendApplyButton:disabled {
+    color: #aaaaaa;
+    background-color: #3b4740;
+}

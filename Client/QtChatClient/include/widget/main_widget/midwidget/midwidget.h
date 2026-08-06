@@ -14,6 +14,11 @@ namespace ChatWidget
        public:
         explicit MidWidget(QWidget *parent = nullptr);
         ~MidWidget() override;
+
+       signals:
+        void addFriendRequested();
+
+       public:
         // 中间会话区标题
         QPointer<MidWidgetTitle> m_titleBar;
         // 中间会话区会话列表

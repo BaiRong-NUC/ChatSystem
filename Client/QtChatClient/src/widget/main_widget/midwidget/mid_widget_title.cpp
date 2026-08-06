@@ -5,7 +5,7 @@ using namespace Log;
 
 namespace
 {
-    constexpr auto kSearchLineEditPlaceholderText = "搜索";          // 搜索框占位符文本
+    constexpr auto kSearchLineEditPlaceholderText = "搜索";  // 搜索框占位符文本
 
     class SearchIconWidget : public QWidget
     {
@@ -49,6 +49,7 @@ MidWidgetTitle::MidWidgetTitle(QWidget *parent) : QWidget(parent)
     this->m_searchLineEdit = new QLineEdit(this);
 
     this->_InitMidWidgetTitle();
+    this->_InitSignalSlots();
 }
 
 MidWidgetTitle::~MidWidgetTitle() = default;
@@ -77,6 +78,9 @@ void MidWidgetTitle::_InitMidWidgetTitle()
     this->m_addFriendButton->setFixedSize(38, 38);
     this->m_addFriendButton->setIcon(MakePlusIcon());
     this->m_addFriendButton->setIconSize(QSize(20, 20));
+    this->m_addFriendButton->setAccessibleName(QStringLiteral("添加朋友"));
+    this->m_addFriendButton->setCursor(Qt::PointingHandCursor);
+
     // 布局
     QGridLayout *midWidgetLayout = new QGridLayout(this);
     midWidgetLayout->setContentsMargins(14, 18, 14, 18);
@@ -88,4 +92,9 @@ void MidWidgetTitle::_InitMidWidgetTitle()
     buttonPlaceholder->setFixedWidth(10);
     midWidgetLayout->addWidget(buttonPlaceholder, 0, 1);
     midWidgetLayout->addWidget(this->m_addFriendButton, 0, 2);  // 添加好友按钮
+}
+
+void MidWidgetTitle::_InitSignalSlots()
+{
+    connect(this->m_addFriendButton, &QPushButton::clicked, this, &MidWidgetTitle::addFriendRequested);
 }

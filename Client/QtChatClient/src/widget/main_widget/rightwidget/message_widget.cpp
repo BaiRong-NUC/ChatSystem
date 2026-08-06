@@ -35,10 +35,15 @@ void MessageWidget::_InitMessageWidget()
 #if DEBUG_CODE
     UserInfo testUser;
     testUser.m_userId = "testUserId";
-    testUser.m_userName = "Test User";
+    testUser.m_userName = "张三";
+    testUser.m_userTag = "小张";
+    testUser.m_description = "这是一个测试用户的签名信息，用于展示消息气泡的样式和布局效果。";
+    testUser.m_phone = "1234567890";
     testUser.m_avatar = QIcon(":/images/defaultAvatar.png");
     Model::Message testMessage = Model::Message::CreateMessage(Model::MessageType::Text, "chatSessionId", testUser,
                                                                "你好，这是一条测试消息", "");
+    // 调试数据分成两个相邻分钟组，用于验证每组只显示一次时间。
+    testMessage.m_timestamp = QDateTime::currentDateTime().addSecs(-60).toString("yyyy-MM-dd HH:mm:ss");
     for (int i = 0; i < 10; i++) { this->AddMessage(true, testMessage); }
 
     UserInfo currentUser = testUser;

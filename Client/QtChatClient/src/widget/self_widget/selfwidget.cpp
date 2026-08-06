@@ -7,14 +7,12 @@ using namespace Model;
 namespace
 {
     constexpr auto kAvatarDefaultIconPath = ":/images/defaultAvatar.png";  // 默认头像图标路径
-    constexpr qsizetype kUserIdCharactersPerLine = 24;
-    constexpr qsizetype kDefaultCharactersPerLine = 28;
     constexpr int kHoverCardShowDelayMs = 500;
     constexpr int kHoverCardHideDelayMs = 260;
     constexpr int kCompactDialogHeight = 250;
     constexpr int kVerificationDialogHeight = 300;
 
-    QString WrapHoverCardText(const QString &text, qsizetype charactersPerLine)
+    QString WrapHoverCardText(const QString &text, const QFontMetrics &fontMetrics, int maximumLineWidth)
     {
         QStringList wrappedLines;
         const QStringList sourceLines = text.split('\n');
@@ -25,10 +23,22 @@ namespace
                 wrappedLines.append("");
                 continue;
             }
-            for (qsizetype index = 0; index < sourceLine.size(); index += charactersPerLine)
+
+            QString currentLine;
+            for (const QChar character : sourceLine)
             {
-                wrappedLines.append(sourceLine.mid(index, charactersPerLine));
+                const QString candidateLine = currentLine + character;
+                if (!currentLine.isEmpty() && fontMetrics.horizontalAdvance(candidateLine) > maximumLineWidth)
+                {
+                    wrappedLines.append(currentLine);
+                    currentLine = character;
+                }
+                else
+                {
+                    currentLine = candidateLine;
+                }
             }
+            if (!currentLine.isEmpty()) { wrappedLines.append(currentLine); }
         }
         return wrappedLines.join('\n');
     }
@@ -384,12 +394,10 @@ void SelfWidget::_ShowHoverCard()
 
     QString title;
     QString content;
-    qsizetype charactersPerLine = kDefaultCharactersPerLine;
     if (source == this->m_avatarButton)
     {
         title = "用户 ID";
         content = this->m_userId;
-        charactersPerLine = kUserIdCharactersPerLine;
         this->m_hoverCardContentLabel->setProperty("kind", "id");
     }
     else if (source == this->m_signatureRow.valueLabel)
@@ -408,30 +416,45 @@ void SelfWidget::_ShowHoverCard()
     this->m_hoverCardContentLabel->style()->unpolish(this->m_hoverCardContentLabel);
     this->m_hoverCardContentLabel->style()->polish(this->m_hoverCardContentLabel);
     this->m_hoverCardTitleLabel->setText(title);
-    this->m_hoverCardContentLabel->setText(WrapHoverCardText(content, charactersPerLine));
 
-    const QStringList lines = this->m_hoverCardContentLabel->text().split('\n');
+    const QFontMetrics contentFontMetrics = this->m_hoverCardContentLabel->fontMetrics();
+    const QStringList lines = content.split('\n');
     int widestLine = 0;
     for (const QString &line : lines)
     {
-        widestLine = qMax(widestLine, this->m_hoverCardContentLabel->fontMetrics().horizontalAdvance(line));
+        widestLine = qMax(widestLine, contentFontMetrics.horizontalAdvance(line));
     }
     const int cardWidth = qBound(150, widestLine + 30, 270);
+    const int contentWidth = cardWidth - 28;
     this->m_hoverCard->setFixedWidth(cardWidth);
-    this->m_hoverCardContentLabel->setFixedWidth(cardWidth - 28);
+    this->m_hoverCardContentLabel->setFixedWidth(contentWidth);
+    this->m_hoverCardContentLabel->setText(WrapHoverCardText(content, contentFontMetrics, contentWidth));
     this->m_hoverCard->adjustSize();
 
     auto *sourceWidget = qobject_cast<QWidget *>(source);
-    QPoint cardPosition = sourceWidget->mapToGlobal(QPoint(0, sourceWidget->height() + 8));
     const QRect availableGeometry = sourceWidget->screen()->availableGeometry();
-    if (cardPosition.x() + this->m_hoverCard->width() > availableGeometry.right())
+    QPoint cardPosition;
+    if (source == this->m_signatureRow.valueLabel)
     {
-        cardPosition.setX(availableGeometry.right() - this->m_hoverCard->width());
+        // 完整签名卡优先放在资料窗外侧，避免遮挡电话和验证码区域。
+        cardPosition = sourceWidget->mapToGlobal(QPoint(sourceWidget->width() + 10, 0));
+        if (cardPosition.x() + this->m_hoverCard->width() > availableGeometry.right())
+        {
+            cardPosition = sourceWidget->mapToGlobal(QPoint(-this->m_hoverCard->width() - 10, 0));
+        }
     }
-    if (cardPosition.y() + this->m_hoverCard->height() > availableGeometry.bottom())
+    else
     {
-        cardPosition.setY(sourceWidget->mapToGlobal(QPoint(0, -this->m_hoverCard->height() - 8)).y());
+        cardPosition = sourceWidget->mapToGlobal(QPoint(0, sourceWidget->height() + 8));
+        if (cardPosition.x() + this->m_hoverCard->width() > availableGeometry.right())
+        {
+            cardPosition.setX(availableGeometry.right() - this->m_hoverCard->width());
+        }
     }
+    cardPosition.setX(qBound(availableGeometry.left(), cardPosition.x(),
+                             availableGeometry.right() - this->m_hoverCard->width()));
+    cardPosition.setY(qBound(availableGeometry.top(), cardPosition.y(),
+                             availableGeometry.bottom() - this->m_hoverCard->height()));
 
     this->m_activeHoverSource = source;
     this->m_hoverCard->move(cardPosition);

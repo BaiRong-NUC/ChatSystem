@@ -3,6 +3,22 @@
 using namespace ChatWidget;
 using namespace Log;
 
+namespace
+{
+    QString DisplayMessageTime(const QString &value)
+    {
+        QDateTime timestamp = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
+        if (!timestamp.isValid()) { timestamp = QDateTime::fromString(value, Qt::ISODate); }
+        if (!timestamp.isValid()) { return value.trimmed().isEmpty() ? "--:--" : value; }
+
+        const QDate today = QDate::currentDate();
+        if (timestamp.date() == today) { return timestamp.toString("HH:mm"); }
+        if (timestamp.date() == today.addDays(-1)) { return timestamp.toString("昨天 HH:mm"); }
+        if (timestamp.date().year() == today.year()) { return timestamp.toString("M月d日 HH:mm"); }
+        return timestamp.toString("yyyy年M月d日 HH:mm");
+    }
+}  // namespace
+
 MessageItem::MessageItem(QWidget *parent, const Model::Message &data, bool isLeft, const QFont &textFont)
     : QWidget(parent), m_isLeft(isLeft)
 {
@@ -54,16 +70,12 @@ void MessageItem::_InitMessageItem()
     this->m_avatarButton->setAccessibleDescription("查看发送者资料");
     connect(this->m_avatarButton, &QPushButton::clicked, this, &MessageItem::_ShowUserInfoWidget);
 
-    // 设置用户名标签样式
+    // 单聊界面不重复显示发送人昵称。
     this->m_username->setText(this->m_chatMessage->m_message->m_sender.m_userName);
-    this->m_username->setAlignment(Qt::AlignBottom);
     this->m_username->setObjectName("usernameLabel");
     this->m_username->hide();
     // 设置时间标签样式
-    const QDateTime timestamp =
-        QDateTime::fromString(this->m_chatMessage->m_message->m_timestamp, "yyyy-MM-dd HH:mm:ss");
-    this->m_timestamp->setText(timestamp.isValid() ? timestamp.toString("M月d日 HH:mm")
-                                                   : this->m_chatMessage->m_message->m_timestamp);
+    this->m_timestamp->setText(DisplayMessageTime(this->m_chatMessage->m_message->m_timestamp));
     this->m_timestamp->setAlignment(Qt::AlignCenter);
     this->m_timestamp->setObjectName("timestampLabel");
 

@@ -1,0 +1,75 @@
+QWidget#singleSessionDetailWidget {
+    background-color: #292929;
+    border: 1px solid #3e3e3e;
+}
+
+QWidget#singleSessionDetailWidget QWidget#sessionDetailMemberArea,
+QWidget#singleSessionDetailWidget QWidget#sessionDetailSettingRow {
+    background-color: transparent;
+    border: none;
+}
+
+QWidget#singleSessionDetailWidget QFrame#sessionDetailDivider {
+    color: #3a3a3a;
+    background-color: #3a3a3a;
+    border: none;
+    max-height: 1px;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton {
+    color: #ededed;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 0 12px 0 0;
+    text-align: left;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton:hover {
+    color: #f7f7f7;
+    background-color: #313131;
+    padding-left: 10px;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#sessionDetailNavigationButton:pressed {
+    color: #d8d8d8;
+    background-color: #242424;
+}
+
+QWidget#singleSessionDetailWidget QLabel#sessionDetailSettingLabel {
+    color: #ededed;
+    background-color: transparent;
+    border: none;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#sessionDetailSwitch {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#clearChatHistoryButton {
+    color: #e65c5c;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#clearChatHistoryButton:hover {
+    color: #f17070;
+    background-color: #3a2929;
+}
+
+QWidget#singleSessionDetailWidget QPushButton#clearChatHistoryButton:pressed {
+    color: #cf4e4e;
+    background-color: #302323;
+}

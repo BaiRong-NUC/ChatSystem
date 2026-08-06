@@ -1,6 +1,6 @@
 #include <widget/main_widget/rightwidget/right_widget_title.h>
-#include <QMouseEvent>
-#include <QWindow>
+
+#include <QGuiApplication>
 
 using namespace ChatWidget;
 using namespace Log;
@@ -106,18 +106,68 @@ void RightWidgetTitle::_InitSignalSlots()
     connect(this->m_minimizeButton, &QPushButton::clicked, this, [this]() { this->window()->showMinimized(); });
     connect(this->m_maximizeButton, &QPushButton::clicked, this, &RightWidgetTitle::_ToggleMaximized);
     connect(this->m_closeButton, &QPushButton::clicked, this, [this]() { this->window()->close(); });
+
+    connect(this->m_titleButton, &QPushButton::clicked, this,
+            [this]()
+            {
+                // 打开会话详情窗口
+                if (this->m_titleLabel == nullptr || this->m_titleButton == nullptr) { return; }
+
+                // Tool 窗口不会因失去焦点自动关闭，再次点击标题按钮时主动收起。
+                if (this->m_sessionDetailWidget != nullptr && this->m_sessionDetailWidget->isVisible())
+                {
+                    this->m_sessionDetailWidget->hide();
+                    return;
+                }
+
+                if (this->m_sessionDetailWidget == nullptr)
+                {
+                    // 标题栏当前只持有会话名称，先使用现有展示数据搭建详情窗口。
+                    // 待会话模型接入后，再由业务层传入完整 UserInfo。
+                    Model::UserInfo userInfo;
+                    userInfo.m_userName = this->m_titleLabel->text().trimmed();
+                    if (userInfo.m_userName.isEmpty()) { userInfo.m_userName = QStringLiteral("未命名会话"); }
+                    userInfo.m_avatar = QIcon(":/images/defaultAvatar.png");
+
+                    // SingleSessionDetailWidget 关闭时会自动销毁，QPointer 随后自动置空。
+                    this->m_sessionDetailWidget = new SingleSessionDetailWidget(userInfo, this);
+                }
+
+                // 详情面板保持右侧窄栏宽度，高度填满标题栏以下的空间。
+                QWidget *rightArea = this->parentWidget();
+                if (rightArea != nullptr)
+                {
+                    const int detailWidth = qMin(SingleSessionDetailWidget::PREFERRED_WIDTH, rightArea->width());
+                    this->m_sessionDetailWidget->resize(
+                        detailWidth, qMax(0, rightArea->height() - this->height()));
+                }
+
+                QPoint popupPosition = this->mapToGlobal(
+                    QPoint(this->width() - this->m_sessionDetailWidget->width(), this->height()));
+
+                // 窗口靠近屏幕边缘时限制在可用显示区域内。
+                QScreen *screen = QGuiApplication::screenAt(popupPosition);
+                if (screen == nullptr) { screen = QGuiApplication::primaryScreen(); }
+                if (screen != nullptr)
+                {
+                    const QRect availableGeometry = screen->availableGeometry();
+                    popupPosition.setX(qBound(availableGeometry.left(), popupPosition.x(),
+                                              availableGeometry.right() - this->m_sessionDetailWidget->width() + 1));
+                    popupPosition.setY(qBound(availableGeometry.top(), popupPosition.y(),
+                                              availableGeometry.bottom() - this->m_sessionDetailWidget->height() + 1));
+                }
+
+                this->m_sessionDetailWidget->move(popupPosition);
+                this->m_sessionDetailWidget->show();
+                this->m_sessionDetailWidget->raise();
+                this->m_sessionDetailWidget->activateWindow();
+            });
 }
 
 void RightWidgetTitle::_ToggleMaximized()
 {
-    if (this->window()->isMaximized())
-    {
-        this->window()->showNormal();
-    }
-    else
-    {
-        this->window()->showMaximized();
-    }
+    if (this->window()->isMaximized()) { this->window()->showNormal(); }
+    else { this->window()->showMaximized(); }
     this->_UpdateMaximizeButtonIcon();
 }
 
@@ -126,20 +176,13 @@ void RightWidgetTitle::_ToggleAlwaysOnTop(bool checked)
     QWidget *topLevelWindow = this->window();
     const bool wasMaximized = topLevelWindow->isMaximized();
     topLevelWindow->setWindowFlag(Qt::WindowStaysOnTopHint, checked);
-    if (wasMaximized)
-    {
-        topLevelWindow->showMaximized();
-    }
-    else
-    {
-        topLevelWindow->show();
-    }
+    if (wasMaximized) { topLevelWindow->showMaximized(); }
+    else { topLevelWindow->show(); }
 }
 
 void RightWidgetTitle::_UpdateMaximizeButtonIcon()
 {
-    this->m_maximizeButton->setIcon(
-        QIcon(this->window()->isMaximized() ? kRestoreIconPath : kMaximizeIconPath));
+    this->m_maximizeButton->setIcon(QIcon(this->window()->isMaximized() ? kRestoreIconPath : kMaximizeIconPath));
 }
 
 void RightWidgetTitle::mousePressEvent(QMouseEvent *event)

@@ -48,4 +48,7 @@ void MidWidget::_InitMidWidget()
 #endif
 }
 
-void MidWidget::_InitSignalSlots() {}
+void MidWidget::_InitSignalSlots()
+{
+    connect(this->m_titleBar, &MidWidgetTitle::addFriendRequested, this, &MidWidget::addFriendRequested);
+}

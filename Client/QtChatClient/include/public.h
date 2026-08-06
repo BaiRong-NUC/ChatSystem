@@ -44,6 +44,13 @@
 #include <QStyle>
 #include <QTimer>
 
+// rightwidget/right_widget_title.h
+#include <QMouseEvent>
+#include <QWindow>
+
+// widget/add_friend_widget
+#include <QStyleOptionButton>
+
 #define DEBUG_CODE 1  // 调试代码开关,在正式发布前可以关闭
 
 // ChatMessage/TextChatMessage

@@ -43,4 +43,49 @@ void MainWidget::_InitMainWidget()
     mainLayout->addWidget(this->m_leftWidget);
     mainLayout->addWidget(this->m_midWidget);
     mainLayout->addWidget(this->m_rightWidget);
+
+    connect(this->m_midWidget, &MidWidget::addFriendRequested, this, &MainWidget::_OpenAddFriendWidget);
+}
+
+void MainWidget::_OpenAddFriendWidget()
+{
+    if (this->m_addFriendWidget == nullptr)
+    {
+        this->m_addFriendWidget = new AddFriendWidget(this);
+        connect(this->m_addFriendWidget, &AddFriendWidget::searchUserRequested, this,
+                &MainWidget::searchUserRequested);
+        connect(this->m_addFriendWidget, &AddFriendWidget::addFriendRequested, this,
+                &MainWidget::addFriendRequested);
+    }
+
+    const QPoint centerPosition = this->mapToGlobal(this->rect().center()) -
+                                  QPoint(this->m_addFriendWidget->width() / 2,
+                                         this->m_addFriendWidget->height() / 2);
+    this->m_addFriendWidget->move(centerPosition);
+    this->m_addFriendWidget->show();
+    this->m_addFriendWidget->raise();
+    this->m_addFriendWidget->activateWindow();
+}
+
+void MainWidget::showUserSearchResult(const Model::UserInfo &userInfo)
+{
+    if (this->m_addFriendWidget != nullptr) { this->m_addFriendWidget->showSearchResult(userInfo); }
+}
+
+void MainWidget::showNoUserSearchResult(const QString &keyword)
+{
+    if (this->m_addFriendWidget != nullptr) { this->m_addFriendWidget->showNoSearchResult(keyword); }
+}
+
+void MainWidget::showUserSearchError(const QString &message)
+{
+    if (this->m_addFriendWidget != nullptr) { this->m_addFriendWidget->showSearchError(message); }
+}
+
+void MainWidget::showFriendRequestResult(bool succeeded, const QString &message)
+{
+    if (this->m_addFriendWidget != nullptr)
+    {
+        this->m_addFriendWidget->showFriendRequestResult(succeeded, message);
+    }
 }

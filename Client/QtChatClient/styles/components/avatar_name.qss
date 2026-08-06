@@ -1,0 +1,38 @@
+QWidget#avatarName {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+}
+
+QWidget#avatarName:hover {
+    background-color: #2b2b2b;
+}
+
+QWidget#avatarName QPushButton#avatarButton {
+    background-color: #303030;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 0;
+}
+
+QWidget#avatarName QPushButton#avatarButton:hover {
+    background-color: #353535;
+    border-color: #4a4a4a;
+}
+
+QWidget#avatarName QPushButton#avatarButton:pressed {
+    background-color: #252525;
+    border-color: #3c3c3c;
+}
+
+QWidget#avatarName QLabel#nameLabel {
+    color: #b8b8b8;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+QWidget#avatarName:hover QLabel#nameLabel {
+    color: #e2e2e2;
+}
