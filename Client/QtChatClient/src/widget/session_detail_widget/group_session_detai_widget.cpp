@@ -1,7 +1,5 @@
 #include <widget/session_detail_widget/group_session_detai_widget.h>
 
-#include <QStyleOptionButton>
-
 using namespace ChatWidget;
 using namespace Log;
 
@@ -21,25 +19,83 @@ namespace
     class GroupNavigationButton final : public QPushButton
     {
        public:
-        explicit GroupNavigationButton(QWidget *parent = nullptr) : QPushButton(parent) {}
+        explicit GroupNavigationButton(QWidget *parent = nullptr) : QPushButton(parent)
+        {
+            this->setFlat(true);
+            this->setFocusPolicy(Qt::NoFocus);
+        }
 
        protected:
         void paintEvent(QPaintEvent *event) override
         {
-            QPushButton::paintEvent(event);
+            Q_UNUSED(event);
 
-            QStyleOptionButton option;
-            this->initStyleOption(&option);
             QPainter painter(this);
             painter.setRenderHint(QPainter::Antialiasing, true);
-            painter.setPen(QPen(option.palette.color(QPalette::ButtonText), 2, Qt::SolidLine,
-                                Qt::RoundCap, Qt::RoundJoin));
+
+            // 不调用 QPushButton 默认绘制，避免不同平台出现整块边框和渐变背景。
+            if (this->underMouse())
+            {
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(this->isDown() ? QColor("#252525") : QColor("#303030"));
+                painter.drawRoundedRect(this->rect().adjusted(0, 2, 0, -2), 5, 5);
+            }
+
+            const QColor foreground = this->isDown() ? QColor("#d6d6d6")
+                                                       : (this->underMouse() ? QColor("#ffffff")
+                                                                            : QColor("#ededed"));
+            painter.setPen(foreground);
+            painter.setFont(this->font());
+            painter.drawText(this->rect().adjusted(0, 0, -42, 0),
+                             Qt::AlignLeft | Qt::AlignVCenter, this->text());
 
             const QPoint center(this->width() - 16, this->height() / 2);
+            painter.setPen(QPen(foreground, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             painter.drawLine(center.x() - 4, center.y() - kChevronHalfHeight,
                              center.x() + 2, center.y());
             painter.drawLine(center.x() + 2, center.y(), center.x() - 4,
                              center.y() + kChevronHalfHeight);
+        }
+    };
+
+    class GroupShowMoreButton final : public QPushButton
+    {
+       public:
+        explicit GroupShowMoreButton(QWidget *parent = nullptr) : QPushButton(parent)
+        {
+            this->setFlat(true);
+            this->setFocusPolicy(Qt::NoFocus);
+        }
+
+       protected:
+        void paintEvent(QPaintEvent *event) override
+        {
+            Q_UNUSED(event);
+
+            QPainter painter(this);
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            if (this->underMouse())
+            {
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(this->isDown() ? QColor("#252525") : QColor("#303030"));
+                painter.drawRoundedRect(this->rect().adjusted(0, 3, 0, -3), 5, 5);
+            }
+
+            const QColor foreground = this->isDown() ? QColor("#989898")
+                                                       : (this->underMouse() ? QColor("#dedede")
+                                                                            : QColor("#a9a9a9"));
+            painter.setFont(this->font());
+            painter.setPen(foreground);
+            const int textWidth = painter.fontMetrics().horizontalAdvance(this->text());
+            const int textLeft = (this->width() - textWidth) / 2 - 8;
+            painter.drawText(QRect(textLeft, 0, textWidth, this->height()),
+                             Qt::AlignCenter, this->text());
+
+            // 在文字右侧绘制向下折线，样式与参考图中的“查看更多”一致。
+            const QPoint arrowCenter(textLeft + textWidth + 16, this->height() / 2 + 1);
+            painter.setPen(QPen(foreground, 1.7, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.drawLine(arrowCenter + QPoint(-6, -3), arrowCenter);
+            painter.drawLine(arrowCenter, arrowCenter + QPoint(6, -3));
         }
     };
 
@@ -123,7 +179,7 @@ GroupSessionDetailWidget::GroupSessionDetailWidget(const QString &groupName, QWi
     this->m_memberSearchBox = new SearchBox(this->m_contentWidget);
     this->m_memberGridWidget = new QWidget(this->m_contentWidget);
     this->m_addGroup = new AddGroup(this->m_memberGridWidget);
-    this->m_showMoreButton = new QPushButton(this->m_contentWidget);
+    this->m_showMoreButton = new GroupShowMoreButton(this->m_contentWidget);
 
     this->m_searchMessageButton = new GroupNavigationButton(this->m_contentWidget);
     this->m_messageDoNotDisturbSwitch = new GroupDetailSwitch(true, this->m_contentWidget);
@@ -166,6 +222,7 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
     this->m_scrollArea->setWidgetResizable(true);
     this->m_scrollArea->setFrameShape(QFrame::NoFrame);
     this->m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->m_scrollArea->verticalScrollBar()->setObjectName("groupSessionDetailScrollBar");
     this->m_contentWidget->setObjectName("groupSessionDetailContent");
     this->m_contentWidget->setAttribute(Qt::WA_StyledBackground, true);
     this->m_scrollArea->setWidget(this->m_contentWidget);
@@ -201,11 +258,11 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
                                 this->m_memberItems.size() % kMemberColumnCount);
 
     this->m_showMoreButton->setObjectName("groupSessionShowMoreButton");
-    this->m_showMoreButton->setText(QStringLiteral("查看更多 ︾"));
+    this->m_showMoreButton->setText(QStringLiteral("查看更多"));
     this->m_showMoreButton->setCursor(Qt::PointingHandCursor);
     this->m_showMoreButton->setFocusPolicy(Qt::NoFocus);
-    this->m_showMoreButton->setFixedHeight(42);
-    contentLayout->addWidget(this->m_showMoreButton);
+    this->m_showMoreButton->setFixedSize(150, 42);
+    contentLayout->addWidget(this->m_showMoreButton, 0, Qt::AlignHCenter);
     contentLayout->addSpacing(4);
     contentLayout->addWidget(CreateDivider(this->m_contentWidget));
 
@@ -280,12 +337,16 @@ void GroupSessionDetailWidget::_InitGroupSessionDetailWidget()
     contentLayout->addWidget(CreateDivider(this->m_contentWidget));
 
     this->m_clearHistoryButton->setObjectName("groupSessionDangerButton");
+    this->m_clearHistoryButton->setFlat(true);
+    this->m_clearHistoryButton->setFocusPolicy(Qt::NoFocus);
     this->m_clearHistoryButton->setText(QStringLiteral("清空聊天记录"));
     this->m_clearHistoryButton->setFixedHeight(kSettingRowHeight);
     contentLayout->addWidget(this->m_clearHistoryButton);
     contentLayout->addWidget(CreateDivider(this->m_contentWidget));
 
     this->m_exitGroupButton->setObjectName("groupSessionDangerButton");
+    this->m_exitGroupButton->setFlat(true);
+    this->m_exitGroupButton->setFocusPolicy(Qt::NoFocus);
     this->m_exitGroupButton->setText(QStringLiteral("退出群聊"));
     this->m_exitGroupButton->setFixedHeight(kSettingRowHeight);
     contentLayout->addWidget(this->m_exitGroupButton);
